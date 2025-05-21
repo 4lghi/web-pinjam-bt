@@ -11,7 +11,7 @@ module.exports = function(app) {
         status: 'error',
         message: 'Data tidak lengkap!'
       });
-    }
+    }4
 
     const docData = {
       userId: data.userId,
