@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Peminjaman</title>
+  <link href="./output.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-white text-sm">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <div id="sidebar"></div>
+    <script>
+      function dropDown() {
+        document.querySelector('#submenu').classList.toggle('hidden');
+        document.querySelector('#arrow').classList.toggle('rotate-180');
+      }
+
+      function dropDown1() {
+        document.querySelector('#submenu1').classList.toggle('hidden');
+        document.querySelector('#arrow1').classList.toggle('rotate-180');
+      }
+
+      fetch('sidebar_admin.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('sidebar').innerHTML = data;
+        });
+    </script>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-60 p-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <!-- Search -->
+          <div class="relative w-64">
+            <input type="text" placeholder="Search" class="w-full pl-10 pr-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+            <i class="bi bi-search absolute left-3 top-2.5 text-gray-400"></i>
+          </div>
+        <div class="flex items-center gap-4">
+          <!--Notifikasi-->
+          <span class="relative">
+          <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">1</span>
+          🔔
+          </span>
+          <!-- Filter Dropdown -->
+          <div class="relative">
+            <button onclick="toggleDropdown('filterDropdown')" class="px-4 py-2 bg-white border rounded-lg flex items-center gap-2">⚙️ Filter</button>
+            <div id="filterDropdown" class="hidden absolute z-10 mt-2 w-48 bg-white shadow rounded">
+            <ul class="text-sm text-gray-700">
+                <li>
+                <label class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    <input type="checkbox" class="form-checkbox text-green-500 mr-2" checked>
+                    Terbaru
+                </label>
+                </li>
+                <li>
+                <label class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    <input type="checkbox" class="form-checkbox text-green-500 mr-2" checked>
+                    Terlama
+                </label>
+                </li>
+                <li>
+                <label class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    <input type="checkbox" class="form-checkbox text-green-500 mr-2">
+                    Tenggat Waktu
+                </label>
+                </li>
+                <li>
+                <label class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    <input type="checkbox" class="form-checkbox text-green-500 mr-2">
+                    Dipinjam
+                </label>
+                </li>
+                <li>
+                <label class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    <input type="checkbox" class="form-checkbox text-green-500 mr-2">
+                    Dikembalikan
+                </label>
+                </li>
+                <li>
+                <label class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    <input type="checkbox" class="form-checkbox text-green-500 mr-2">
+                    Ditolak
+                </label>
+                </li>
+                <li>
+                <label class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    <input type="checkbox" class="form-checkbox text-green-500 mr-2">
+                    Telat
+                </label>
+                </li>
+            </ul>
+            </div>
+          </div>
+          <button onclick="exportToExcel()" class="px-4 py-2 bg-green-600 text-white rounded-lg">Export</button>
+            <!-- Tombol untuk membuka modal -->
+            <button onclick="openModal()" class="px-4 py-2 bg-sky-900 text-white rounded-lg">+ Tambah</button>
+
+            <!-- Modal Tambah Pinjam-->
+            <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white rounded-xl p-6 w-[700px] relative">
+                <!-- Header -->
+                <div class="flex justify-between items-start mb-4">
+                <h2 class="text-xl font-semibold">Tambah Peminjaman</h2>
+                <button onclick="closeModal()" class="text-gray-700 text-xl">&times;</button>
+                </div>
+
+                <!-- Form -->
+                <div class="grid grid-cols-2 gap-4">
+                <!-- Kolom kiri -->
+                <div class="space-y-3">
+                    <div>
+                    <label>Nama Peminjam</label>
+                    <input type="text" class="w-full border rounded-lg px-3 py-2" />
+                    </div>
+                    <div>
+                    <label>Jenis Hak</label>
+                    <select class="w-full border rounded-lg px-3 py-2">
+                        <option>Hak Milik</option>
+                        <option>Hak Pakai</option>
+                        <option>Hak Guna Bangunan</option>
+                        <option>Hak Tanggungan</option>
+                        <option>Hak Pengelolaan</option>
+                    </select>
+                    </div>
+                    <div>
+                    <label>Nomor Hak</label>
+                    <input type="text" class="w-full border rounded-lg px-3 py-2" />
+                    </div>
+                    <div>
+                    <label>Pilih Seksi</label>
+                    <select class="w-full border rounded-lg px-3 py-2">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>TU</option>
+                    </select>
+                    </div>
+                </div>
+
+                <!-- Kolom kanan -->
+                <div class="space-y-3">
+                    <div>
+                    <label>Kecamatan</label>
+                    <select class="w-full border rounded-lg px-3 py-2">
+                        <option>...</option>
+                    </select>
+                    </div>
+                    <div>
+                    <label>Kelurahan</label>
+                    <select class="w-full border rounded-lg px-3 py-2">
+                        <option>...</option>
+                    </select>
+                    </div>
+                    <div>
+                    <label>Tanggal Peminjaman</label>
+                    <input type="date" class="w-full border rounded-lg px-3 py-2" />
+                    </div>
+                    <div>
+                    <label>Durasi Peminjaman</label>
+                    <select class="w-full border rounded-lg px-3 py-2">
+                        <option>1 Hari</option>
+                        <option>3 Hari</option>
+                        <option>1 Minggu</option>
+                    </select>
+                    </div>
+                    <div>
+                    <label>Keperluan</label>
+                    <textarea class="w-full border rounded-lg px-3 py-2" rows="2"></textarea>
+                    </div>
+                </div>
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="mt-6 flex justify-end gap-2">
+                <button onclick="closeModal()" class="px-4 py-2 border rounded-lg">Batalkan</button>
+                <button class="px-4 py-2 bg-sky-900 text-white rounded-lg">Simpan</button>
+                </div>
+            </div>
+            </div>
+
+            <!-- Script -->
+            <script>
+            function openModal() {
+                document.getElementById("modal").classList.remove("hidden");
+            }
+
+            function closeModal() {
+                document.getElementById("modal").classList.add("hidden");
+            }
+            </script>
+
+          <div class="flex items-center gap-2">
+            <span>👤</span> <span>User</span>
+          </div>
+        </div>
+      </div>
+
+        <!-- Tombol Tab -->
+        <div class="flex space-x-2 mb-4">
+          <button onclick="showTable('bukuTanah')" id="btnBukuTanah" class="px-4 py-2 bg-white text-gray-800 border rounded-xl shadow">Buku Tanah</button>
+          <button onclick="showTable('suratUkur')" id="btnSuratUkur" class="px-4 py-2 bg-white text-gray-800 border rounded-xl shadow">Surat Ukur</button>
+        </div>
+
+        <!-- Tabel Buku Tanah -->
+        <div id="bukuTanahTable" class="overflow-x-auto">
+          <table class="min-w-full border rounded-xl overflow-hidden">
+            <thead class="bg-white text-gray-800">
+              <tr class="border">
+                <th class="px-4 py-2 text-left">No</th>
+                <th class="px-4 py-2 text-left">Nama Peminjam</th>
+                <th class="px-4 py-2 text-left">Seksi</th>
+                <th class="px-4 py-2 text-left">Jenis Hak</th>
+                <th class="px-4 py-2 text-left">Nomor Hak</th>
+                <th class="px-4 py-2 text-left">Kecamatan</th>
+                <th class="px-4 py-2 text-left">Kelurahan</th>
+                <th class="px-4 py-2 text-left">Tgl Pinjam</th>
+                <th class="px-4 py-2 text-left">Durasi</th>
+                <th class="px-4 py-2 text-left">Status</th>
+                <th class="px-4 py-2 text-left">Info</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <script>
+                const dataBukuTanah = [
+                  ["Ucok", 1, "HGB", 121, "Medan Sunggal", "Binjai", "12/03/2025", "3 Hari", "Ditolak", "Data tidak lengkap"],
+                  ["Ani", 2, "HM", 212, "Medan Baru", "Suka Maju", "10/03/2025", "2 Hari", "Diterima", "Siap diambil"],
+                  ["Budi", 3, "HW", 111, "Medan Tembung", "Sari Rejo", "08/03/2025", "4 Hari", "Menunggu", "Sedang diproses"],
+                  ["Citra", 4, "HGB", 433, "Medan Denai", "Teladan", "07/03/2025", "1 Hari", "Diterima", "Akan dikonfirmasi"],
+                  ["Doni", 5, "HM", 500, "Medan Timur", "Pahlawan", "05/03/2025", "3 Hari", "Ditolak", "Berkas tidak sah"],
+                  ["Eka", "Tu", "HW", 777, "Medan Helvetia", "Padang Bulan", "04/03/2025", "2 Hari", "Menunggu", "Masih diverifikasi"],
+                ];
+
+                function renderRow(data, index) {
+                  const statusClass = {
+                    "Ditolak": "bg-red-100 text-red-700",
+                    "Diterima": "bg-green-100 text-green-700",
+                    "Menunggu": "bg-yellow-100 text-yellow-700"
+                  }[data[8]];
+
+                  return `
+                    <tr>
+                      <td class="px-4 py-2">${index + 1}</td>
+                      <td class="px-4 py-2">${data[0]}</td>
+                      <td class="px-4 py-2">${data[1]}</td>
+                      <td class="px-4 py-2">${data[2]}</td>
+                      <td class="px-4 py-2">${data[3]}</td>
+                      <td class="px-4 py-2">${data[4]}</td>
+                      <td class="px-4 py-2">${data[5]}</td>
+                      <td class="px-4 py-2">${data[6]}</td>
+                      <td class="px-4 py-2">${data[7]}</td>
+                      <td class="px-4 py-2">
+                        <span class="px-2 py-1 rounded-full text-sm ${statusClass}">${data[8]}</span>
+                      </td>
+                      <td class="px-4 py-2">
+                        <button onclick="alert('${data[9]}')" class="text-lg font-bold">!</button>
+                        <button onclick="toggleMenu(this)" class="text-black text-lg dropdown-toggle">⋮</button>
+                        <div class="dropdown-menu hidden absolute bg-white border rounded shadow-md right-0 mt-2 z-10">
+                          <ul>
+                            <li>
+                              <button id="btnEdit" class="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">
+                                ✏️ Edit
+                              </button>
+                            </li>
+                            <li>
+                              <button onclick="showAlert()" class="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">
+                                🗑️ Hapus
+                              </button>
+                            </li>
+                            <li>
+                              <button onclick="showStatusModal()" class="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">
+                                🔄 Edit Status
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                  `;
+                }
+
+                document.write(dataBukuTanah.map(renderRow).join(""));
+              </script>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tabel Surat Ukur -->
+        <div id="suratUkurTable" class="hidden overflow-x-auto">
+          <table class="min-w-full border rounded-xl overflow-hidden">
+            <thead class="bg-white text-gray-800">
+              <tr class="border">
+                <th class="px-4 py-2 text-left">No</th>
+                <th class="px-4 py-2 text-left">Nama Peminjam</th>
+                <th class="px-4 py-2 text-left">Seksi</th>
+                <th class="px-4 py-2 text-left">Jenis Hak</th>
+                <th class="px-4 py-2 text-left">Nomor Hak</th>
+                <th class="px-4 py-2 text-left">Kecamatan</th>
+                <th class="px-4 py-2 text-left">Kelurahan</th>
+                <th class="px-4 py-2 text-left">Tgl Pinjam</th>
+                <th class="px-4 py-2 text-left">Durasi</th>
+                <th class="px-4 py-2 text-left">Status</th>
+                <th class="px-4 py-2 text-left">Info</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <script>
+                const dataSuratUkur = [
+                  ["Fina", 1, "HM", 901, "Binjai", "Kwala Begumit", "13/03/2025", "3 Hari", "Diterima", "Boleh diambil"],
+                  ["Gilang", 2, "HGB", 832, "Binjai", "Tandam Hulu", "11/03/2025", "1 Hari", "Menunggu", "Dalam pengecekan"],
+                  ["Hani", 3, "HW", 412, "Binjai", "Tandam Hilir", "10/03/2025", "2 Hari", "Ditolak", "Tidak sesuai prosedur"],
+                  ["Indra", 4, "HM", 744, "Binjai", "Sumber Karya", "09/03/2025", "3 Hari", "Menunggu", "Belum diverifikasi"],
+                  ["Joko", 5, "HGB", 501, "Binjai", "Kwala Mencirim", "07/03/2025", "2 Hari", "Diterima", "Sudah dikonfirmasi"],
+                  ["Kiki", "Tu", "HW", 266, "Binjai", "Suka Damai", "06/03/2025", "1 Hari", "Ditolak", "Berkas rusak"],
+                ];
+
+                document.write(dataSuratUkur.map(renderRow).join(""));
+              </script>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Dropdown menu -->
+        <div class="dropdown absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-lg border hidden z-50">
+          <ul class="text-sm text-gray-700">
+            <li>
+              <button id="btnEdit" class="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">
+                ✏️ Edit
+              </button>
+            </li>
+            <li>
+              <button onclick="showAlert()" class="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">
+                🗑️ Hapus
+              </button>
+            </li>
+            <li>
+              <button onclick="showStatusModal()" class="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">
+                🔄 Edit Status
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Modal Form Edit -->
+        <div id="editModal" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center hidden z-50">
+          <div class="bg-white w-full max-w-4xl p-6 rounded-lg shadow-lg">
+            <h2 class="text-xl font-semibold mb-4">Edit Peminjaman</h2>
+
+            <!-- Form -->
+            <div class="grid grid-cols-2 gap-4 max-h-[70vh] overflow-y-auto">
+              <!-- Kolom kiri -->
+              <div class="space-y-3">
+                <div>
+                <label>Jenis Peminjaman</label>
+                  <select class="w-full border rounded-lg px-3 py-2">
+                    <option>Buku Tanah</option>
+                    <option>Surat Ukur</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Nama Peminjam</label>
+                  <input type="text" class="w-full border rounded-lg px-3 py-2" />
+                </div>
+                <div>
+                  <label>Jenis Hak</label>
+                  <select class="w-full border rounded-lg px-3 py-2">
+                    <option>Hak Milik</option>
+                    <option>Hak Pakai</option>
+                    <option>Hak Guna Bangunan</option>
+                    <option>Hak Tanggungan</option>
+                    <option>Hak Pengelolaan</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Nomor Hak</label>
+                  <input type="text" class="w-full border rounded-lg px-3 py-2" />
+                </div>
+                <div>
+                  <label>Pilih Seksi</label>
+                  <select class="w-full border rounded-lg px-3 py-2">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>TU</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Kolom kanan -->
+              <div class="space-y-3">
+                <div>
+                  <label>Kecamatan</label>
+                  <select class="w-full border rounded-lg px-3 py-2">
+                    <option>...</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Kelurahan</label>
+                  <select class="w-full border rounded-lg px-3 py-2">
+                    <option>...</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Tanggal Peminjaman</label>
+                  <input type="date" class="w-full border rounded-lg px-3 py-2" />
+                </div>
+                <div>
+                  <label>Durasi Peminjaman</label>
+                  <select class="w-full border rounded-lg px-3 py-2">
+                    <option>1 Hari</option>
+                    <option>3 Hari</option>
+                    <option>1 Minggu</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Keperluan</label>
+                  <textarea class="w-full border rounded-lg px-3 py-2" rows="2"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="mt-6 flex justify-end gap-2">
+              <button onclick="closeModal()" class="px-4 py-2 border rounded-lg">Batalkan</button>
+              <button class="px-4 py-2 bg-sky-900 text-white rounded-lg">Simpan</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Alert Hapus-->
+        <div id="alertDelete" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+          <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <h2 class="text-lg font-semibold mb-2">Apakah Anda yakin?</h2>
+            <p class="text-gray-500 mb-6">
+              Setelah dihapus, aksi Anda tidak bisa diulang. Data akan terhapus secara permanen.
+            </p>
+            <div class="flex justify-end gap-3">
+              <button id="btnCancel" class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">
+                Batalkan
+              </button>
+              <button onclick="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                Ya, Hapus
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Edit Status-->
+        <div id="statusModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+          <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl">
+
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-xl font-semibold text-gray-800">Edit Status Peminjaman</h2>
+              <button onclick="closeStatusModal()" class="text-gray-500 hover:text-red-500 text-xl">✕</button>
+            </div>
+
+            <!-- Form Content -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Custom Dropdown -->
+              <div>
+                <div class="relative w-full max-w-md">
+                  <label class="block mb-2 text-sm font-medium text-gray-700">Ubah Status</label>
+
+                  <!-- Tombol Dropdown -->
+                  <button id="dropdownToggleButton" onclick="toggleDropdown()" class="w-full flex justify-between items-center px-4 py-3 bg-gray-100 rounded border border-gray-300 hover:bg-gray-200">
+                    <span id="selectedStatus" class="bg-green-100 text-green-800 text-sm font-semibold px-4 py-1 rounded-full">Dikembalikan</span>
+                    <svg class="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  <!-- Menu Dropdown -->
+                  <div id="statusDropdown" class="dropdown hidden absolute mt-2 w-full bg-white border rounded shadow z-50">
+                    <div onclick="selectStatus('dikembalikan')" class="cursor-pointer px-4 py-2 hover:bg-green-50">
+                      <span class="text-green-700 bg-green-100 px-3 py-1 rounded-full text-sm font-semibold">Dikembalikan</span>
+                    </div>
+                    <div onclick="selectStatus('dipinjam')" class="cursor-pointer px-4 py-2 hover:bg-yellow-50">
+                      <span class="text-yellow-700 bg-yellow-100 px-3 py-1 rounded-full text-sm font-semibold">Dipinjam</span>
+                    </div>
+                    <div onclick="selectStatus('ditolak')" class="cursor-pointer px-4 py-2 hover:bg-red-50">
+                      <span class="text-red-700 bg-red-100 px-3 py-1 rounded-full text-sm font-semibold">Ditolak</span>
+                    </div>
+                    <div onclick="selectStatus('disetujui')" class="cursor-pointer px-4 py-2 hover:bg-blue-50">
+                      <span class="text-blue-700 bg-blue-100 px-3 py-1 rounded-full text-sm font-semibold">Disetujui</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Placeholder form dinamis -->
+              <div id="statusField" class="mt-4"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-end mt-6 gap-2">
+              <button onclick="closeStatusModal()" class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100">Batalkan</button>
+              <button class="px-4 py-2 rounded bg-[#0f2c3f] text-white hover:bg-[#15425d]">Simpan</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-4 space-x-2">
+          <button class="w-8 h-8 rounded-full bg-white border">1</button>
+          <button class="w-8 h-8 rounded-full bg-white border">2</button>
+          <button class="w-8 h-8 rounded-full bg-white border">3</button>
+          <button class="w-8 h-8 rounded-full bg-white border">…</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // tabel buku tanah dan surat ukur
+      function showTable(tableName) {
+      document.getElementById('bukuTanahTable').classList.add('hidden');
+      document.getElementById('suratUkurTable').classList.add('hidden');
+      document.getElementById(`${tableName}Table`).classList.remove('hidden');
+
+      document.getElementById('btnBukuTanah').classList.remove('bg-gray-300');
+      document.getElementById('btnSuratUkur').classList.remove('bg-gray-300');
+      document.getElementById('btnBukuTanah').disabled = false;
+      document.getElementById('btnSuratUkur').disabled = false;
+
+      document.getElementById(`btn${tableName.charAt(0).toUpperCase() + tableName.slice(1)}`).classList.add('bg-gray-300');
+      document.getElementById(`btn${tableName.charAt(0).toUpperCase() + tableName.slice(1)}`).disabled = true;
+    }
+
+      showTable('bukuTanah');
+
+      function toggleDropdown(id) {
+        const el = document.getElementById(id);
+        el.classList.toggle('hidden');
+      }
+      function exportToExcel() {
+        alert(".");
+      }
+      function dropDown() {
+        const submenu = document.getElementById('submenu');
+        const arrow = document.getElementById('arrow');
+        submenu.classList.toggle('hidden');
+        arrow.classList.toggle('rotate-180');
+      }
+
+      //  Modal Edit
+      const btnEdit = document.getElementById('btnEdit');
+      const editModal = document.getElementById('editModal');
+
+      btnEdit.addEventListener('click', () => {
+        editModal.classList.remove('hidden');
+      });
+
+      function closeModal() {
+        editModal.classList.add('hidden');
+      }
+
+      // Modal Alert Hapus
+      const alertBox = document.getElementById("alertDelete");
+      const btnCancel = document.getElementById("btnCancel");
+
+      function showAlert() {
+        alertBox.classList.remove("hidden");
+      }
+
+      btnCancel.addEventListener("click", () => {
+        alertBox.classList.add("hidden");
+      });
+
+      function confirmDelete() {
+        // Aksi penghapusan
+        alert("Data berhasil dihapus.");
+        alertBox.classList.add("hidden");
+      }
+  
+      // Fungsi toggle dropdown menu titik tiga
+      function toggleMenu(button) {
+        const menu = button.nextElementSibling;
+        if (!menu) return;
+        // Tutup dropdown lain yang terbuka
+        document.querySelectorAll('.dropdown-menu').forEach(m => {
+          if (m !== menu) m.classList.add('hidden');
+        });
+        // Toggle menu ini
+        menu.classList.toggle('hidden');
+      }
+
+      // Modal Edit Status
+      function showStatusModal() {
+          document.getElementById('statusModal').classList.remove('hidden');
+          handleStatusChange(); // Reset field sesuai default select
+        }
+
+      function closeStatusModal() {
+          document.getElementById('statusModal').classList.add('hidden');
+        }
+
+      function handleStatusChange() {
+          const status = document.getElementById('statusSelect').value;
+          const field = document.getElementById('statusField');
+          field.innerHTML = '';
+
+          if (status === 'dikembalikan') {
+            field.innerHTML = `
+              <label class="block mb-2 text-sm font-medium text-gray-700">Tanggal Pengembalian</label>
+              <input type="date" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            `;
+          } else if (status === 'ditolak') {
+            field.innerHTML = `
+              <label class="block mb-2 text-sm font-medium text-gray-700">Berikan Alasan Penolakan</label>
+              <textarea class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" rows="3"></textarea>
+            `;
+          } else if (status === 'disetujui') {
+            field.innerHTML = `
+              <label class="block mb-2 text-sm font-medium text-gray-700">Tanggal Tenggat</label>
+              <input type="date" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            `;
+          }
+        }
+
+      function closeAllDropdowns() {
+        document.querySelectorAll(".dropdown").forEach(d => d.classList.add("hidden"));
+      }
+  </script>
+</body>
+</html>
