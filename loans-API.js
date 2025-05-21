@@ -69,4 +69,30 @@ module.exports = function(app) {
       });
     }
   });
+
+  // PUT untuk update status peminjaman
+  app.put('/peminjaman/:id', async (req, res) => {
+    const { id } = req.params;
+    const dataUpdate = req.body;
+
+    try {
+      await db.collection('loans').doc(id).update(dataUpdate);
+      res.status(200).json({ status: 'sukses', message: 'Data berhasil diperbarui.' });
+    } catch (err) {
+      res.status(500).json({ status: 'error', message: 'Gagal update data.' });
+    }
+  });
+
+  // DELETE permintaan berdasarkan ID
+  app.delete('/peminjaman/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      await db.collection('loans').doc(id).delete();
+      res.status(200).json({ status: 'sukses', message: 'Data berhasil dihapus.' });
+    } catch (err) {
+      res.status(500).json({ status: 'error', message: 'Gagal hapus data.' });
+    }
+  });
+
 };
