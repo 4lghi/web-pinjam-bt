@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pinjam Buku Tanah</title>
   <link href="./output.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" />
   <link href="../output.css" rel="stylesheet">
@@ -25,106 +26,229 @@
     <!-- Header -->
     <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
       <!-- Search -->
-      <div class="relative w-64">
-        <input type="text" placeholder="Search" class="w-full pl-10 pr-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400"/>
-        <i class="bi bi-search absolute left-3 top-2.5 text-gray-400"></i>
-      </div>
+          <div class="relative w-[550px]">
+              <input type="text" placeholder="Cari nama pengguna" class="w-full pl-10 pr-20 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"/>
+              
+              <!-- Ikon Search di kiri -->
+              <i class="bi bi-search absolute left-3 top-2.5 text-gray-400"></i>
+              
+              <!-- Tombol Search di kanan -->
+              <button class="h-full absolute right-[0.5px] top-[0.5px] bottom-1 px-4 bg-transparent text-black rounded-full hover:bg-slate-200 transition">
+                Search
+              </button>
+          </div>
 
       <!-- Actions -->
       <div class="flex items-center gap-3 flex-wrap">
         <!--Notifikasi-->
-        <span class="relative">
-          <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">1</span>
-          🔔
-        </span>
+        <a href="/src/notif_admin.html">
+            <span class="cursor-pointer relative">
+            <span class="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">1</span>
+              <ion-icon class="text-xl mt-2 " name="notifications"></ion-icon>
+            </span>
+        </a>
         <!-- Tambah -->
          <a href="/src/signup.html">
-            <button class="px-4 py-2 bg-teal-950 text-white rounded-lg hover:bg-teal-900">+ Tambah</button>
+            <button class="px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-teal-900">+ Tambah</button>
         </a>
         <!-- User -->
         <div class="flex items-center gap-2">
-          <i class="bi bi-person-circle text-xl"></i> <span>User</span>
+          <i class="bi bi-person-circle text-xl"></i> <span>Admin</span>
         </div>
       </div>
     </div>
 
-    <!-- Table -->
-    <div class="bg-white rounded-xl p-4 shadow">
-      <h2 class="text-xl font-semibold mb-4">Daftar Pengguna</h2>
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-sm border">
-          <thead class="bg-gray-50 text-left border-b">
-            <tr>
-              <th class="w-[7%] p-3">No</th>
-              <th class="w-[33%]p-3">Nama Seksi</th>
-              <th class="w-[35%] p-3">Role</th>
-              <th class="w-[18%] p-3">Password</th>
-              <th class="w-[7%] p-3"></th>
-            </tr>
-          </thead>
-          <tbody class="divide-y">
-            <tr>
-              <td class="p-3">1</td>
-              <td class="p-3">Ucok</td>
-              <td class="p-3">1</td>
-              <td class="p-3">M. 121</td>
-              <td class="p-3 flex justify-between">
-                <button class="hover:bg-teal-950 hover:text-white p-0.5 rounded-md cursor-pointer text-xl mx-2"><ion-icon name="trash"></ion-icon></button>
-                <button class="hover:bg-teal-950 hover:text-white p-0.5 rounded-md cursor-pointer text-xl mx-2"><ion-icon name="pencil"></ion-icon></button>
-              </td>
-              <tbody class="divide-y">
-            <tr>
-          </tbody>
-          <tbody class="divide-y">
-            <tr>
-              <td class="p-3">1</td>
-              <td class="p-3">Ucok</td>
-              <td class="p-3">1</td>
-              <td class="p-3">M. 121</td>
-              <td class="p-3 flex justify-between">
-                <button class="hover:bg-teal-950 hover:text-white p-0.5 rounded-md cursor-pointer text-xl mx-2"><ion-icon name="trash"></ion-icon></button>
-                <button class="hover:bg-teal-950 hover:text-white p-0.5 rounded-md cursor-pointer text-xl mx-2"><ion-icon name="pencil"></ion-icon></button>
-              </td>
-              <tbody class="divide-y">
-            <tr>
-          </tbody>
-        </table>
+    <!-- Modal Alert Hapus-->
+        <div id="alertDelete" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+          <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <h2 class="text-lg font-semibold mb-2">Apakah Anda yakin?</h2>
+            <p class="text-gray-500 mb-6">
+              Setelah dihapus, aksi Anda tidak bisa diulang. Data akan terhapus secara permanen.
+            </p>
+            <div class="flex justify-end gap-3">
+              <button id="btnCancel" class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">
+                Batalkan
+              </button>
+              <button onclick="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                Ya, Hapus
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Alert Logout -->
+      <div id="alertLogout" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+          <h2 class="text-lg font-semibold mb-2">Apakah Anda yakin ingin logout?</h2>
+          <p class="text-gray-500 mb-6">
+            Setelah logout, Anda perlu login kembali untuk mengakses akun Anda.        </p>
+          <div class="flex justify-end gap-3">
+            <button id="btnCancel1" class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">
+              Batalkan
+            </button>
+            <button id="btnConfirm" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+              Ya, Logout
+            </button>
+          </div>
+        </div>
       </div>
 
-      <!-- Pagination -->
-      <div class="flex justify-center mt-6 gap-2">
-        <button class="w-8 h-8 rounded-full bg-white border hover:bg-gray-100">1</button>
-        <button class="w-8 h-8 rounded-full bg-white border hover:bg-gray-100">2</button>
-        <button class="w-8 h-8 rounded-full bg-white border hover:bg-gray-100">3</button>
-        <button class="w-8 h-8 rounded-full bg-white border hover:bg-gray-100">…</button>
-      </div>
+
+      <!-- Modal Form Edit -->
+        <div id="editModal" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center hidden z-50">
+          <div class="bg-white w-full max-w-4xl p-6 rounded-lg shadow-lg">
+            <h2 class="text-xl font-semibold mb-4">Edit Pengguna</h2>
+
+            <!-- Form -->
+            <div class="h-fit overflow-y-auto">
+              <!-- Kolom kiri -->
+              <div class="space-y-3">
+                <div>
+                  <label>Nama Seksi</label>
+                  <select class="w-full border rounded-lg px-3 py-2">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>TU</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Role</label>
+                  <select class="w-full border rounded-lg px-3 py-2">
+                    <option>User</option>
+                    <option>Admin</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Password</label>
+                  <input type="text" class="w-full border rounded-lg px-3 py-2" />
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="mt-6 flex justify-end gap-2">
+              <button onclick="closeModal()" class="px-4 py-2 border rounded-lg">Batalkan</button>
+              <button class="px-4 py-2 bg-sky-900 text-white rounded-lg">Simpan</button>
+            </div>
+          </div>
+        </div>
+
+    <!-- Table -->
+    <div id="bukuTanahTable" class="overflow-x-auto">
+      <table class="min-w-full border rounded-xl overflow-hidden">
+        <thead class="bg-white text-gray-800">
+          <tr class="border border-gray-300">
+            <th class="px-4 py-2 text-left">No</th>
+            <th class="px-4 py-2 text-left">Nama Seksi</th>
+            <th class="px-4 py-2 text-left">Role</th>
+            <th class="px-4 py-2 text-left">Password</th>
+            <th class="px-4 py-2 text-left"></th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-300">
+          <script>
+            const dataBukuTanah = [
+              ["TU", "User", "TU123", ""],
+              [1, "User", "1123", ""],
+              [2, "User", "2123", ""],
+              [3, "User", "3123", ""],
+              [4, "User", "4123", ""],
+              [5, "User", "5123", ""],
+              ["", "Admin", "admin123", ""],
+            ];
+
+            function renderRow(data, index) {
+              const statusClass = {
+                "Ditolak": "bg-red-100 text-red-700",
+                "Diterima": "bg-green-100 text-green-700",
+                "Menunggu": "bg-yellow-100 text-yellow-700"
+              }[data[8]];
+
+              return `
+                <tr>
+                  <td class="px-4 py-2">${index + 1}</td>
+                  <td class="px-4 py-2">${data[0]}</td>
+                  <td class="px-4 py-2">${data[1]}</td>
+                  <td class="px-4 py-2">${data[2]}</td>
+                  <td class="flex px-4 gap-2 py-2">${data[3]}
+                    <button onclick="showAlert()">
+                      <span class="hover:bg-teal-950 hover:text-white p-0.5 rounded-md cursor-pointer text-xl mx-2"><ion-icon name="trash"></ion-icon></span>
+                    </button>
+                    <button id="btnEdit">
+                      <span class="hover:bg-teal-950 hover:text-white p-0.5 rounded-md cursor-pointer text-xl mx-2"><ion-icon name="pencil"></ion-icon></span>
+                    </button>
+                  </td>
+
+                </tr>
+              `;
+            }
+
+            document.write(dataBukuTanah.map(renderRow).join(""));
+          </script>
+        </tbody>
+      </table>
     </div>
   </main>
 </div>
 
 <script>
-//   function dropDown() {
-//     document.getElementById('submenu').classList.toggle('hidden');
-//     document.getElementById('arrow').classList.toggle('rotate-180');
-//   }
+  // Modal Alert logout
+      const alertBox1 = document.getElementById("alertLogout");
+      const btnCancel1 = document.getElementById("btnCancel1");
 
-//   function dropDown1() {
-//     document.getElementById('submenu1').classList.toggle('hidden');
-//     document.getElementById('arrow1').classList.toggle('rotate-180');
-//   }
+      function showAlertLogout() {
+        alertBox1.classList.remove("hidden");
+      }
 
-//   function toggleDropdown(id) {
-//     document.getElementById(id).classList.toggle('hidden');
-//   }
+      btnCancel1.addEventListener("click", () => {
+        alertBox1.classList.add("hidden");
+      });
 
-//   function exportToExcel() {
-//     alert("Fitur Export belum diaktifkan.");
-//   }
+      btnConfirm.addEventListener("click", () => {
+      alertBox1.classList.add("hidden");
+      // Arahkan ke halaman login
+      window.location.href = "login.html"; 
+      });
+
     fetch('sidebar_admin.html')
       .then(response => response.text())
       .then(data => {
         document.getElementById('sidebar').innerHTML = data;
       });
+
+    //  Modal Edit
+      const btnEdit = document.getElementById('btnEdit');
+      const editModal = document.getElementById('editModal');
+
+      btnEdit.addEventListener('click', () => {
+        editModal.classList.remove('hidden');
+      });
+
+      function closeModal() {
+        editModal.classList.add('hidden');
+      }
+
+      // Modal Alert Hapus
+      const alertBox = document.getElementById("alertDelete");
+      const btnCancel = document.getElementById("btnCancel");
+
+      function showAlert() {
+        alertBox.classList.remove("hidden");
+      }
+
+      btnCancel.addEventListener("click", () => {
+        alertBox.classList.add("hidden");
+      });
+
+      function confirmDelete() {
+        // Aksi penghapusan
+        alert("Data berhasil dihapus.");
+        alertBox.classList.add("hidden");
+      }
 </script>
 
 </body>

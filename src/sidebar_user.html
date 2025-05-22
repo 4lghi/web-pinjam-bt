@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dasboard</title>
     <link href="./output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 </head>
@@ -13,9 +14,10 @@
   <div class="flex min-h-screen">
     <!-- Sidebar -->
     <aside class="sidebar fixed top-0 bottom-0 left-0 w-60 bg-[#bfdbf7] text-black h-screen rounded-tr-3xl flex flex-col">
-      <div class="text-center mt-4">
-        <h1 class="text-xl font-bold">Pinjam BT/SU</h1>
-      </div>
+      <a href="dasboard_user.html" class="text-center mt-4">
+        <!-- Gambar Logo -->
+        <img src="asset/logo.png" alt="Logo Pinjam BT/SU" class="mx-auto h-32 w-auto mb-2" />
+      </a>
 
       <nav class="flex flex-col text-sm font-medium mt-10 px-4">
         <a href="dasboard_user.html" class="flex items-center p-2 rounded-md hover:bg-[#022B3A] hover:text-white">
@@ -53,95 +55,52 @@
           </div> -->
         </div>
         
-        <a href="login.html" class="flex items-center p-2 rounded-md hover:bg-[#022B3A] hover:text-white">
+        <!-- Tombol Logout -->
+        <button onclick="showAlertLogout()" class="mt-40 flex items-center p-2 rounded-md hover:bg-[#022B3A] hover:text-white">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 30">
             <path fill="currentColor" d="M24.7917 11.6667L22.7354 13.7229L25.0396 16.0417H13.125V18.9583H25.0396L22.7354 21.2625L24.7917 23.3333L30.625 17.5L24.7917 11.6667ZM7.29167 7.29167H17.5V4.375H7.29167C5.6875 4.375 4.375 5.6875 4.375 7.29167V27.7083C4.375 29.3125 5.6875 30.625 7.29167 30.625H17.5V27.7083H7.29167V7.29167Z" />
           </svg>
           <span class="ml-4 font-semibold">Logout</span>
-        </a>
+        </button>
       </nav>
     </aside>
 
-  <!-- <script>
-    function dropDown() {
-      document.querySelector('#submenu').classList.toggle('hidden');
-      document.querySelector('#arrow').classList.toggle('rotate-180');
-    }
-
-    function dropDown1() {
-      document.querySelector('#submenu1').classList.toggle('hidden');
-      document.querySelector('#arrow1').classList.toggle('rotate-180');
-    }
-  </script> -->
-
-    <!-- Main Content -->
-    <!-- <main class="flex-1 p-6 bg-gray-50 min-h-screen ml-60"> -->
-      <!-- Header -->
-      <!-- <div class="flex justify-end items-center gap-4 mb-6">
-        <button class="text-2xl hover:text-gray-600 transition">🔔</button>
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 bg-gray-300 rounded-full"></div>
-          <span class="font-semibold text-gray-800">Admin</span>
-        </div>
-      </div> -->
-
-      <!-- Summary Cards -->
-      <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div class="flex items-center gap-4 bg-yellow-100 p-6 rounded-lg shadow">
-          <div class="text-yellow-800 text-3xl">⚠️</div>
-          <div>
-            <div class="text-gray-700">Terlambat</div>
-            <div class="text-2xl font-bold">10</div>
-          </div>
-        </div>
-        <div class="flex items-center gap-4 bg-red-100 p-6 rounded-lg shadow">
-          <div class="text-red-800 text-3xl">❌</div>
-          <div>
-            <div class="text-gray-700">Belum Dikembalikan</div>
-            <div class="text-2xl font-bold">10</div>
-          </div>
-        </div>
-      </div> -->
-
-      <!-- Tabel Peminjaman -->
-      <!-- <div class="bg-white rounded-lg shadow border">
-        <div class="p-4 font-semibold text-lg border-b text-gray-800">Daftar Peminjaman Belum Dikembalikan</div>
-        <div class="p-4">
-          <input
-            type="text"
-            placeholder="Cari nama peminjam atau nomor dokumen..."
-            class="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
-          />
-          <div class="overflow-auto">
-            <table class="min-w-full text-sm text-left border border-gray-200">
-              <thead>
-                <tr class="bg-gray-100 border-b text-gray-700">
-                  <th class="p-2 font-medium">No</th>
-                  <th class="p-2 font-medium">Nama Peminjam</th>
-                  <th class="p-2 font-medium">Seksi</th>
-                  <th class="p-2 font-medium">No. M/B/P/HPL/HT</th>
-                  <th class="p-2 font-medium">Kelurahan</th>
-                  <th class="p-2 font-medium">Tgl Pinjam</th>
-                  <th class="p-2 font-medium">Tgl Tenggat</th>
-                </tr>
-              </thead>
-              <tbody class="text-gray-700">
-                <tr class="border-t hover:bg-gray-50 transition">
-                  <td class="p-2">1</td>
-                  <td class="p-2">Ucok</td>
-                  <td class="p-2">1</td>
-                  <td class="p-2">M. 121</td>
-                  <td class="p-2">Binjai</td>
-                  <td class="p-2">12/03/2025</td>
-                  <td class="p-2">14/03/2025</td>
-                </tr> -->
-                <!-- Tambahkan baris lain di sini -->
-              <!-- </tbody>
-            </table>
-          </div>
+    <!-- Modal Alert Logout -->
+    <div id="alertLogout" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+      <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+        <h2 class="text-lg font-semibold mb-2">Apakah Anda yakin ingin logout?</h2>
+        <p class="text-gray-500 mb-6">
+          Setelah logout, Anda perlu login kembali untuk mengakses akun Anda.        </p>
+        <div class="flex justify-end gap-3">
+          <button id="btnCancel" class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">
+            Batalkan
+          </button>
+          <button id="btnConfirm" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+            Ya, Logout
+          </button>
         </div>
       </div>
-    </main> -->
+    </div>
   </div>
 </body>
+
+<script>
+  // Modal Alert logout
+      const alertBox = document.getElementById("alertLogout");
+      const btnCancel = document.getElementById("btnCancel");
+
+      function showAlertLogout() {
+        alertBox.classList.remove("hidden");
+      }
+
+      btnCancel.addEventListener("click", () => {
+        alertBox.classList.add("hidden");
+      });
+
+      btnConfirm.addEventListener("click", () => {
+      alertBox.classList.add("hidden");
+      // Arahkan ke halaman login
+      window.location.href = "login.html"; 
+      });
+</script>
 </html>

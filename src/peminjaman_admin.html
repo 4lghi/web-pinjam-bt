@@ -4,12 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daftar Peminjaman</title>
-  <link href="./output.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+  <link href="./output.css" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" />
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
-<body class="font-sans bg-white text-sm">
+<body class="font-sans bg-gray-100 text-sm text-gray-800">
   <div class="flex min-h-screen">
     <!-- Sidebar -->
     <div id="sidebar"></div>
@@ -36,20 +38,35 @@
       <!-- Header -->
       <div class="flex justify-between items-center mb-6">
         <!-- Search -->
-          <div class="relative w-64">
-            <input type="text" placeholder="Search" class="w-full pl-10 pr-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400"/>
-            <i class="bi bi-search absolute left-3 top-2.5 text-gray-400"></i>
+          <div class="relative w-[550px]">
+              <input type="text" placeholder="Cari peminjaman" class="w-full pl-10 pr-20 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"/>
+              
+              <!-- Ikon Search di kiri -->
+              <i class="bi bi-search absolute left-3 top-2.5 text-gray-400"></i>
+              
+              <!-- Tombol Search di kanan -->
+              <button class="h-full absolute right-[0.5px] top-[0.5px] bottom-1 px-4 bg-transparent text-black rounded-full hover:bg-slate-200 transition">
+                Search
+              </button>
           </div>
         <div class="flex items-center gap-4">
-          <!--Notifikasi-->
-          <span class="relative">
-          <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">1</span>
-          🔔
+        <!--Notifikasi-->
+        <a href="/src/notif_admin.html">
+          <span class="cursor-pointer relative">
+            <span class="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">1</span>
+              <ion-icon class="text-xl mt-2 " name="notifications"></ion-icon>
           </span>
+        </a>
           <!-- Filter Dropdown -->
           <div class="relative">
-            <button onclick="toggleDropdown('filterDropdown')" class="px-4 py-2 bg-white border rounded-lg flex items-center gap-2">⚙️ Filter</button>
-            <div id="filterDropdown" class="hidden absolute z-10 mt-2 w-48 bg-white shadow rounded">
+            <button onclick="toggleDropdown1('filterDropdown')">
+              <div class="cursor-pointer rounded-lg flex items-center gap-2 mt-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M14 12v7.88c.04.3-.06.62-.29.83a.996.996 0 0 1-1.41 0l-2.01-2.01a.99.99 0 0 1-.29-.83V12h-.03L4.21 4.62a1 1 0 0 1 .17-1.4c.19-.14.4-.22.62-.22h14c.22 0 .43.08.62.22a1 1 0 0 1 .17 1.4L14.03 12z" />
+                </svg>
+              </div>
+            </button>
+            <div id="filterDropdown" class="hidden absolute left-1/2 transform -translate-x-1/2 z-10 mt- w-32 bg-white shadow rounded">
             <ul class="text-sm text-gray-700">
                 <li>
                 <label class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
@@ -106,13 +123,19 @@
                 <!-- Header -->
                 <div class="flex justify-between items-start mb-4">
                 <h2 class="text-xl font-semibold">Tambah Peminjaman</h2>
-                <button onclick="closeModal()" class="text-gray-700 text-xl">&times;</button>
                 </div>
 
                 <!-- Form -->
                 <div class="grid grid-cols-2 gap-4">
                 <!-- Kolom kiri -->
                 <div class="space-y-3">
+                    <div>
+                    <label>Jenis Peminjaman</label>
+                      <select class="w-full border rounded-lg px-3 py-2">
+                        <option>Buku Tanah</option>
+                        <option>Surat Ukur</option>
+                      </select>
+                    </div>
                     <div>
                     <label>Nama Peminjam</label>
                     <input type="text" class="w-full border rounded-lg px-3 py-2" />
@@ -121,8 +144,9 @@
                     <label>Jenis Hak</label>
                     <select class="w-full border rounded-lg px-3 py-2">
                         <option>Hak Milik</option>
-                        <option>Hak Pakai</option>
                         <option>Hak Guna Bangunan</option>
+                        <option>Hak Pakai</option>
+                        <option>Hak Wakaf</option>
                         <option>Hak Tanggungan</option>
                         <option>Hak Pengelolaan</option>
                     </select>
@@ -179,33 +203,39 @@
 
                 <!-- Tombol Aksi -->
                 <div class="mt-6 flex justify-end gap-2">
-                <button onclick="closeModal()" class="px-4 py-2 border rounded-lg">Batalkan</button>
+                <button onclick="closeModalForm()" class="px-4 py-2 border rounded-lg">Batalkan</button>
                 <button class="px-4 py-2 bg-sky-900 text-white rounded-lg">Simpan</button>
                 </div>
             </div>
             </div>
 
-            <!-- Script -->
-            <script>
-            function openModal() {
-                document.getElementById("modal").classList.remove("hidden");
-            }
-
-            function closeModal() {
-                document.getElementById("modal").classList.add("hidden");
-            }
-            </script>
-
           <div class="flex items-center gap-2">
-            <span>👤</span> <span>User</span>
+            <i class="bi bi-person-circle text-xl"></i> <span>Admin</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Alert Logout -->
+      <div id="alertLogout" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+          <h2 class="text-lg font-semibold mb-2">Apakah Anda yakin ingin logout?</h2>
+          <p class="text-gray-500 mb-6">
+            Setelah logout, Anda perlu login kembali untuk mengakses akun Anda.        </p>
+          <div class="flex justify-end gap-3">
+            <button id="btnCancel1" class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">
+              Batalkan
+            </button>
+            <button id="btnConfirm" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+              Ya, Logout
+            </button>
           </div>
         </div>
       </div>
 
         <!-- Tombol Tab -->
         <div class="flex space-x-2 mb-4">
-          <button onclick="showTable('bukuTanah')" id="btnBukuTanah" class="px-4 py-2 bg-white text-gray-800 border rounded-xl shadow">Buku Tanah</button>
-          <button onclick="showTable('suratUkur')" id="btnSuratUkur" class="px-4 py-2 bg-white text-gray-800 border rounded-xl shadow">Surat Ukur</button>
+          <button onclick="showTable('bukuTanah')" id="btnBukuTanah" class="px-4 py-2 bg-white text-gray-800 hover:bg-[#022B3A] hover:text-white cursor-pointer rounded-xl shadow font-semibold">Buku Tanah</button>
+          <button onclick="showTable('suratUkur')" id="btnSuratUkur" class="px-4 py-2 bg-white text-gray-800 hover:bg-[#022B3A] hover:text-white cursor-pointer rounded-xl shadow font-semibold">Surat Ukur</button>
         </div>
 
         <!-- Tabel Buku Tanah -->
@@ -371,8 +401,9 @@
                   <label>Jenis Hak</label>
                   <select class="w-full border rounded-lg px-3 py-2">
                     <option>Hak Milik</option>
-                    <option>Hak Pakai</option>
                     <option>Hak Guna Bangunan</option>
+                    <option>Hak Pakai</option>
+                    <option>Hak Wakaf</option>
                     <option>Hak Tanggungan</option>
                     <option>Hak Pengelolaan</option>
                   </select>
@@ -429,7 +460,7 @@
 
             <!-- Tombol Aksi -->
             <div class="mt-6 flex justify-end gap-2">
-              <button onclick="closeModal()" class="px-4 py-2 border rounded-lg">Batalkan</button>
+              <button onclick="closeModalEdit()" class="px-4 py-2 border rounded-lg">Batalkan</button>
               <button class="px-4 py-2 bg-sky-900 text-white rounded-lg">Simpan</button>
             </div>
           </div>
@@ -520,27 +551,59 @@
   </div>
 
   <script>
+    // Modal Alert logout
+      const alertBox1 = document.getElementById("alertLogout");
+      const btnCancel1 = document.getElementById("btnCancel1");
+
+      function showAlertLogout() {
+        alertBox1.classList.remove("hidden");
+      }
+
+      btnCancel1.addEventListener("click", () => {
+        alertBox1.classList.add("hidden");
+      });
+
+      btnConfirm.addEventListener("click", () => {
+      alertBox1.classList.add("hidden");
+      // Arahkan ke halaman login
+      window.location.href = "login.html"; 
+      });
+
     // tabel buku tanah dan surat ukur
-      function showTable(tableName) {
+    function showTable(tableName) {
       document.getElementById('bukuTanahTable').classList.add('hidden');
       document.getElementById('suratUkurTable').classList.add('hidden');
       document.getElementById(`${tableName}Table`).classList.remove('hidden');
 
-      document.getElementById('btnBukuTanah').classList.remove('bg-gray-300');
-      document.getElementById('btnSuratUkur').classList.remove('bg-gray-300');
+      document.getElementById('btnBukuTanah').classList.remove('bg-[#022B3A]');
+      document.getElementById('btnBukuTanah').classList.remove('text-[#ffffff]');
+      document.getElementById('btnSuratUkur').classList.remove('bg-[#022B3A]');
+      document.getElementById('btnSuratUkur').classList.remove('text-[#ffffff]');
       document.getElementById('btnBukuTanah').disabled = false;
       document.getElementById('btnSuratUkur').disabled = false;
 
-      document.getElementById(`btn${tableName.charAt(0).toUpperCase() + tableName.slice(1)}`).classList.add('bg-gray-300');
+      document.getElementById(`btn${tableName.charAt(0).toUpperCase() + tableName.slice(1)}`).classList.add('bg-[#022B3A]');
+      document.getElementById(`btn${tableName.charAt(0).toUpperCase() + tableName.slice(1)}`).classList.add('text-[#ffffff]');
       document.getElementById(`btn${tableName.charAt(0).toUpperCase() + tableName.slice(1)}`).disabled = true;
     }
 
       showTable('bukuTanah');
 
-      function toggleDropdown(id) {
-        const el = document.getElementById(id);
-        el.classList.toggle('hidden');
+      function dropDown() {
+        document.querySelector("#submenu").classList.toggle("hidden");
+        document.querySelector("#arrow").classList.toggle("rotate-180");
       }
+
+      function dropDown1() {
+        document.querySelector("#submenu1").classList.toggle("hidden");
+        document.querySelector("#arrow1").classList.toggle("rotate-180");
+      }
+
+      function toggleDropdown1(id) {
+        const el = document.getElementById(id);
+        el.classList.toggle("hidden");
+      }
+
       function exportToExcel() {
         alert(".");
       }
@@ -551,7 +614,16 @@
         arrow.classList.toggle('rotate-180');
       }
 
-      //  Modal Edit
+      // Modal Tambah
+      function openModal() {
+        document.getElementById("modal").classList.remove("hidden");
+      }
+
+      function closeModalForm() {
+        document.getElementById("modal").classList.add("hidden");
+      }
+
+      // Modal Edit
       const btnEdit = document.getElementById('btnEdit');
       const editModal = document.getElementById('editModal');
 
@@ -559,9 +631,13 @@
         editModal.classList.remove('hidden');
       });
 
-      function closeModal() {
+      function closeModalEdit() {
         editModal.classList.add('hidden');
       }
+
+      // Kalau dipakai dalam HTML inline onclick
+      window.closeModalForm = closeModalForm;
+      window.closeModalEdit = closeModalEdit;    
 
       // Modal Alert Hapus
       const alertBox = document.getElementById("alertDelete");
@@ -594,6 +670,11 @@
       }
 
       // Modal Edit Status
+      function toggleDropdown() {
+        const dropdown = document.getElementById('statusDropdown');
+        dropdown.classList.toggle('hidden');
+      }
+
       function showStatusModal() {
           document.getElementById('statusModal').classList.remove('hidden');
           handleStatusChange(); // Reset field sesuai default select
@@ -603,32 +684,58 @@
           document.getElementById('statusModal').classList.add('hidden');
         }
 
-      function handleStatusChange() {
-          const status = document.getElementById('statusSelect').value;
-          const field = document.getElementById('statusField');
-          field.innerHTML = '';
+        function handleStatusChange() {
+        const status = document.getElementById('selectedStatus').textContent.toLowerCase();
+        const field = document.getElementById('statusField');
+        field.innerHTML = '';
 
-          if (status === 'dikembalikan') {
-            field.innerHTML = `
-              <label class="block mb-2 text-sm font-medium text-gray-700">Tanggal Pengembalian</label>
-              <input type="date" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
-            `;
-          } else if (status === 'ditolak') {
-            field.innerHTML = `
-              <label class="block mb-2 text-sm font-medium text-gray-700">Berikan Alasan Penolakan</label>
-              <textarea class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" rows="3"></textarea>
-            `;
-          } else if (status === 'disetujui') {
-            field.innerHTML = `
-              <label class="block mb-2 text-sm font-medium text-gray-700">Tanggal Tenggat</label>
-              <input type="date" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
-            `;
-          }
+        if (status === 'dikembalikan') {
+          field.innerHTML = `
+            <label class="block mb-2 text-sm font-medium text-gray-700">Tanggal Pengembalian</label>
+            <input type="date" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          `;
+        } else if (status === 'ditolak') {
+          field.innerHTML = `
+            <label class="block mb-2 text-sm font-medium text-gray-700">Berikan Alasan Penolakan</label>
+            <textarea class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" rows="3"></textarea>
+          `;
+        } else if (status === 'disetujui') {
+          field.innerHTML = `
+            <label class="block mb-2 text-sm font-medium text-gray-700">Tanggal Tenggat</label>
+            <input type="date" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          `;
         }
-
-      function closeAllDropdowns() {
-        document.querySelectorAll(".dropdown").forEach(d => d.classList.add("hidden"));
       }
+
+      function selectStatus(status) {
+      const selectedStatus = document.getElementById('selectedStatus');
+      const dropdown = document.getElementById('statusDropdown');
+
+      // Update isi dan style
+      if (status === 'dikembalikan') {
+        selectedStatus.textContent = 'Dikembalikan';
+        selectedStatus.className = 'bg-green-100 text-green-800 text-sm font-semibold px-4 py-1 rounded-full';
+      } else if (status === 'dipinjam') {
+        selectedStatus.textContent = 'Dipinjam';
+        selectedStatus.className = 'bg-yellow-100 text-yellow-700 text-sm font-semibold px-4 py-1 rounded-full';
+      } else if (status === 'ditolak') {
+        selectedStatus.textContent = 'Ditolak';
+        selectedStatus.className = 'bg-red-100 text-red-700 text-sm font-semibold px-4 py-1 rounded-full';
+      } else if (status === 'disetujui') {
+        selectedStatus.textContent = 'Disetujui';
+        selectedStatus.className = 'bg-blue-100 text-blue-700 text-sm font-semibold px-4 py-1 rounded-full';
+      }
+
+      // Tutup dropdown
+      dropdown.classList.add('hidden');
+
+      // Update field dinamis
+      handleStatusChange();
+    }
+
+      // function closeAllDropdowns() {
+      //   document.querySelectorAll(".dropdown").forEach(d => d.classList.add("hidden"));
+      // }
   </script>
 </body>
 </html>
