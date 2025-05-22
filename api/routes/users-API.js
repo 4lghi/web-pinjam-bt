@@ -1,5 +1,5 @@
 module.exports = function (app) {
-  const { db, admin } = require("./firebase");
+  const { db, admin } = require("../firebase");
 
   // GET semua user
   app.get("/users", async (req, res) => {
