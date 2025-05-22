@@ -18,6 +18,7 @@
   "homepage": "https://github.com/4lghi/web-pinjam-bt#readme",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "firebase-admin": "^13.4.0"
   }

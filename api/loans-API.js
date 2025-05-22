@@ -6,15 +6,15 @@ module.exports = function(app) {
     const data = req.body;
     console.log('Data diterima:', data);
 
-    if (!data.nomorHak || !data.namaPeminjam) {
+    if (!data.namaPeminjam) {
       return res.status(400).json({
         status: 'error',
         message: 'Data tidak lengkap!'
       });
-    }4
+    }
 
     const docData = {
-      userId: data.userId,
+      userId: data.userId || "",
       namaPeminjam: data.namaPeminjam,
       status: 'menunggu persetujuan',
       dateRequested: admin.firestore.Timestamp.now(),
