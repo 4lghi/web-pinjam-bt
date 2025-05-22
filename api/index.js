@@ -10,6 +10,9 @@ app.use(express.json());
 // Import endpoint loans
 require('./loans-API')(app);
 
+// Import endpoint users
+require('./users-API')(app);
+
 app.listen(port, () => {
   console.log(`Server Express jalan di http://localhost:${port}`);
 });

@@ -1,8 +1,8 @@
 module.exports = function(app) {
   const { admin, db } = require('./firebase');
 
-  // Endpoint POST /pinjam-buku
-  app.post('/pinjam-buku', async (req, res) => {
+  // Endpoint POST /peminjaman
+  app.post('/peminjaman', async (req, res) => {
     const data = req.body;
     console.log('Data diterima:', data);
 

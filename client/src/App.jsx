@@ -8,7 +8,7 @@ function App() {
     console.log("Data dikirim:", { nama});
 
     // Contoh POST ke backend
-    fetch("http://localhost:3000/pinjam-buku", {
+    fetch("http://localhost:3000/peminjaman", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
