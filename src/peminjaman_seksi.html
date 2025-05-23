@@ -243,7 +243,6 @@
           <tr class="border border-gray-300">
             <th class="px-4 py-2 text-left">No</th>
             <th class="px-4 py-2 text-left">Nama Peminjam</th>
-            <th class="px-4 py-2 text-left">Seksi</th>
             <th class="px-4 py-2 text-left">Jenis Hak</th>
             <th class="px-4 py-2 text-left">Nomor Hak</th>
             <th class="px-4 py-2 text-left">Kecamatan</th>
@@ -257,12 +256,12 @@
         <tbody class="bg-white divide-y divide-gray-300">
           <script>
             const dataBukuTanah = [
-              ["Ucok", 1, "HGB", 121, "Medan Sunggal", "Binjai", "12/03/2025", "3 Hari", "Ditolak", "Data tidak lengkap"],
-              ["Ani", 2, "HM", 212, "Medan Baru", "Suka Maju", "10/03/2025", "2 Hari", "Diterima", "Siap diambil"],
-              ["Budi", 3, "HW", 111, "Medan Tembung", "Sari Rejo", "08/03/2025", "4 Hari", "Menunggu", "Sedang diproses"],
-              ["Citra", 4, "HGB", 433, "Medan Denai", "Teladan", "07/03/2025", "1 Hari", "Diterima", "Akan dikonfirmasi"],
-              ["Doni", 5, "HM", 500, "Medan Timur", "Pahlawan", "05/03/2025", "3 Hari", "Ditolak", "Berkas tidak sah"],
-              ["Eka", "Tu", "HW", 777, "Medan Helvetia", "Padang Bulan", "04/03/2025", "2 Hari", "Menunggu", "Masih diverifikasi"],
+              ["Ucok", "HGB", 121, "Medan Sunggal", "Binjai", "12/03/2025", "3 Hari", "Ditolak", "Data tidak lengkap"],
+              ["Ani", "HM", 212, "Medan Baru", "Suka Maju", "10/03/2025", "2 Hari", "Diterima", "Siap diambil"],
+              ["Budi", "HW", 111, "Medan Tembung", "Sari Rejo", "08/03/2025", "4 Hari", "Menunggu", "Sedang diproses"],
+              ["Citra", "HGB", 433, "Medan Denai", "Teladan", "07/03/2025", "1 Hari", "Diterima", "Akan dikonfirmasi"],
+              ["Doni", "HM", 500, "Medan Timur", "Pahlawan", "05/03/2025", "3 Hari", "Ditolak", "Berkas tidak sah"],
+              ["Eka", "HW", 777, "Medan Helvetia", "Padang Bulan", "04/03/2025", "2 Hari", "Menunggu", "Masih diverifikasi"],
             ];
 
             function renderRow(data, index) {
@@ -282,12 +281,11 @@
                   <td class="px-4 py-2">${data[4]}</td>
                   <td class="px-4 py-2">${data[5]}</td>
                   <td class="px-4 py-2">${data[6]}</td>
-                  <td class="px-4 py-2">${data[7]}</td>
                   <td class="px-4 py-2">
-                    <span class="px-2 py-1 rounded-full text-sm ${statusClass}">${data[8]}</span>
+                    <span class="px-2 py-1 rounded-full text-sm ${statusClass}">${data[7]}</span>
                   </td>
                   <td class="px-4 py-2">
-                    <button onclick="alert('${data[9]}')" class="text-lg font-bold">!</button>
+                    <button onclick="alert('${data[8]}')" class="text-lg font-bold">!</button>
                   </td>
                 </tr>
               `;
@@ -306,7 +304,6 @@
           <tr class="border border-gray-300">
             <th class="px-4 py-2 text-left">No</th>
             <th class="px-4 py-2 text-left">Nama Peminjam</th>
-            <th class="px-4 py-2 text-left">Seksi</th>
             <th class="px-4 py-2 text-left">Jenis Hak</th>
             <th class="px-4 py-2 text-left">Nomor Hak</th>
             <th class="px-4 py-2 text-left">Kecamatan</th>
@@ -320,12 +317,12 @@
         <tbody class="bg-white divide-y divide-gray-300">
           <script>
             const dataSuratUkur = [
-              ["Fina", 1, "HM", 901, "Binjai", "Kwala Begumit", "13/03/2025", "3 Hari", "Diterima", "Boleh diambil"],
-              ["Gilang", 2, "HGB", 832, "Binjai", "Tandam Hulu", "11/03/2025", "1 Hari", "Menunggu", "Dalam pengecekan"],
-              ["Hani", 3, "HW", 412, "Binjai", "Tandam Hilir", "10/03/2025", "2 Hari", "Ditolak", "Tidak sesuai prosedur"],
-              ["Indra", 4, "HM", 744, "Binjai", "Sumber Karya", "09/03/2025", "3 Hari", "Menunggu", "Belum diverifikasi"],
-              ["Joko", 5, "HGB", 501, "Binjai", "Kwala Mencirim", "07/03/2025", "2 Hari", "Diterima", "Sudah dikonfirmasi"],
-              ["Kiki", "Tu", "HW", 266, "Binjai", "Suka Damai", "06/03/2025", "1 Hari", "Ditolak", "Berkas rusak"],
+              ["Fina", "HM", 901, "Binjai", "Kwala Begumit", "13/03/2025", "3 Hari", "Diterima", "Boleh diambil"],
+              ["Gilang", "HGB", 832, "Binjai", "Tandam Hulu", "11/03/2025", "1 Hari", "Menunggu", "Dalam pengecekan"],
+              ["Hani", "HW", 412, "Binjai", "Tandam Hilir", "10/03/2025", "2 Hari", "Ditolak", "Tidak sesuai prosedur"],
+              ["Indra", "HM", 744, "Binjai", "Sumber Karya", "09/03/2025", "3 Hari", "Menunggu", "Belum diverifikasi"],
+              ["Joko", "HGB", 501, "Binjai", "Kwala Mencirim", "07/03/2025", "2 Hari", "Diterima", "Sudah dikonfirmasi"],
+              ["Kiki", "HW", 266, "Binjai", "Suka Damai", "06/03/2025", "1 Hari", "Ditolak", "Berkas rusak"],
             ];
 
             document.write(dataSuratUkur.map(renderRow).join(""));
