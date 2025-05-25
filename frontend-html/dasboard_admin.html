@@ -1,89 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dasboard</title>
     <link href="./output.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" />
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
-</head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
+    />
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+  </head>
   <body class="font-sans bg-gray-100 text-sm">
+    <div class="flex min-h-screen">
+      <div id="sidebar"></div>
 
-  <div class="flex min-h-screen">
-  <div id="sidebar"></div>
-
-    <!-- Main Content -->
-    <main class="flex-1 p-6 bg-gray-100 min-h-screen ml-60">
-      <!-- Header -->
+      <!-- Main Content -->
+      <main class="flex-1 p-6 bg-gray-100 min-h-screen ml-60">
+        <!-- Header -->
         <div class="flex items-center justify-between gap-4 mb-6">
           <h1 class="text-xl font-bold">Pinjam BT/SU</h1>
-            <div class="flex items-center space-x-4">
-              <!--Notifikasi-->
-              <a href="/src/notif_user.html">
-                <span class="cursor-pointer relative">
-                <span class="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">1</span>
-                  <ion-icon class="text-xl mt-2 " name="notifications"></ion-icon>
-                </span>
-              </a>
-              <!--User-->
-              <div class="flex items-center gap-2">
-              <i class="bi bi-person-circle text-xl"></i> <span class="font-semibold">User</span>
-              </div>
+          <div class="flex items-center space-x-4">
+            <!--Notifikasi-->
+            <a href="/src/notif_user.html">
+              <span class="cursor-pointer relative">
+                <span
+                  class="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
+                  >1</span
+                >
+                <ion-icon class="text-xl mt-2" name="notifications"></ion-icon>
+              </span>
+            </a>
+            <!--User-->
+            <div class="flex items-center gap-2">
+              <i class="bi bi-person-circle text-xl"></i>
+              <span class="font-semibold">User</span>
             </div>
+          </div>
         </div>
 
-      <!-- Summary Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div class="flex items-center gap-4 bg-yellow-100 p-6 rounded-lg shadow">
-          <div class="text-yellow-800 text-3xl">⚠️</div>
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div
+            class="flex items-center gap-4 bg-yellow-100 p-6 rounded-lg shadow"
+          >
+            <div class="text-yellow-800 text-3xl">⚠️</div>
             <div>
               <div class="text-gray-700">Terlambat</div>
               <div class="text-2xl font-bold">10</div>
             </div>
-        </div>
-        <div class="flex items-center gap-4 bg-red-100 p-6 rounded-lg shadow">
-          <div class="text-red-800 text-3xl">❌</div>
-          <div>
-            <div class="text-gray-700">Belum Dikembalikan</div>
-            <div class="text-2xl font-bold">10</div>
+          </div>
+          <div class="flex items-center gap-4 bg-red-100 p-6 rounded-lg shadow">
+            <div class="text-red-800 text-3xl">❌</div>
+            <div>
+              <div class="text-gray-700">Belum Dikembalikan</div>
+              <div class="text-2xl font-bold">10</div>
+            </div>
           </div>
         </div>
-      </div>
 
         <!-- Modal Alert Logout -->
-      <div id="alertLogout" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-          <h2 class="text-lg font-semibold mb-2">Apakah Anda yakin ingin logout?</h2>
-          <p class="text-gray-500 mb-6">
-            Setelah logout, Anda perlu login kembali untuk mengakses akun Anda.        </p>
-          <div class="flex justify-end gap-3">
-            <button id="btnCancel" class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">
-              Batalkan
-            </button>
-            <button id="btnConfirm" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-              Ya, Logout
-            </button>
+        <div
+          id="alertLogout"
+          class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden"
+        >
+          <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <h2 class="text-lg font-semibold mb-2">
+              Apakah Anda yakin ingin logout?
+            </h2>
+            <p class="text-gray-500 mb-6">
+              Setelah logout, Anda perlu login kembali untuk mengakses akun
+              Anda.
+            </p>
+            <div class="flex justify-end gap-3">
+              <button
+                id="btnCancel"
+                class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200"
+              >
+                Batalkan
+              </button>
+              <button
+                id="btnConfirm"
+                class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              >
+                Ya, Logout
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
         <!-- Tabel Peminjaman -->
         <div class="bg-white rounded-xl p-4 shadow">
-          <div class="p-4 font-semibold text-lg border-b text-gray-800">Daftar Peminjaman Belum Dikembalikan</div>
+          <div class="p-4 font-semibold text-lg border-b text-gray-800">
+            Daftar Peminjaman Belum Dikembalikan
+          </div>
           <div class="p-4">
-            <input type="text" placeholder="Cari nama peminjam atau nomor dokumen..." class="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300" />
+            <input
+              type="text"
+              placeholder="Cari nama peminjam atau nomor dokumen..."
+              class="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            />
             <div class="overflow-auto">
-              
-
               <!-- Tombol Tab -->
               <div class="flex space-x-2 mb-4">
-                <button onclick="showTable('bukuTanah')" id="btnBukuTanah" class="px-4 py-2 bg-white text-gray-800 hover:bg-[#022B3A] hover:text-white cursor-pointer rounded-xl shadow font-semibold">Buku Tanah</button>
-                <button onclick="showTable('suratUkur')" id="btnSuratUkur" class="px-4 py-2 bg-white text-gray-800 hover:bg-[#022B3A] hover:text-white cursor-pointer rounded-xl shadow font-semibold">Surat Ukur</button>
+                <button
+                  onclick="showTable('bukuTanah')"
+                  id="btnBukuTanah"
+                  class="px-4 py-2 bg-white text-gray-800 hover:bg-[#022B3A] hover:text-white cursor-pointer rounded-xl shadow font-semibold"
+                >
+                  Buku Tanah
+                </button>
+                <button
+                  onclick="showTable('suratUkur')"
+                  id="btnSuratUkur"
+                  class="px-4 py-2 bg-white text-gray-800 hover:bg-[#022B3A] hover:text-white cursor-pointer rounded-xl shadow font-semibold"
+                >
+                  Surat Ukur
+                </button>
               </div>
 
               <!-- tabel buku tanah -->
@@ -107,19 +152,85 @@
                   <tbody class="bg-white divide-y divide-gray-300">
                     <script>
                       const dataBukuTanah = [
-                        ["Ucok", 1, "HGB", 121, "Medan Sunggal", "Binjai", "12/03/2025", "3 Hari", "Ditolak", "Data tidak lengkap"],
-                        ["Ani", 2, "HM", 212, "Medan Baru", "Suka Maju", "10/03/2025", "2 Hari", "Diterima", "Siap diambil"],
-                        ["Budi", 3, "HW", 111, "Medan Tembung", "Sari Rejo", "08/03/2025", "4 Hari", "Menunggu", "Sedang diproses"],
-                        ["Citra", 4, "HGB", 433, "Medan Denai", "Teladan", "07/03/2025", "1 Hari", "Diterima", "Akan dikonfirmasi"],
-                        ["Doni", 5, "HM", 500, "Medan Timur", "Pahlawan", "05/03/2025", "3 Hari", "Ditolak", "Berkas tidak sah"],
-                        ["Eka", "Tu", "HW", 777, "Medan Helvetia", "Padang Bulan", "04/03/2025", "2 Hari", "Menunggu", "Masih diverifikasi"],
+                        [
+                          "Ucok",
+                          1,
+                          "HGB",
+                          121,
+                          "Medan Sunggal",
+                          "Binjai",
+                          "12/03/2025",
+                          "3 Hari",
+                          "Ditolak",
+                          "Data tidak lengkap",
+                        ],
+                        [
+                          "Ani",
+                          2,
+                          "HM",
+                          212,
+                          "Medan Baru",
+                          "Suka Maju",
+                          "10/03/2025",
+                          "2 Hari",
+                          "Diterima",
+                          "Siap diambil",
+                        ],
+                        [
+                          "Budi",
+                          3,
+                          "HW",
+                          111,
+                          "Medan Tembung",
+                          "Sari Rejo",
+                          "08/03/2025",
+                          "4 Hari",
+                          "Menunggu",
+                          "Sedang diproses",
+                        ],
+                        [
+                          "Citra",
+                          4,
+                          "HGB",
+                          433,
+                          "Medan Denai",
+                          "Teladan",
+                          "07/03/2025",
+                          "1 Hari",
+                          "Diterima",
+                          "Akan dikonfirmasi",
+                        ],
+                        [
+                          "Doni",
+                          5,
+                          "HM",
+                          500,
+                          "Medan Timur",
+                          "Pahlawan",
+                          "05/03/2025",
+                          "3 Hari",
+                          "Ditolak",
+                          "Berkas tidak sah",
+                        ],
+                        [
+                          "Eka",
+                          "Tu",
+                          "HW",
+                          777,
+                          "Medan Helvetia",
+                          "Padang Bulan",
+                          "04/03/2025",
+                          "2 Hari",
+                          "Menunggu",
+                          "Masih diverifikasi",
+                        ],
                       ];
 
                       function renderRow(data, index) {
                         const statusClass = {
-                          "Ditolak": "bg-red-100 text-red-700",
-                          "Diterima": "bg-green-100 text-green-700",
-                          "Menunggu": "bg-yellow-100 text-yellow-700"
+                          Ditolak: "bg-red-100 text-red-700",
+                          Diterima: "bg-green-100 text-green-700",
+                          Menunggu: "bg-yellow-100 text-yellow-700",
                         }[data[8]];
 
                         return `
@@ -134,10 +245,14 @@
                             <td class="px-4 py-2">${data[6]}</td>
                             <td class="px-4 py-2">${data[7]}</td>
                             <td class="px-4 py-2">
-                              <span class="px-2 py-1 rounded-full text-sm ${statusClass}">${data[8]}</span>
+                              <span class="px-2 py-1 rounded-full text-sm ${statusClass}">${
+                          data[8]
+                        }</span>
                             </td>
                             <td class="px-4 py-2">
-                              <button onclick="alert('${data[9]}')" class="text-lg font-bold">!</button>
+                              <button onclick="alert('${
+                                data[9]
+                              }')" class="text-lg font-bold">!</button>
                             </td>
                           </tr>
                         `;
@@ -170,12 +285,78 @@
                   <tbody class="bg-white divide-y divide-gray-300">
                     <script>
                       const dataSuratUkur = [
-                        ["Fina", 1, "HM", 901, "Binjai", "Kwala Begumit", "13/03/2025", "3 Hari", "Diterima", "Boleh diambil"],
-                        ["Gilang", 2, "HGB", 832, "Binjai", "Tandam Hulu", "11/03/2025", "1 Hari", "Menunggu", "Dalam pengecekan"],
-                        ["Hani", 3, "HW", 412, "Binjai", "Tandam Hilir", "10/03/2025", "2 Hari", "Ditolak", "Tidak sesuai prosedur"],
-                        ["Indra", 4, "HM", 744, "Binjai", "Sumber Karya", "09/03/2025", "3 Hari", "Menunggu", "Belum diverifikasi"],
-                        ["Joko", 5, "HGB", 501, "Binjai", "Kwala Mencirim", "07/03/2025", "2 Hari", "Diterima", "Sudah dikonfirmasi"],
-                        ["Kiki", "Tu", "HW", 266, "Binjai", "Suka Damai", "06/03/2025", "1 Hari", "Ditolak", "Berkas rusak"],
+                        [
+                          "Fina",
+                          1,
+                          "HM",
+                          901,
+                          "Binjai",
+                          "Kwala Begumit",
+                          "13/03/2025",
+                          "3 Hari",
+                          "Diterima",
+                          "Boleh diambil",
+                        ],
+                        [
+                          "Gilang",
+                          2,
+                          "HGB",
+                          832,
+                          "Binjai",
+                          "Tandam Hulu",
+                          "11/03/2025",
+                          "1 Hari",
+                          "Menunggu",
+                          "Dalam pengecekan",
+                        ],
+                        [
+                          "Hani",
+                          3,
+                          "HW",
+                          412,
+                          "Binjai",
+                          "Tandam Hilir",
+                          "10/03/2025",
+                          "2 Hari",
+                          "Ditolak",
+                          "Tidak sesuai prosedur",
+                        ],
+                        [
+                          "Indra",
+                          4,
+                          "HM",
+                          744,
+                          "Binjai",
+                          "Sumber Karya",
+                          "09/03/2025",
+                          "3 Hari",
+                          "Menunggu",
+                          "Belum diverifikasi",
+                        ],
+                        [
+                          "Joko",
+                          5,
+                          "HGB",
+                          501,
+                          "Binjai",
+                          "Kwala Mencirim",
+                          "07/03/2025",
+                          "2 Hari",
+                          "Diterima",
+                          "Sudah dikonfirmasi",
+                        ],
+                        [
+                          "Kiki",
+                          "Tu",
+                          "HW",
+                          266,
+                          "Binjai",
+                          "Suka Damai",
+                          "06/03/2025",
+                          "1 Hari",
+                          "Ditolak",
+                          "Berkas rusak",
+                        ],
                       ];
 
                       document.write(dataSuratUkur.map(renderRow).join(""));
@@ -183,71 +364,79 @@
                   </tbody>
                 </table>
               </div>
-
             </div>
           </div>
         </div>
-
-
-    </main>
-  </div>
-</body>
+      </main>
+    </div>
+  </body>
 
   <script>
-    fetch('sidebar_admin.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('sidebar').innerHTML = data;
+    fetch("sidebar_admin.html")
+      .then((response) => response.text())
+      .then((data) => {
+        document.getElementById("sidebar").innerHTML = data;
       });
 
-        // tabel buku tanah dan surat ukur
-        function showTable(tableName) {
-          document.getElementById('bukuTanahTable').classList.add('hidden');
-          document.getElementById('suratUkurTable').classList.add('hidden');
-          document.getElementById(`${tableName}Table`).classList.remove('hidden');
+    // tabel buku tanah dan surat ukur
+    function showTable(tableName) {
+      document.getElementById("bukuTanahTable").classList.add("hidden");
+      document.getElementById("suratUkurTable").classList.add("hidden");
+      document.getElementById(`${tableName}Table`).classList.remove("hidden");
 
-          document.getElementById('btnBukuTanah').classList.remove('bg-[#022B3A]');
-          document.getElementById('btnBukuTanah').classList.remove('text-[#ffffff]');
-          document.getElementById('btnSuratUkur').classList.remove('bg-[#022B3A]');
-          document.getElementById('btnSuratUkur').classList.remove('text-[#ffffff]');
-          document.getElementById('btnBukuTanah').disabled = false;
-          document.getElementById('btnSuratUkur').disabled = false;
+      document.getElementById("btnBukuTanah").classList.remove("bg-[#022B3A]");
+      document
+        .getElementById("btnBukuTanah")
+        .classList.remove("text-[#ffffff]");
+      document.getElementById("btnSuratUkur").classList.remove("bg-[#022B3A]");
+      document
+        .getElementById("btnSuratUkur")
+        .classList.remove("text-[#ffffff]");
+      document.getElementById("btnBukuTanah").disabled = false;
+      document.getElementById("btnSuratUkur").disabled = false;
 
-          document.getElementById(`btn${tableName.charAt(0).toUpperCase() + tableName.slice(1)}`).classList.add('bg-[#022B3A]');
-          document.getElementById(`btn${tableName.charAt(0).toUpperCase() + tableName.slice(1)}`).classList.add('text-[#ffffff]');
-          document.getElementById(`btn${tableName.charAt(0).toUpperCase() + tableName.slice(1)}`).disabled = true;
-        }
-          showTable('bukuTanah');
-
+      document
+        .getElementById(
+          `btn${tableName.charAt(0).toUpperCase() + tableName.slice(1)}`
+        )
+        .classList.add("bg-[#022B3A]");
+      document
+        .getElementById(
+          `btn${tableName.charAt(0).toUpperCase() + tableName.slice(1)}`
+        )
+        .classList.add("text-[#ffffff]");
+      document.getElementById(
+        `btn${tableName.charAt(0).toUpperCase() + tableName.slice(1)}`
+      ).disabled = true;
+    }
+    showTable("bukuTanah");
 
     function dropDown() {
-      document.querySelector('#submenu').classList.toggle('hidden');
-      document.querySelector('#arrow').classList.toggle('rotate-180');
+      document.querySelector("#submenu").classList.toggle("hidden");
+      document.querySelector("#arrow").classList.toggle("rotate-180");
     }
 
     function dropDown1() {
-      document.querySelector('#submenu1').classList.toggle('hidden');
-      document.querySelector('#arrow1').classList.toggle('rotate-180');
+      document.querySelector("#submenu1").classList.toggle("hidden");
+      document.querySelector("#arrow1").classList.toggle("rotate-180");
     }
 
     // Modal Alert logout
-      const alertBox = document.getElementById("alertLogout");
-      const btnCancel = document.getElementById("btnCancel");
+    const alertBox = document.getElementById("alertLogout");
+    const btnCancel = document.getElementById("btnCancel");
 
-      function showAlertLogout() {
-        alertBox.classList.remove("hidden");
-      }
+    function showAlertLogout() {
+      alertBox.classList.remove("hidden");
+    }
 
-      btnCancel.addEventListener("click", () => {
-        alertBox.classList.add("hidden");
-      });
+    btnCancel.addEventListener("click", () => {
+      alertBox.classList.add("hidden");
+    });
 
-      btnConfirm.addEventListener("click", () => {
+    btnConfirm.addEventListener("click", () => {
       alertBox.classList.add("hidden");
       // Arahkan ke halaman login
-      window.location.href = "login.html"; 
-      });
+      window.location.href = "login.html";
+    });
   </script>
-
-
 </html>

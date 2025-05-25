@@ -10,7 +10,7 @@ const Login = () => {
     e.preventDefault();
     // Simulasi login sukses
     if (username && password) {
-      navigate('/sidebarAdmin');
+      navigate('/dashboardAdmin');
     } else {
       alert('Isi username dan password terlebih dahulu!');
     }
