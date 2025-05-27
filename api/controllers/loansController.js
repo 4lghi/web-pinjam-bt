@@ -18,8 +18,8 @@ const createLoan = async (req, res) => {
     userId: data.userId || "",
     namaPeminjam: data.namaPeminjam,
     status: isAdmin ? "disetujui" : "menunggu persetujuan",
+    dateApproved: isAdmin ? admin.firestore.Timestamp.now() : null,
     dateRequested: admin.firestore.Timestamp.now(),
-    dateApproved: null,
     dateBorrowed: null,
     dateReturned: null,
     reasonIfRejected: null,
@@ -101,5 +101,8 @@ const deleteLoan = async (req, res) => {
     res.status(500).json({ status: "error", message: "Gagal hapus data." });
   }
 }
+
+// status: menunggu persetujuan, disetujui, dipinjam, dikembalikan, ditolak, telat
+
 
 module.exports = { createLoan, getLoans, updateLoan, deleteLoan };

@@ -26,21 +26,21 @@ const SidebarAdmin = () => {
             <span className="ml-4">Beranda</span>
           </Link>
 
-          <Link to="/peminjaman_admin" className="flex items-center p-2 rounded-md hover:bg-[#022B3A] hover:text-white mt-4">
+          <Link to="/daftarPeminjaman" className="flex items-center p-2 rounded-md hover:bg-[#022B3A] hover:text-white mt-4">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
               <path fill="currentColor" d="M7 9V7h14v2zm0 4v-2h14v2zm0 4v-2h14v2zM4 9q-.425 0-.712-.288T3 8t.288-.712T4 7t.713.288T5 8t-.288.713T4 9m0 4q-.425 0-.712-.288T3 12t.288-.712T4 11t.713.288T5 12t-.288.713T4 13m0 4q-.425 0-.712-.288T3 16t.288-.712T4 15t.713.288T5 16t-.288.713T4 17" />
             </svg>
             <span className="ml-4">Daftar Peminjaman</span>
           </Link>
 
-          <Link to="/pengajuan" className="flex items-center p-2 rounded-md hover:bg-[#022B3A] hover:text-white mt-4">
+          <Link to="/daftarPengajuan" className="flex items-center p-2 rounded-md hover:bg-[#022B3A] hover:text-white mt-4">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024">
               <path fill="currentColor" d="M704 192h160v736H160V192h160v64h384zM288 512h448v-64H288zm0 256h448v-64H288zm96-576V96h256v96z" />
             </svg>
             <span className="ml-4">Daftar Pengajuan</span>
           </Link>
 
-          <Link to="/daftar_pengguna" className="flex items-center p-2 rounded-md hover:bg-[#022B3A] hover:text-white mt-4">
+          <Link to="/daftarPengguna" className="flex items-center p-2 rounded-md hover:bg-[#022B3A] hover:text-white mt-4">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
               <path fill="currentColor" d="M6 7.5a5.5 5.5 0 1 1 11 0a5.5 5.5 0 0 1-11 0M11.75 22H2v-2a6 6 0 0 1 6-6h3.75zm2-8h8.5v2h-8.5zm0 3h8.5v2h-8.5zm0 3h8.5v2h-8.5z" />
             </svg>
