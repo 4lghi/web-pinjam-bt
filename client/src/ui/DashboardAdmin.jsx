@@ -1,8 +1,64 @@
 import React, { useState } from "react";
-import SidebarAdmin from "./SidebarAdmin";
+import SidebarAdmin from "./components/SidebarAdmin";
+import LoanTable from "./components/LoanTable";
 
 const DashboardAdmin = () => {
   const [activeTab, setActiveTab] = useState("bukuTanah");
+
+    const dummyData = [
+    {
+      userId: "user_001",
+      namaPeminjam: "Andi Prasetyo",
+      status: "disetujui",
+      dateApproved: new Date("2025-05-25T09:00:00Z"),
+      dateRequested: new Date("2025-05-24T08:00:00Z"),
+      dateBorrowed: new Date("2025-05-26T10:00:00Z"),
+      dateReturned: null,
+      reasonIfRejected: null,
+      fixDurasi: 3,
+      jenisHak: "Hak Milik",
+      kecamatan: "Kecamatan A",
+      kelurahan: "Kelurahan A",
+      keperluan: "Penelitian skripsi",
+      nomorHak: 12345,
+      requestDurasi: 5,
+    },
+    {
+      userId: "user_002",
+      namaPeminjam: "Budi Santoso",
+      status: "menunggu",
+      dateApproved: null,
+      dateRequested: new Date("2025-05-26T11:00:00Z"),
+      dateBorrowed: null,
+      dateReturned: null,
+      reasonIfRejected: null,
+      fixDurasi: 1,
+      jenisHak: "HGB",
+      kecamatan: "Kecamatan B",
+      kelurahan: "Kelurahan B",
+      keperluan: "Pengurusan Sertifikat",
+      nomorHak: 67890,
+      requestDurasi: 2,
+    },
+    {
+      userId: "user_003",
+      namaPeminjam: "Citra Lestari",
+      status: "disetujui",
+      dateApproved: new Date("2025-05-20T13:00:00Z"),
+      dateRequested: new Date("2025-05-19T10:00:00Z"),
+      dateBorrowed: new Date("2025-05-21T09:30:00Z"),
+      dateReturned: new Date("2025-05-24T16:00:00Z"),
+      reasonIfRejected: null,
+      fixDurasi: 3,
+      jenisHak: "Hak Pakai",
+      kecamatan: "Kecamatan C",
+      kelurahan: "Kelurahan C",
+      keperluan: "Keperluan pribadi",
+      nomorHak: 54321,
+      requestDurasi: 3,
+    },
+  ];
+
 
   return (
     <div className="flex min-h-screen">
@@ -47,7 +103,7 @@ const DashboardAdmin = () => {
 
         {/* Borrow Table Section */}
         <div className="bg-white rounded-xl p-4 shadow">
-          <div className="p-4 font-semibold text-lg border-b text-gray-800">
+          <div className="p-4 font-semibold text-lg text-gray-800">
             Daftar Peminjaman Belum Dikembalikan
           </div>
 
@@ -81,34 +137,7 @@ const DashboardAdmin = () => {
               </button>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="min-w-full border rounded-xl overflow-hidden">
-                <thead className="bg-white text-gray-800">
-                  <tr className="border border-gray-300">
-                    {[
-                      "No",
-                      "Nama",
-                      "Seksi",
-                      "Jenis Hak",
-                      "Nomor Hak",
-                      "Kecamatan",
-                      "Kelurahan",
-                      "Tgl Pinjam",
-                      "Durasi",
-                      "Status",
-                      "Info",
-                    ].map((header, i) => (
-                      <th key={i} className="px-4 py-2 text-left">
-                        {header}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-300">
-                  {/* Data kosong, akan diisi dari API */}
-                </tbody>
-              </table>
-            </div>
+            <LoanTable data={dummyData}/>
           </div>
         </div>
       </main>

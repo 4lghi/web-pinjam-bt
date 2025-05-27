@@ -13,7 +13,7 @@ const SidebarAdmin = () => {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="sidebar fixed top-0 bottom-0 left-0 w-60 bg-[#bfdbf7] text-black h-screen rounded-tr-3xl flex flex-col">
+      <aside className="sidebar fixed top-0 bottom-0 left-0 w-60 bg-[#bfdbf7] text-black h-screen rounded-tr-3xl rounded-br-3xl flex flex-col">
         <Link to="/dashboardAdmin" className="text-center mt-4">
           <img src="/logo.png" alt="Logo Pinjam BT/SU" className="mx-auto h-32 w-auto mb-2" />
         </Link>

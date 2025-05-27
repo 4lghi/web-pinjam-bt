@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
-import SidebarAdmin from "./SidebarAdmin";
-
-const statusClassMap = {
-  Ditolak: "bg-red-100 text-red-700",
-  Diterima: "bg-green-100 text-green-700",
-  Menunggu: "bg-yellow-100 text-yellow-700",
-};
+import SidebarAdmin from "./components/SidebarAdmin";
+import LoanTable from "./components/LoanTable";
 
 function DaftarPeminjaman() {
   const [activeTab, setActiveTab] = useState("bukuTanah");
@@ -32,6 +27,60 @@ function DaftarPeminjaman() {
   const exportToExcel = () => {
     // tambahkan logika export di sini
   };
+
+  const dummyData = [
+    {
+      userId: "user_001",
+      namaPeminjam: "Andi Prasetyo",
+      status: "disetujui",
+      dateApproved: new Date("2025-05-25T09:00:00Z"),
+      dateRequested: new Date("2025-05-24T08:00:00Z"),
+      dateBorrowed: new Date("2025-05-26T10:00:00Z"),
+      dateReturned: null,
+      reasonIfRejected: null,
+      fixDurasi: 3,
+      jenisHak: "Hak Milik",
+      kecamatan: "Kecamatan A",
+      kelurahan: "Kelurahan A",
+      keperluan: "Penelitian skripsi",
+      nomorHak: 12345,
+      requestDurasi: 5,
+    },
+    {
+      userId: "user_002",
+      namaPeminjam: "Budi Santoso",
+      status: "menunggu persetujuan",
+      dateApproved: null,
+      dateRequested: new Date("2025-05-26T11:00:00Z"),
+      dateBorrowed: null,
+      dateReturned: null,
+      reasonIfRejected: null,
+      fixDurasi: 1,
+      jenisHak: "HGB",
+      kecamatan: "Kecamatan B",
+      kelurahan: "Kelurahan B",
+      keperluan: "Pengurusan Sertifikat",
+      nomorHak: 67890,
+      requestDurasi: 2,
+    },
+    {
+      userId: "user_003",
+      namaPeminjam: "Citra Lestari",
+      status: "disetujui",
+      dateApproved: new Date("2025-05-20T13:00:00Z"),
+      dateRequested: new Date("2025-05-19T10:00:00Z"),
+      dateBorrowed: new Date("2025-05-21T09:30:00Z"),
+      dateReturned: new Date("2025-05-24T16:00:00Z"),
+      reasonIfRejected: null,
+      fixDurasi: 3,
+      jenisHak: "Hak Pakai",
+      kecamatan: "Kecamatan C",
+      kelurahan: "Kelurahan C",
+      keperluan: "Keperluan pribadi",
+      nomorHak: 54321,
+      requestDurasi: 3,
+    },
+  ];
 
   return (
     <div className="flex min-h-screen font-sans bg-gray-100 text-sm text-gray-800">
@@ -270,64 +319,10 @@ function DaftarPeminjaman() {
         </div>
 
         {/* Table Buku Tanah */}
-        {activeTab === "bukuTanah" && (
-          <div className="overflow-x-auto">
-            <table className="min-w-full border rounded-xl overflow-hidden">
-              <thead className="bg-white text-gray-800">
-                <tr className="border">
-                  <th className="px-4 py-2 text-left">No</th>
-                  <th className="px-4 py-2 text-left">Nama Peminjam</th>
-                  <th className="px-4 py-2 text-left">Seksi</th>
-                  <th className="px-4 py-2 text-left">Jenis Hak</th>
-                  <th className="px-4 py-2 text-left">Nomor Hak</th>
-                  <th className="px-4 py-2 text-left">Kecamatan</th>
-                  <th className="px-4 py-2 text-left">Kelurahan</th>
-                  <th className="px-4 py-2 text-left">Tgl Pinjam</th>
-                  <th className="px-4 py-2 text-left">Durasi</th>
-                  <th className="px-4 py-2 text-left">Status</th>
-                  <th className="px-4 py-2 text-left">Info</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {/* {dataBukuTanah.map((data, index) => (
-                  <tr key={index}>
-                    <td className="px-4 py-2">{index + 1}</td>
-                    <td className="px-4 py-2">{data[0]}</td>
-                    <td className="px-4 py-2">{data[1]}</td>
-                    <td className="px-4 py-2">{data[2]}</td>
-                    <td className="px-4 py-2">{data[3]}</td>
-                    <td className="px-4 py-2">{data[4]}</td>
-                    <td className="px-4 py-2">{data[5]}</td>
-                    <td className="px-4 py-2">{data[6]}</td>
-                    <td className="px-4 py-2">{data[7]}</td>
-                    <td className="px-4 py-2">
-                      <span className={`px-2 py-1 rounded-full text-sm ${statusClassMap[data[8]]}`}>
-                        {data[8]}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2 relative">
-                      <button onClick={() => alert(data[9])} className="text-lg font-bold mr-2">!</button>
-                      <button onClick={toggleMenu} className="text-black text-lg dropdown-toggle">⋮</button>
-                      <div className="dropdown-menu hidden absolute bg-white border rounded shadow-md right-0 mt-2 z-10">
-                        <ul>
-                          <li>
-                            <button className="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">✏️ Edit</button>
-                          </li>
-                          <li>
-                            <button onClick={showAlert} className="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">🗑️ Hapus</button>
-                          </li>
-                          <li>
-                            <button onClick={showStatusModal} className="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">🔄 Edit Status</button>
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
-                  </tr>
-                ))} */}
-              </tbody>
-            </table>
-          </div>
-        )}
+        {activeTab === "bukuTanah" && <LoanTable data={dummyData} />}
+
+        {/* Table Surat Ukur */}
+        {activeTab === "suratUkur" && <LoanTable data={dummyData} />}
 
         {/* Pagination */}
         <div className="flex justify-center mt-4 space-x-2">

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SidebarAdmin from "./SidebarAdmin";
+import SidebarAdmin from "./components/SidebarAdmin";
 
 const dataBukuTanah = [
   ["TU", "User", "TU123", ""],
@@ -50,7 +50,8 @@ export default function DaftarPengguna() {
                 + Tambah
               </button>
               <div className="flex items-center gap-2">
-                <i className="bi bi-person-circle text-xl"></i> <span>Admin</span>
+                <i className="bi bi-person-circle text-xl"></i>{" "}
+                <span>Admin</span>
               </div>
             </div>
           </div>
@@ -95,15 +96,24 @@ export default function DaftarPengguna() {
           {showDeleteModal && (
             <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
               <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-                <h2 className="text-lg font-semibold mb-2">Apakah Anda yakin?</h2>
+                <h2 className="text-lg font-semibold mb-2">
+                  Apakah Anda yakin?
+                </h2>
                 <p className="text-gray-500 mb-6">
-                  Setelah dihapus, aksi Anda tidak bisa diulang. Data akan terhapus secara permanen.
+                  Setelah dihapus, aksi Anda tidak bisa diulang. Data akan
+                  terhapus secara permanen.
                 </p>
                 <div className="flex justify-end gap-3">
-                  <button onClick={() => setShowDeleteModal(false)} className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">
+                  <button
+                    onClick={() => setShowDeleteModal(false)}
+                    className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200"
+                  >
                     Batalkan
                   </button>
-                  <button onClick={handleDeleteConfirm} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                  <button
+                    onClick={handleDeleteConfirm}
+                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                  >
                     Ya, Hapus
                   </button>
                 </div>
@@ -115,12 +125,18 @@ export default function DaftarPengguna() {
           {showLogoutModal && (
             <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
               <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-                <h2 className="text-lg font-semibold mb-2">Apakah Anda yakin ingin logout?</h2>
+                <h2 className="text-lg font-semibold mb-2">
+                  Apakah Anda yakin ingin logout?
+                </h2>
                 <p className="text-gray-500 mb-6">
-                  Setelah logout, Anda perlu login kembali untuk mengakses akun Anda.
+                  Setelah logout, Anda perlu login kembali untuk mengakses akun
+                  Anda.
                 </p>
                 <div className="flex justify-end gap-3">
-                  <button onClick={() => setShowLogoutModal(false)} className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">
+                  <button
+                    onClick={() => setShowLogoutModal(false)}
+                    className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200"
+                  >
                     Batalkan
                   </button>
                   <button
@@ -163,14 +179,22 @@ export default function DaftarPengguna() {
                   </div>
                   <div>
                     <label>Password</label>
-                    <input type="text" className="w-full border rounded-lg px-3 py-2" />
+                    <input
+                      type="text"
+                      className="w-full border rounded-lg px-3 py-2"
+                    />
                   </div>
                 </div>
                 <div className="mt-6 flex justify-end gap-2">
-                  <button onClick={() => setShowEditModal(false)} className="px-4 py-2 border rounded-lg">
+                  <button
+                    onClick={() => setShowEditModal(false)}
+                    className="px-4 py-2 border rounded-lg"
+                  >
                     Batalkan
                   </button>
-                  <button className="px-4 py-2 bg-sky-900 text-white rounded-lg">Simpan</button>
+                  <button className="px-4 py-2 bg-sky-900 text-white rounded-lg">
+                    Simpan
+                  </button>
                 </div>
               </div>
             </div>

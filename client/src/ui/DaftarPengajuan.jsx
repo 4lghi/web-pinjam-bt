@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import SidebarAdmin from "./SidebarAdmin";
+import SidebarAdmin from "./components/SidebarAdmin";
+import RequestTable from "./components/RequestTable";
 
 function DaftarPengajuan() {
   const [activeTab, setActiveTab] = useState("bukuTanah");
@@ -24,85 +25,58 @@ function DaftarPengajuan() {
     alert("Tolak modal dibuka");
   };
 
-  const dataBukuTanah = [
-    [
-      "Ucok",
-      1,
-      "HGB",
-      121,
-      "Medan Sunggal",
-      "Binjai",
-      "12/03/2025",
-      "3 Hari",
-      "Data tidak lengkap",
-      "",
-      "",
-    ],
-    [
-      "Ani",
-      2,
-      "HM",
-      212,
-      "Medan Baru",
-      "Suka Maju",
-      "10/03/2025",
-      "2 Hari",
-      "Siap diambil",
-      "",
-      "",
-    ],
-    [
-      "Budi",
-      3,
-      "HW",
-      111,
-      "Medan Tembung",
-      "Sari Rejo",
-      "08/03/2025",
-      "4 Hari",
-      "Sedang diproses",
-      "",
-      "",
-    ],
-    [
-      "Citra",
-      4,
-      "HGB",
-      433,
-      "Medan Denai",
-      "Teladan",
-      "07/03/2025",
-      "1 Hari",
-      "Akan dikonfirmasi",
-      "",
-      "",
-    ],
-    [
-      "Doni",
-      5,
-      "HM",
-      500,
-      "Medan Timur",
-      "Pahlawan",
-      "05/03/2025",
-      "3 Hari",
-      "Berkas tidak sah",
-      "",
-      "",
-    ],
-    [
-      "Eka",
-      "Tu",
-      "HW",
-      777,
-      "Medan Helvetia",
-      "Padang Bulan",
-      "04/03/2025",
-      "2 Hari",
-      "Masih diverifikasi",
-      "",
-      "",
-    ],
+  const dummyData = [
+    {
+      userId: "user_001",
+      namaPeminjam: "Andi Prasetyo",
+      status: "disetujui",
+      dateApproved: new Date("2025-05-25T09:00:00Z"),
+      dateRequested: new Date("2025-05-24T08:00:00Z"),
+      dateBorrowed: new Date("2025-05-26T10:00:00Z"),
+      dateReturned: null,
+      reasonIfRejected: null,
+      fixDurasi: 3,
+      jenisHak: "Hak Milik",
+      kecamatan: "Kecamatan A",
+      kelurahan: "Kelurahan A",
+      keperluan: "Penelitian skripsi",
+      nomorHak: 12345,
+      requestDurasi: 5,
+    },
+    {
+      userId: "user_002",
+      namaPeminjam: "Budi Santoso",
+      status: "menunggu",
+      dateApproved: null,
+      dateRequested: new Date("2025-05-26T11:00:00Z"),
+      dateBorrowed: null,
+      dateReturned: null,
+      reasonIfRejected: null,
+      fixDurasi: 1,
+      jenisHak: "HGB",
+      kecamatan: "Kecamatan B",
+      kelurahan: "Kelurahan B",
+      keperluan: "Pengurusan Sertifikat",
+      nomorHak: 67890,
+      requestDurasi: 2,
+    },
+    {
+      userId: "user_003",
+      namaPeminjam: "Citra Lestari",
+      status: "disetujui",
+      dateApproved: new Date("2025-05-20T13:00:00Z"),
+      dateRequested: new Date("2025-05-19T10:00:00Z"),
+      dateBorrowed: new Date("2025-05-21T09:30:00Z"),
+      dateReturned: new Date("2025-05-24T16:00:00Z"),
+      reasonIfRejected: null,
+      fixDurasi: 3,
+      jenisHak: "Hak Pakai",
+      kecamatan: "Kecamatan C",
+      kelurahan: "Kelurahan C",
+      keperluan: "Keperluan pribadi",
+      nomorHak: 54321,
+      requestDurasi: 3,
+    },
   ];
 
   return (
@@ -219,80 +193,20 @@ function DaftarPengajuan() {
 
         {/* Table */}
         {activeTab === "bukuTanah" && (
-          <div id="bukuTanahTable" className="overflow-x-auto">
-            <table className="min-w-full border rounded-xl overflow-hidden">
-              <thead className="bg-white text-gray-800">
-                <tr className="border">
-                  <th className="px-4 py-2 text-left">No</th>
-                  <th className="px-4 py-2 text-left">Nama Peminjam</th>
-                  <th className="px-4 py-2 text-left">Seksi</th>
-                  <th className="px-4 py-2 text-left">Jenis Hak</th>
-                  <th className="px-4 py-2 text-left">Nomor Hak</th>
-                  <th className="px-4 py-2 text-left">Kecamatan</th>
-                  <th className="px-4 py-2 text-left">Kelurahan</th>
-                  <th className="px-4 py-2 text-left">Tgl Pinjam</th>
-                  <th className="px-4 py-2 text-left">Durasi</th>
-                  <th className="px-4 py-2 text-left">Info</th>
-                  <th className="px-4 py-2 text-left">Proses</th>
-                  <th className="px-4 py-2 text-left"></th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {dataBukuTanah.map((data, index) => (
-                  <tr key={index}>
-                    <td className="px-4 py-2">{index + 1}</td>
-                    <td className="px-4 py-2">{data[0]}</td>
-                    <td className="px-4 py-2">{data[1]}</td>
-                    <td className="px-4 py-2">{data[2]}</td>
-                    <td className="px-4 py-2">{data[3]}</td>
-                    <td className="px-4 py-2">{data[4]}</td>
-                    <td className="px-4 py-2">{data[5]}</td>
-                    <td className="px-4 py-2">{data[6]}</td>
-                    <td className="px-4 py-2">{data[7]}</td>
-                    <td className="px-4 py-2">
-                      <button
-                        onClick={() => handleInfoClick(data[8])}
-                        className="text-lg font-bold"
-                      >
-                        !
-                      </button>
-                    </td>
-                    <td className="px-4 py-4 flex gap-2 items-center">
-                      {data[9]}
-                      <span className="cursor-pointer bg-green-200 text-green-600 rounded-full w-7 h-7 hover:bg-green-100 flex items-center justify-center">
-                        <ion-icon
-                          class="text-xl mt-1"
-                          name="checkmark"
-                        ></ion-icon>
-                      </span>
-                      <span className="bg-red-200 text-red-600 rounded-full w-7 h-7 hover:bg-red-100 flex items-center justify-center">
-                        <button
-                          onClick={handleRejectModal}
-                          className="rounded-full w-7 h-7"
-                        >
-                          <ion-icon
-                            class="text-xl mt-1"
-                            name="close"
-                          ></ion-icon>
-                        </button>
-                      </span>
-                    </td>
-                    <td className="px-4 py-2">
-                      {data[10]}
-                      <button onClick={handleDelete}>
-                        <span className="hover:bg-teal-950 hover:text-white pt-1 px-0.5 rounded-md cursor-pointer text-xl mx-2">
-                          <ion-icon
-                            class="text-xl mt-1"
-                            name="trash"
-                          ></ion-icon>
-                        </span>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <RequestTable
+            data={dummyData}
+            onDelete={handleDelete}
+            onReject={handleRejectModal}
+            onInfoClick={handleInfoClick}
+          />
+        )}
+        {activeTab === "suratUkur" && (
+          <RequestTable
+            data={dummyData}
+            onDelete={handleDelete}
+            onReject={handleRejectModal}
+            onInfoClick={handleInfoClick}
+          />
         )}
 
         {/* Pagination */}
