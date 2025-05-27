@@ -36,8 +36,8 @@ function LoanTable({ data }) {
               <td className="px-4 py-2">{row.nomorHak}</td>
               <td className="px-4 py-2">{row.kecamatan}</td>
               <td className="px-4 py-2">{row.kelurahan}</td>
-              <td className="px-4 py-2">{row.date}</td>
-              <td className="px-4 py-2">{row.durasi}</td>
+              <td className="px-4 py-2">{row.dateBorrowed}</td>
+              <td className="px-4 py-2">{row.fixDurasi}</td>
               <td className="px-4 py-2">
                 <span
                   className={`px-2 py-1 rounded-full text-sm ${
@@ -49,7 +49,7 @@ function LoanTable({ data }) {
               </td>
               <td className="px-4 py-2 relative">
                 <button
-                  onClick={() => alert(row.info || "Tidak ada info")}
+                  onClick={() => alert(row.keperluan || "Tidak ada info")}
                   className="text-lg font-bold mr-2"
                 >
                   !

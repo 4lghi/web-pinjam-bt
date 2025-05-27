@@ -5,14 +5,14 @@ import LoanTable from "./components/LoanTable";
 const DashboardAdmin = () => {
   const [activeTab, setActiveTab] = useState("bukuTanah");
 
-    const dummyData = [
+  const dummyData = [
     {
       userId: "user_001",
       namaPeminjam: "Andi Prasetyo",
       status: "disetujui",
       dateApproved: new Date("2025-05-25T09:00:00Z"),
       dateRequested: new Date("2025-05-24T08:00:00Z"),
-      dateBorrowed: new Date("2025-05-26T10:00:00Z"),
+      dateBorrowed: "01/06/2025",
       dateReturned: null,
       reasonIfRejected: null,
       fixDurasi: 3,
@@ -26,7 +26,7 @@ const DashboardAdmin = () => {
     {
       userId: "user_002",
       namaPeminjam: "Budi Santoso",
-      status: "menunggu",
+      status: "menunggu persetujuan",
       dateApproved: null,
       dateRequested: new Date("2025-05-26T11:00:00Z"),
       dateBorrowed: null,
@@ -46,7 +46,7 @@ const DashboardAdmin = () => {
       status: "disetujui",
       dateApproved: new Date("2025-05-20T13:00:00Z"),
       dateRequested: new Date("2025-05-19T10:00:00Z"),
-      dateBorrowed: new Date("2025-05-21T09:30:00Z"),
+      dateBorrowed: "21/05/2025",
       dateReturned: new Date("2025-05-24T16:00:00Z"),
       reasonIfRejected: null,
       fixDurasi: 3,
@@ -58,7 +58,6 @@ const DashboardAdmin = () => {
       requestDurasi: 3,
     },
   ];
-
 
   return (
     <div className="flex min-h-screen">
@@ -137,7 +136,7 @@ const DashboardAdmin = () => {
               </button>
             </div>
 
-            <LoanTable data={dummyData}/>
+            <LoanTable data={dummyData} />
           </div>
         </div>
       </main>
