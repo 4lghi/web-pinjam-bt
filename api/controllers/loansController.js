@@ -16,7 +16,7 @@ const createLoan = async (req, res) => {
 
   const docData = {
     userId: data.userId || "",
-    namaPeminjam: data.namaPeminjam,
+    namaPeminjam: data.namaPeminjam || "",
     status: isAdmin ? "disetujui" : "menunggu persetujuan",
     dateApproved: isAdmin ? admin.firestore.Timestamp.now() : null,
     dateRequested: admin.firestore.Timestamp.now(),
@@ -47,8 +47,6 @@ const createLoan = async (req, res) => {
     });
   }
 };
-
-
 
 // Endpoint GET /peminjaman
 const getLoans = async (req, res) => {

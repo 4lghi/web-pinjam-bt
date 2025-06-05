@@ -26,7 +26,7 @@ const DashboardAdmin = () => {
     {
       userId: "user_002",
       namaPeminjam: "Budi Santoso",
-      status: "menunggu persetujuan",
+      status: "menunggu",
       dateApproved: null,
       dateRequested: new Date("2025-05-26T11:00:00Z"),
       dateBorrowed: null,

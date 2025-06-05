@@ -28,17 +28,14 @@ function DaftarPeminjaman() {
     // tambahkan logika export di sini
   };
 
-
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async () => {
-    console.log("tes", formData); 
     try {
-      const response = await fetch("http://localhost:3000/peminjaman", {
+      const response = await fetch("http://localhost:3000/api/peminjaman", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -248,7 +245,6 @@ function DaftarPeminjaman() {
                       <label>Nama Peminjam</label>
                       <input
                         type="text"
-                        name="namaPeminjam"
                         className="w-full border rounded-lg px-3 py-2"
                         value={formData.namaPeminjam}
                         onChange={handleChange}
@@ -258,7 +254,6 @@ function DaftarPeminjaman() {
                       <label>Jenis Hak</label>
                       <select
                         className="w-full border rounded-lg px-3 py-2"
-                        name="jenisHak"
                         value={formData.jenisHak}
                         onChange={handleChange}
                       >
@@ -274,7 +269,6 @@ function DaftarPeminjaman() {
                       <label>Nomor Hak</label>
                       <input
                         type="text"
-                        name="nomorHak"
                         className="w-full border rounded-lg px-3 py-2"
                         value={formData.nomorHak}
                         onChange={handleChange}
@@ -312,7 +306,6 @@ function DaftarPeminjaman() {
                       <input
                         type="date"
                         className="w-full border rounded-lg px-3 py-2"
-                        name="dateBorrowed"
                         value={formData.dateBorrowed}
                         onChange={handleChange}
                       />
@@ -330,7 +323,6 @@ function DaftarPeminjaman() {
                       <textarea
                         className="w-full border rounded-lg px-3 py-2"
                         rows="2"
-                        name="keperluan"
                         value={formData.keperluan}
                         onChange={handleChange}
                       ></textarea>
