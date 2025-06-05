@@ -34,7 +34,7 @@
     </script>
 
     <!-- Main Content -->
-    <main class="flex-1 ml-60 p-6">
+    <main class="flex-1 ml-60 p-6 overflow-auto">
       <!-- Header -->
       <div class="flex justify-between items-center mb-6">
         <!-- Search -->
@@ -260,19 +260,35 @@
               <script>
                 const dataBukuTanah = [
                   ["Ucok", 1, "HGB", 121, "Medan Sunggal", "Binjai", "12/03/2025", "3 Hari", "Ditolak", "Data tidak lengkap"],
-                  ["Ani", 2, "HM", 212, "Medan Baru", "Suka Maju", "10/03/2025", "2 Hari", "Diterima", "Siap diambil"],
-                  ["Budi", 3, "HW", 111, "Medan Tembung", "Sari Rejo", "08/03/2025", "4 Hari", "Menunggu", "Sedang diproses"],
-                  ["Citra", 4, "HGB", 433, "Medan Denai", "Teladan", "07/03/2025", "1 Hari", "Diterima", "Akan dikonfirmasi"],
+                  ["Ani", 2, "HM", 212, "Medan Baru", "Suka Maju", "10/03/2025", "2 Hari", "Diterima", "Keperluan: surat-menyurat"],
+                  ["Budi", 3, "HW", 111, "Medan Tembung", "Sari Rejo", "08/03/2025", "4 Hari", "Menunggu", "Keperluan: administrasi"],
+                  ["Citra", 4, "HGB", 433, "Medan Denai", "Teladan", "07/03/2025", "1 Hari", "Diterima", "Keperluan: cek hm"],
                   ["Doni", 5, "HM", 500, "Medan Timur", "Pahlawan", "05/03/2025", "3 Hari", "Ditolak", "Berkas tidak sah"],
                   ["Eka", "Tu", "HW", 777, "Medan Helvetia", "Padang Bulan", "04/03/2025", "2 Hari", "Menunggu", "Masih diverifikasi"],
+                  ["Nur", "2", "HM", 152, "Medan Perjuangan", "Sei Kera Hulu", "04/03/2025", "2 Hari", "Dikembalikan", "Keperluan: Kebutuhan surat-menyurat"],
+                  ["Reza", "1", "HM", 122, "Medan Perjuangan", "Sei Kera Hulu", "04/03/2025", "2 Hari", "Dipinjam", "Keperluan: Kebutuhan surat-menyurat"],
+                  ["Ibud", "1", "HM", 122, "Medan Perjuangan", "Sei Kera Hulu", "04/03/2025", "2 Hari", "Telat", "Keperluan: Kebutuhan surat-menyurat"],
+
                 ];
 
                 function renderRow(data, index) {
+                  const status = data[8];
+                  const tanggal = data[6];
+
                   const statusClass = {
                     "Ditolak": "bg-red-100 text-red-700",
                     "Diterima": "bg-green-100 text-green-700",
-                    "Menunggu": "bg-yellow-100 text-yellow-700"
-                  }[data[8]];
+                    "Menunggu": "bg-yellow-100 text-yellow-700",
+                    "Telat": "bg-rose-100 text-rose-500",
+                    "Dikembalikan": "bg-cyan-100 text-sky-500",
+                    "Dipinjam": "bg-orange-100 text-orange-500",
+                  }[status] || "bg-gray-100 text-gray-700";
+
+                  let statusContent = status;
+                  if (status === "Dikembalikan") {
+                    statusContent = `${status} 
+                    <br>${tanggal}`;
+                  }
 
                   return `
                     <tr>
@@ -285,8 +301,8 @@
                       <td class="px-4 py-2">${data[5]}</td>
                       <td class="px-4 py-2">${data[6]}</td>
                       <td class="px-4 py-2">${data[7]}</td>
-                      <td class="px-4 py-2">
-                        <span class="px-2 py-1 rounded-full text-sm ${statusClass}">${data[8]}</span>
+                      <td class= "px-4 py-2">
+                        <div class="px-4 py-1 w-fit rounded-full text-sm ${statusClass}">${statusContent}</div>
                       </td>
                       <td class="px-4 py-2">
                         <button onclick="alert('${data[9]}')" class="text-lg font-bold">!</button>
@@ -347,7 +363,7 @@
                   ["Hani", 3, "HW", 412, "Binjai", "Tandam Hilir", "10/03/2025", "2 Hari", "Ditolak", "Tidak sesuai prosedur"],
                   ["Indra", 4, "HM", 744, "Binjai", "Sumber Karya", "09/03/2025", "3 Hari", "Menunggu", "Belum diverifikasi"],
                   ["Joko", 5, "HGB", 501, "Binjai", "Kwala Mencirim", "07/03/2025", "2 Hari", "Diterima", "Sudah dikonfirmasi"],
-                  ["Kiki", "Tu", "HW", 266, "Binjai", "Suka Damai", "06/03/2025", "1 Hari", "Ditolak", "Berkas rusak"],
+                  ["Kiki", "Tu", "HW", 266, "Binjai", "Suka Damai", "06/03/2025", "1 Hari", "Telat", "Berkas rusak"],
                 ];
 
                 document.write(dataSuratUkur.map(renderRow).join(""));
@@ -503,7 +519,7 @@
 
                   <!-- Tombol Dropdown -->
                   <button id="dropdownToggleButton" onclick="toggleDropdown()" class="w-full flex justify-between items-center px-4 py-3 bg-gray-100 rounded border border-gray-300 hover:bg-gray-200">
-                    <span id="selectedStatus" class="bg-green-100 text-green-800 text-sm font-semibold px-4 py-1 rounded-full">Dikembalikan</span>
+                    <span id="selectedStatus" class="bg-cyan-100 text-sky-500 text-sm font-semibold px-4 py-1 rounded-full">Dikembalikan</span>
                     <svg class="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
@@ -512,16 +528,16 @@
                   <!-- Menu Dropdown -->
                   <div id="statusDropdown" class="dropdown hidden absolute mt-2 w-full bg-white border rounded shadow z-50">
                     <div onclick="selectStatus('dikembalikan')" class="cursor-pointer px-4 py-2 hover:bg-green-50">
-                      <span class="text-green-700 bg-green-100 px-3 py-1 rounded-full text-sm font-semibold">Dikembalikan</span>
+                      <span class="bg-cyan-100 text-sky-500 px-3 py-1 rounded-full text-sm font-semibold">Dikembalikan</span>
                     </div>
                     <div onclick="selectStatus('dipinjam')" class="cursor-pointer px-4 py-2 hover:bg-yellow-50">
-                      <span class="text-yellow-700 bg-yellow-100 px-3 py-1 rounded-full text-sm font-semibold">Dipinjam</span>
+                      <span class="text-orange-700 bg-orange-100 px-3 py-1 rounded-full text-sm font-semibold">Dipinjam</span>
                     </div>
                     <div onclick="selectStatus('ditolak')" class="cursor-pointer px-4 py-2 hover:bg-red-50">
                       <span class="text-red-700 bg-red-100 px-3 py-1 rounded-full text-sm font-semibold">Ditolak</span>
                     </div>
-                    <div onclick="selectStatus('disetujui')" class="cursor-pointer px-4 py-2 hover:bg-blue-50">
-                      <span class="text-blue-700 bg-blue-100 px-3 py-1 rounded-full text-sm font-semibold">Disetujui</span>
+                    <div onclick="selectStatus('diterima')" class="cursor-pointer px-4 py-2 hover:bg-blue-50">
+                      <span class="text-green-700 bg-green-100 px-3 py-1 rounded-full text-sm font-semibold">Diterima</span>
                     </div>
                   </div>
                 </div>
@@ -699,7 +715,7 @@
             <label class="block mb-2 text-sm font-medium text-gray-700">Berikan Alasan Penolakan</label>
             <textarea class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" rows="3"></textarea>
           `;
-        } else if (status === 'disetujui') {
+        } else if (status === 'diterima') {
           field.innerHTML = `
             <label class="block mb-2 text-sm font-medium text-gray-700">Tanggal Tenggat</label>
             <input type="date" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
@@ -714,16 +730,16 @@
       // Update isi dan style
       if (status === 'dikembalikan') {
         selectedStatus.textContent = 'Dikembalikan';
-        selectedStatus.className = 'bg-green-100 text-green-800 text-sm font-semibold px-4 py-1 rounded-full';
+        selectedStatus.className = 'bg-cyan-100 text-sky-500 text-sm font-semibold px-4 py-1 rounded-full';
       } else if (status === 'dipinjam') {
         selectedStatus.textContent = 'Dipinjam';
-        selectedStatus.className = 'bg-yellow-100 text-yellow-700 text-sm font-semibold px-4 py-1 rounded-full';
+        selectedStatus.className = 'bg-orange-100 text-orange-500 text-sm font-semibold px-4 py-1 rounded-full';
       } else if (status === 'ditolak') {
         selectedStatus.textContent = 'Ditolak';
         selectedStatus.className = 'bg-red-100 text-red-700 text-sm font-semibold px-4 py-1 rounded-full';
-      } else if (status === 'disetujui') {
-        selectedStatus.textContent = 'Disetujui';
-        selectedStatus.className = 'bg-blue-100 text-blue-700 text-sm font-semibold px-4 py-1 rounded-full';
+      } else if (status === 'diterima') {
+        selectedStatus.textContent = 'Diterima';
+        selectedStatus.className = 'bg-green-100 text-green-700 text-sm font-semibold px-4 py-1 rounded-full';
       }
 
       // Tutup dropdown
