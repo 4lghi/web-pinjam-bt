@@ -28,15 +28,13 @@ function DaftarPeminjaman() {
     // tambahkan logika export di sini
   };
 
-
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async () => {
-    console.log("tes", formData); 
+    console.log("tes", formData);
     try {
       const response = await fetch("http://localhost:3000/peminjaman", {
         method: "POST",
@@ -124,6 +122,25 @@ function DaftarPeminjaman() {
       requestDurasi: 3,
     },
   ];
+
+  const [loanData, setLoanData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchLoans = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/peminjaman"); // ganti URL kalau beda
+      const data = await response.json();
+      setLoanData(data);
+    } catch (error) {
+      console.error("Gagal fetch data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLoans();
+  }, []);
 
   return (
     <div className="flex min-h-screen font-sans bg-gray-100 text-sm text-gray-800">
@@ -382,10 +399,18 @@ function DaftarPeminjaman() {
         </div>
 
         {/* Table Buku Tanah */}
-        {activeTab === "bukuTanah" && <LoanTable data={dummyData} />}
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          activeTab === "bukuTanah" && <LoanTable data={loanData} />
+        )}
 
         {/* Table Surat Ukur */}
-        {activeTab === "suratUkur" && <LoanTable data={dummyData} />}
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          activeTab === "suratUkur" && <LoanTable data={loanData} />
+        )}
 
         {/* Pagination */}
         <div className="flex justify-center mt-4 space-x-2">
