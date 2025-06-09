@@ -5,7 +5,7 @@ const RequestTable = ({
   handleRejectModal = (id) => console.log("Default reject", id),
   handleInfoClick = (loan) => console.log("Default info", loan),
   handleDelete = (id) => console.log("Default delete", id),
-  handleAccept = (id) => console.log("Default accept", id)
+  handleAccept = (id) => {console.log("Default accept", id)}
 }) => {
   
   return (
@@ -41,7 +41,7 @@ const RequestTable = ({
               <td className="px-4 py-2">{item.durasi}</td>
               <td className="px-4 py-2">
                 <button
-                  onClick={() => handleInfoClick(item)}
+                  onClick={() => handleInfoClick(item.keperluan)}
                   className="text-lg font-bold"
                 >
                   !
