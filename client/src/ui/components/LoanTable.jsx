@@ -1,13 +1,14 @@
 import React from "react";
 
 const statusColorMap = {
-  ditolak: "bg-red-100 text-red-700",
-  diterima: "bg-green-100 text-green-700",
-  menunggu: "bg-yellow-100 text-yellow-700",
-  telat: "bg-orange-100 text-orange-700",
-  disetujui: "bg-blue-100 text-blue-700",
-  dikembalikan: "bg-gray-100 text-gray-700",
+  menunggu: "bg-yellow-100 text-yellow-700",     // Menunggu persetujuan
+  disetujui: "bg-blue-100 text-blue-700",         // Sudah disetujui, belum diambil
+  diterima: "bg-purple-100 text-purple-700",      // Sedang dipinjam
+  telat: "bg-orange-100 text-orange-700",         // Melebihi waktu peminjaman
+  dikembalikan: "bg-green-100 text-green-700",    // Sudah dikembalikan
+  ditolak: "bg-red-100 text-red-700",             // Tidak disetujui
 };
+
 
 function LoanTable({ data }) {
   return (
