@@ -43,7 +43,7 @@ function DaftarPengajuan() {
       // Update state setelah sukses
       setLoanData((prevData) =>
         prevData.map((loan) =>
-          loan.id === id ? { ...loan, status: "diterima" } : loan
+          loan.id === id ? { ...loan, status: "disetujui" } : loan
         )
       );
 
