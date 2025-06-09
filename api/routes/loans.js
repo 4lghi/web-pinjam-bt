@@ -10,4 +10,17 @@ router.patch("/:id", loansController.updateLoan);
 
 router.delete("/:id", loansController.deleteLoan);
 
+// NEW NEW NEW NEW
+router.post("/bukuTanah", loansController.createBt);
+router.post("/suratUkur", loansController.createSu);
+
+router.get("/bukuTanah", loansController.getBt);
+router.get("/suratUkur", loansController.getSu);
+
+// router.patch("/bukuTanah/:id", loansController.updateBtLoan);
+// router.patch("/suratUkur/:id", loansController.updateSuLoan);
+
+// router.delete("/bukuTanah/:id", loansController.deleteBtLoan);
+// router.delete("/suratUkur/:id", loansController.deleteSuLoan);
+
 module.exports = router;

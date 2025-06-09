@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SidebarAdmin from "./components/SidebarAdmin";
 import LoanTable from "./components/LoanTable";
+import axios from "axios";
 
 function DaftarPeminjaman() {
   const [activeTab, setActiveTab] = useState("bukuTanah");
@@ -69,77 +70,31 @@ function DaftarPeminjaman() {
     keperluan: "",
   });
 
-  const dummyData = [
-    {
-      userId: "user_001",
-      namaPeminjam: "Andi Prasetyo",
-      status: "disetujui",
-      dateApproved: new Date("2025-05-25T09:00:00Z"),
-      dateRequested: new Date("2025-05-24T08:00:00Z"),
-      dateBorrowed: "01/06/2025",
-      dateReturned: null,
-      reasonIfRejected: null,
-      fixDurasi: 3,
-      jenisHak: "Hak Milik",
-      kecamatan: "Kecamatan A",
-      kelurahan: "Kelurahan A",
-      keperluan: "Penelitian skripsi",
-      nomorHak: 12345,
-      requestDurasi: 5,
-    },
-    {
-      userId: "user_002",
-      namaPeminjam: "Budi Santoso",
-      status: "menunggu",
-      dateApproved: null,
-      dateRequested: new Date("2025-05-26T11:00:00Z"),
-      dateBorrowed: null,
-      dateReturned: null,
-      reasonIfRejected: null,
-      fixDurasi: 1,
-      jenisHak: "HGB",
-      kecamatan: "Kecamatan B",
-      kelurahan: "Kelurahan B",
-      keperluan: "Pengurusan Sertifikat",
-      nomorHak: 67890,
-      requestDurasi: 2,
-    },
-    {
-      userId: "user_003",
-      namaPeminjam: "Citra Lestari",
-      status: "disetujui",
-      dateApproved: new Date("2025-05-20T13:00:00Z"),
-      dateRequested: new Date("2025-05-19T10:00:00Z"),
-      dateBorrowed: "21/05/2025",
-      dateReturned: new Date("2025-05-24T16:00:00Z"),
-      reasonIfRejected: null,
-      fixDurasi: 3,
-      jenisHak: "Hak Pakai",
-      kecamatan: "Kecamatan C",
-      kelurahan: "Kelurahan C",
-      keperluan: "Keperluan pribadi",
-      nomorHak: 54321,
-      requestDurasi: 3,
-    },
-  ];
-
-  const [loanData, setLoanData] = useState([]);
+  const [btData, setBtData] = useState([]);
+  const [suData, setSuData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchLoans = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/peminjaman"); // ganti URL kalau beda
-      const data = await response.json();
-      setLoanData(data);
-    } catch (error) {
-      console.error("Gagal fetch data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchLoans();
+    const fetchData = async () => {
+      try {
+        const [btResponse, suResponse] = await Promise.all([
+          axios.get("http://localhost:3000/peminjaman/bukuTanah"),
+          axios.get("http://localhost:3000/peminjaman/suratUkur"),
+        ]);
+
+        setBtData(btResponse.data);
+        setSuData(suResponse.data);
+      } catch (error) {
+        console.error("Gagal ambil data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    console.log("BT Data:", btData);
+    console.log("SU Data:", suData);
+
+    fetchData();
   }, []);
 
   return (
@@ -403,8 +358,8 @@ function DaftarPeminjaman() {
           <p>Loading...</p>
         ) : (
           <>
-            {activeTab === "bukuTanah" && <LoanTable data={loanData} />}
-            {activeTab === "suratUkur" && <LoanTable data={loanData} />}
+            {activeTab === "bukuTanah" && <LoanTable data={btData} />}
+            {activeTab === "suratUkur" && <LoanTable data={suData} />}
           </>
         )}
         {/* Pagination */}
