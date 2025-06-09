@@ -398,20 +398,15 @@ function DaftarPeminjaman() {
           </button>
         </div>
 
-        {/* Table Buku Tanah */}
+        {/* Conditional Table Rendering */}
         {loading ? (
           <p>Loading...</p>
         ) : (
-          activeTab === "bukuTanah" && <LoanTable data={loanData} />
+          <>
+            {activeTab === "bukuTanah" && <LoanTable data={loanData} />}
+            {activeTab === "suratUkur" && <LoanTable data={loanData} />}
+          </>
         )}
-
-        {/* Table Surat Ukur */}
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          activeTab === "suratUkur" && <LoanTable data={loanData} />
-        )}
-
         {/* Pagination */}
         <div className="flex justify-center mt-4 space-x-2">
           {[1, 2, 3, "…"].map((page, index) => (

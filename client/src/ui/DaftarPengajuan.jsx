@@ -12,19 +12,6 @@ function DaftarPengajuan() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleInfoClick = (info) => {
-    alert(info);
-  };
-
-  const handleDelete = () => {
-    alert("Data dihapus!");
-  };
-
-  const handleRejectModal = () => {
-    // kamu bisa ganti ini dengan membuka modal di React state
-    alert("Tolak modal dibuka");
-  };
-
   const dummyData = [
     {
       userId: "user_001",
@@ -78,6 +65,25 @@ function DaftarPengajuan() {
       requestDurasi: 3,
     },
   ];
+
+    const [loanData, setLoanData] = useState([]);
+    const [loading, setLoading] = useState(true);
+  
+    const fetchLoans = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/peminjaman"); // ganti URL kalau beda
+        const data = await response.json();
+        setLoanData(data);
+      } catch (error) {
+        console.error("Gagal fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    useEffect(() => {
+      fetchLoans();
+    }, []);
 
   return (
     <div className="flex min-h-screen font-sans bg-gray-100 text-sm text-gray-800">
@@ -194,18 +200,14 @@ function DaftarPengajuan() {
         {/* Table */}
         {activeTab === "bukuTanah" && (
           <RequestTable
-            data={dummyData}
-            onDelete={handleDelete}
-            onReject={handleRejectModal}
-            onInfoClick={handleInfoClick}
+            data={loanData.filter(
+              (loan) => loan.status === "menunggu")}
           />
         )}
         {activeTab === "suratUkur" && (
           <RequestTable
-            data={dummyData}
-            onDelete={handleDelete}
-            onReject={handleRejectModal}
-            onInfoClick={handleInfoClick}
+            data={loanData.filter(
+              (loan) => loan.status === "menunggu")}
           />
         )}
 

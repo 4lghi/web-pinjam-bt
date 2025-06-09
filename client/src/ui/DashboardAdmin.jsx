@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SidebarAdmin from "./components/SidebarAdmin";
 import LoanTable from "./components/LoanTable";
 
@@ -58,6 +58,25 @@ const DashboardAdmin = () => {
       requestDurasi: 3,
     },
   ];
+
+  const [loanData, setLoanData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchLoans = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/peminjaman"); // ganti URL kalau beda
+      const data = await response.json();
+      setLoanData(data);
+    } catch (error) {
+      console.error("Gagal fetch data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLoans();
+  }, []);
 
   return (
     <div className="flex min-h-screen">
@@ -136,7 +155,28 @@ const DashboardAdmin = () => {
               </button>
             </div>
 
-            <LoanTable data={dummyData} />
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <>
+                {activeTab === "bukuTanah" && (
+                  <LoanTable
+                    data={loanData.filter(
+                      (loan) =>
+                        loan.status === "diterima" || loan.status === "telat"
+                    )}
+                  />
+                )}
+                {activeTab === "suratUkur" && (
+                  <LoanTable
+                    data={loanData.filter(
+                      (loan) =>
+                        loan.status == "diterima" || loan.status === "telat"
+                    )}
+                  />
+                )}
+              </>
+            )}
           </div>
         </div>
       </main>
