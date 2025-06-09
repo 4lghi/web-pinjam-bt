@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import SidebarAdmin from "./components/SidebarAdmin";
 import RequestTable from "./components/RequestTable";
 
@@ -12,78 +13,67 @@ function DaftarPengajuan() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const dummyData = [
-    {
-      userId: "user_001",
-      namaPeminjam: "Andi Prasetyo",
-      status: "disetujui",
-      dateApproved: new Date("2025-05-25T09:00:00Z"),
-      dateRequested: "21/05/2025",
-      dateBorrowed: new Date("2025-05-26T10:00:00Z"),
-      dateReturned: null,
-      reasonIfRejected: null,
-      fixDurasi: 3,
-      jenisHak: "Hak Milik",
-      kecamatan: "Kecamatan A",
-      kelurahan: "Kelurahan A",
-      keperluan: "Penelitian skripsi",
-      nomorHak: 12345,
-      requestDurasi: 5,
-    },
-    {
-      userId: "user_002",
-      namaPeminjam: "Budi Santoso",
-      status: "menunggu",
-      dateApproved: null,
-      dateRequested: new Date("2025-05-26T11:00:00Z"),
-      dateBorrowed: null,
-      dateReturned: null,
-      reasonIfRejected: null,
-      fixDurasi: 1,
-      jenisHak: "HGB",
-      kecamatan: "Kecamatan B",
-      kelurahan: "Kelurahan B",
-      keperluan: "Pengurusan Sertifikat",
-      nomorHak: 67890,
-      requestDurasi: 2,
-    },
-    {
-      userId: "user_003",
-      namaPeminjam: "Citra Lestari",
-      status: "disetujui",
-      dateApproved: new Date("2025-05-20T13:00:00Z"),
-      dateRequested: new Date("2025-05-19T10:00:00Z"),
-      dateBorrowed: "21/05/2025",
-      dateReturned: new Date("2025-05-24T16:00:00Z"),
-      reasonIfRejected: null,
-      fixDurasi: 3,
-      jenisHak: "Hak Pakai",
-      kecamatan: "Kecamatan C",
-      kelurahan: "Kelurahan C",
-      keperluan: "Keperluan pribadi",
-      nomorHak: 54321,
-      requestDurasi: 3,
-    },
-  ];
+  const [loanData, setLoanData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    const [loanData, setLoanData] = useState([]);
-    const [loading, setLoading] = useState(true);
-  
-    const fetchLoans = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/peminjaman"); // ganti URL kalau beda
-        const data = await response.json();
-        setLoanData(data);
-      } catch (error) {
-        console.error("Gagal fetch data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    useEffect(() => {
-      fetchLoans();
-    }, []);
+  const fetchLoans = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/peminjaman"); // ganti URL kalau beda
+      setLoanData(response.data);
+    } catch (error) {
+      console.error("Gagal fetch data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLoans();
+  }, []);
+
+  const handleAccept = async (id) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:3000/peminjaman/${id}`,
+        {
+          status: "diterima",
+        }
+      );
+
+      // Update state setelah sukses
+      setLoanData((prevData) =>
+        prevData.map((loan) =>
+          loan.id === id ? { ...loan, status: "diterima" } : loan
+        )
+      );
+
+      console.log("Status berhasil diubah:", response.data);
+    } catch (error) {
+      console.error("Gagal update status:", error);
+    }
+  };
+
+  const handleRejectModal = async (id) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:3000/peminjaman/${id}`,
+        {
+          status: "ditolak",
+        }
+      );
+
+      // Update state setelah sukses
+      setLoanData((prevData) =>
+        prevData.map((loan) =>
+          loan.id === id ? { ...loan, status: "ditolak" } : loan
+        )
+      );
+
+      console.log("Status berhasil diubah:", response.data);
+    } catch (error) {
+      console.error("Gagal update status:", error);
+    }
+  };
 
   return (
     <div className="flex min-h-screen font-sans bg-gray-100 text-sm text-gray-800">
@@ -200,14 +190,14 @@ function DaftarPengajuan() {
         {/* Table */}
         {activeTab === "bukuTanah" && (
           <RequestTable
-            data={loanData.filter(
-              (loan) => loan.status === "menunggu")}
+            data={loanData.filter((loan) => loan.status === "menunggu")}
+            handleAccept={handleAccept}
+            handleRejectModal={handleRejectModal}
           />
         )}
         {activeTab === "suratUkur" && (
           <RequestTable
-            data={loanData.filter(
-              (loan) => loan.status === "menunggu")}
+            data={loanData.filter((loan) => loan.status === "menunggu")}
           />
         )}
 

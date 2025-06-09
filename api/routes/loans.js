@@ -6,7 +6,7 @@ router.post("/", loansController.createLoan);
 
 router.get("/", loansController.getLoans);
 
-router.put("/:id", loansController.updateLoan);
+router.patch("/:id", loansController.updateLoan);
 
 router.delete("/:id", loansController.deleteLoan);
 

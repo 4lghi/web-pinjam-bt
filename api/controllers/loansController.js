@@ -71,7 +71,7 @@ const getLoans = async (req, res) => {
   }
 }
 
-// PUT untuk update status peminjaman
+// PATCH untuk update status peminjaman
 const updateLoan = async (req, res) => {
   const { id } = req.params;
   const dataUpdate = req.body;
