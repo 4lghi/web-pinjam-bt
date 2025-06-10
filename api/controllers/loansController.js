@@ -69,7 +69,7 @@ const getLoans = async (req, res) => {
       message: "Gagal mengambil data peminjaman.",
     });
   }
-}
+};
 
 // PATCH untuk update status peminjaman
 const updateLoan = async (req, res) => {
@@ -84,7 +84,7 @@ const updateLoan = async (req, res) => {
   } catch (err) {
     res.status(500).json({ status: "error", message: "Gagal update data." });
   }
-}
+};
 
 // DELETE permintaan berdasarkan ID
 const deleteLoan = async (req, res) => {
@@ -98,7 +98,7 @@ const deleteLoan = async (req, res) => {
   } catch (err) {
     res.status(500).json({ status: "error", message: "Gagal hapus data." });
   }
-}
+};
 
 // NEW NEW NEW NEW
 
@@ -194,7 +194,6 @@ const createSu = async (req, res) => {
   }
 };
 
-
 // Endpoint GET /peminjaman
 const getBt = async (req, res) => {
   try {
@@ -216,7 +215,7 @@ const getBt = async (req, res) => {
       message: "Gagal mengambil data peminjaman.",
     });
   }
-}
+};
 
 // Endpoint GET /peminjaman
 const getSu = async (req, res) => {
@@ -239,7 +238,7 @@ const getSu = async (req, res) => {
       message: "Gagal mengambil data peminjaman.",
     });
   }
-}
+};
 
 // PATCH untuk update status peminjaman
 const updateBt = async (req, res) => {
@@ -254,7 +253,7 @@ const updateBt = async (req, res) => {
   } catch (err) {
     res.status(500).json({ status: "error", message: "Gagal update data." });
   }
-}
+};
 
 // PATCH untuk update status peminjaman
 const updateSu = async (req, res) => {
@@ -269,10 +268,17 @@ const updateSu = async (req, res) => {
   } catch (err) {
     res.status(500).json({ status: "error", message: "Gagal update data." });
   }
-}
+};
 
-
-
-
-
-module.exports = { createLoan, getLoans, updateLoan, deleteLoan, getBt, getSu, createBt, createSu, updateBt, updateSu };
+module.exports = {
+  createLoan,
+  getLoans,
+  updateLoan,
+  deleteLoan,
+  getBt,
+  getSu,
+  createBt,
+  createSu,
+  updateBt,
+  updateSu,
+};
