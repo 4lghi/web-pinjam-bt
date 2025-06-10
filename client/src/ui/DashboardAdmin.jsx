@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SidebarAdmin from "./components/SidebarAdmin";
 import LoanTable from "./components/LoanTable";
 import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 const DashboardAdmin = () => {
   const [activeTab, setActiveTab] = useState("bukuTanah");
@@ -14,8 +15,8 @@ const DashboardAdmin = () => {
     const fetchData = async () => {
       try {
         const [btResponse, suResponse] = await Promise.all([
-          axios.get("http://localhost:3000/peminjaman/bukuTanah"),
-          axios.get("http://localhost:3000/peminjaman/suratUkur"),
+          axiosInstance.get("http://localhost:3000/peminjaman/bukuTanah"),
+          axiosInstance.get("http://localhost:3000/peminjaman/suratUkur"),
         ]);
 
         setBtData(btResponse.data);
