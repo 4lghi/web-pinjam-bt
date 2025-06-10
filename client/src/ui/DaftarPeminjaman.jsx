@@ -35,30 +35,24 @@ function DaftarPeminjaman() {
   };
 
   const handleSubmit = async () => {
-    console.log("tes", formData);
+    const endpoint =
+      formData.jenisPeminjaman === "Buku Tanah"
+        ? "http://localhost:3000/peminjaman/bukuTanah"
+        : "http://localhost:3000/peminjaman/suratUkur";
+
     try {
-      const response = await fetch("http://localhost:3000/peminjaman", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Gagal menyimpan data");
-      }
-
-      const result = await response.json();
-      console.log("Berhasil:", result);
-      closeModalForm(); // tutup modal
+      await axios.post(endpoint, formData);
+      alert("Data berhasil disimpan!");
+      closeModalForm();
+      // Reload data jika perlu
     } catch (error) {
-      console.error("Error:", error.message);
+      console.error("Gagal simpan data:", error);
+      alert("Gagal menyimpan data.");
     }
   };
 
   const [formData, setFormData] = useState({
-    jenisPeminjaman: "",
+    jenisPeminjaman: "Buku Tanah",
     namaPeminjam: "",
     jenisHak: "",
     nomorHak: "",
@@ -211,9 +205,14 @@ function DaftarPeminjaman() {
                   <div className="space-y-3">
                     <div>
                       <label>Jenis Peminjaman</label>
-                      <select className="w-full border rounded-lg px-3 py-2">
-                        <option>Buku Tanah</option>
-                        <option>Surat Ukur</option>
+                      <select
+                        className="w-full border rounded-lg px-3 py-2"
+                        name="jenisPeminjaman"
+                        value={formData.jenisPeminjaman}
+                        onChange={handleChange}
+                      >
+                        <option value="Buku Tanah">Buku Tanah</option>
+                        <option value="Surat Ukur">Surat Ukur</option>
                       </select>
                     </div>
                     <div>
@@ -234,12 +233,12 @@ function DaftarPeminjaman() {
                         value={formData.jenisHak}
                         onChange={handleChange}
                       >
-                        <option>Hak Milik</option>
-                        <option>Hak Guna Bangunan</option>
-                        <option>Hak Pakai</option>
-                        <option>Hak Wakaf</option>
-                        <option>Hak Tanggungan</option>
-                        <option>Hak Pengelolaan</option>
+                        <option value="Hak Milik">Hak Milik</option>
+                        <option value="Hak Guna Bangunan">Hak Guna Bangunan</option>
+                        <option value="Hak Pakai">Hak Pakai</option>
+                        <option value="Hak Pakai">Hak Wakaf</option>
+                        <option value="Hak Tanggungan">Hak Tanggungan</option>
+                        <option value="Hak Pengelolaan">Hak Pengelolaan</option>
                       </select>
                     </div>
                     <div>

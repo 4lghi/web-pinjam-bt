@@ -116,7 +116,7 @@ const createBt = async (req, res) => {
 
   const docData = {
     userId: data.userId || "",
-    namaPeminjam: data.namaPeminjam || "",
+    namaPeminjam: data.namaPeminjam,
     status: isAdmin ? "disetujui" : "menunggu persetujuan",
     dateApproved: isAdmin ? admin.firestore.Timestamp.now() : null,
     dateRequested: admin.firestore.Timestamp.now(),
@@ -124,10 +124,10 @@ const createBt = async (req, res) => {
     dateReturned: null,
     reasonIfRejected: null,
     fixDurasi: data.fixDurasi || 1,
-    jenisHak: data.jenisHak || "",
+    jenisHak: data.jenisHak || "Hak Milik",
     kecamatan: data.kecamatan || "",
     kelurahan: data.kelurahan || "",
-    keperluan: data.keperluan || "",
+    keperluan: data.keperluan,
     nomorHak: data.nomorHak || 0,
     requestDurasi: data.requestDurasi || 1,
   };
@@ -162,7 +162,7 @@ const createSu = async (req, res) => {
 
   const docData = {
     userId: data.userId || "",
-    namaPeminjam: data.namaPeminjam || "",
+    namaPeminjam: data.namaPeminjam,
     status: isAdmin ? "disetujui" : "menunggu persetujuan",
     dateApproved: isAdmin ? admin.firestore.Timestamp.now() : null,
     dateRequested: admin.firestore.Timestamp.now(),
@@ -170,10 +170,10 @@ const createSu = async (req, res) => {
     dateReturned: null,
     reasonIfRejected: null,
     fixDurasi: data.fixDurasi || 1,
-    jenisHak: data.jenisHak || "",
+    jenisHak: data.jenisHak || "Hak Milik",
     kecamatan: data.kecamatan || "",
     kelurahan: data.kelurahan || "",
-    keperluan: data.keperluan || "",
+    keperluan: data.keperluan,
     nomorHak: data.nomorHak || 0,
     requestDurasi: data.requestDurasi || 1,
   };
