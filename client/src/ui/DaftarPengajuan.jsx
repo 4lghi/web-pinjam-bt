@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import SidebarAdmin from "./components/SidebarAdmin";
 import RequestTable from "./components/RequestTable";
+import axiosInstance from "../utils/axiosInstance";
+
 
 function DaftarPengajuan() {
   const [activeTab, setActiveTab] = useState("bukuTanah");
@@ -22,8 +24,8 @@ function DaftarPengajuan() {
     const fetchData = async () => {
       try {
         const [btResponse, suResponse] = await Promise.all([
-          axios.get("http://localhost:3000/peminjaman/bukuTanah"),
-          axios.get("http://localhost:3000/peminjaman/suratUkur"),
+          axiosInstance.get("http://localhost:3000/peminjaman/bukuTanah"),
+          axiosInstance.get("http://localhost:3000/peminjaman/suratUkur"),
         ]);
 
         setBtData(btResponse.data);
@@ -49,7 +51,7 @@ function DaftarPengajuan() {
           ? `http://localhost:3000/peminjaman/bukuTanah/${id}`
           : `http://localhost:3000/peminjaman/suratUkur/${id}`;
 
-      const response = await axios.patch(endpoint, {
+      const response = await axiosInstance.patch(endpoint, {
         status: "disetujui",
       });
 

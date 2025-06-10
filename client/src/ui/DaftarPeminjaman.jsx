@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SidebarAdmin from "./components/SidebarAdmin";
 import LoanTable from "./components/LoanTable";
 import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 function DaftarPeminjaman() {
   const [activeTab, setActiveTab] = useState("bukuTanah");
@@ -41,7 +42,7 @@ function DaftarPeminjaman() {
         : "http://localhost:3000/peminjaman/suratUkur";
 
     try {
-      await axios.post(endpoint, formData);
+      await axiosInstance.post(endpoint, formData);
       alert("Data berhasil disimpan!");
       closeModalForm();
       // Reload data jika perlu
@@ -72,8 +73,8 @@ function DaftarPeminjaman() {
     const fetchData = async () => {
       try {
         const [btResponse, suResponse] = await Promise.all([
-          axios.get("http://localhost:3000/peminjaman/bukuTanah"),
-          axios.get("http://localhost:3000/peminjaman/suratUkur"),
+          axiosInstance.get("http://localhost:3000/peminjaman/bukuTanah"),
+          axiosInstance.get("http://localhost:3000/peminjaman/suratUkur"),
         ]);
 
         setBtData(btResponse.data);
