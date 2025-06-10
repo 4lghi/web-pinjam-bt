@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import getTokenPayload from "../utils/checkToken";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const Login = () => {
 
       // Arahkan ke dashboard sesuai role
       if (role === "admin") {
+        getTokenPayload();
         navigate("/dashboardAdmin");
       } else if (role === "user") {
         navigate("/dashboardUser");
