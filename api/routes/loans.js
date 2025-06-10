@@ -17,8 +17,8 @@ router.post("/suratUkur", loansController.createSu);
 router.get("/bukuTanah", loansController.getBt);
 router.get("/suratUkur", loansController.getSu);
 
-// router.patch("/bukuTanah/:id", loansController.updateBtLoan);
-// router.patch("/suratUkur/:id", loansController.updateSuLoan);
+router.patch("/bukuTanah/:id", loansController.updateBt);
+router.patch("/suratUkur/:id", loansController.updateSu);
 
 // router.delete("/bukuTanah/:id", loansController.deleteBtLoan);
 // router.delete("/suratUkur/:id", loansController.deleteSuLoan);

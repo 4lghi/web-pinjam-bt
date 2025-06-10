@@ -5,7 +5,8 @@ const RequestTable = ({
   handleRejectModal = (id) => console.log("Default reject", id),
   handleInfoClick = (loan) => console.log("Default info", loan),
   handleDelete = (id) => console.log("Default delete", id),
-  handleAccept = (id) => {console.log("Default accept", id)}
+  handleAccept = (id) => {console.log("Default accept", id);},
+  jenis
 }) => {
   
   return (
@@ -49,7 +50,7 @@ const RequestTable = ({
               </td>
               <td className="px-4 py-4 flex gap-2 items-center">
                 <span className="cursor-pointer bg-green-200 text-green-600 rounded-full w-7 h-7 hover:bg-green-100 flex items-center justify-center">
-                  <button onClick={() => handleAccept(item.id)}>
+                  <button onClick={() => handleAccept(item.id,jenis)}>
                     <ion-icon class="text-xl mt-1" name="checkmark"></ion-icon>
                   </button>
                 </span>

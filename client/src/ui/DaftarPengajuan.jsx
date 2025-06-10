@@ -13,41 +13,63 @@ function DaftarPengajuan() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const [loanData, setLoanData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchLoans = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/peminjaman"); // ganti URL kalau beda
-      setLoanData(response.data);
-    } catch (error) {
-      console.error("Gagal fetch data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [btData, setBtData] = useState([]);
+  const [suData, setSuData] = useState([]);
 
   useEffect(() => {
-    fetchLoans();
+    const fetchData = async () => {
+      try {
+        const [btResponse, suResponse] = await Promise.all([
+          axios.get("http://localhost:3000/peminjaman/bukuTanah"),
+          axios.get("http://localhost:3000/peminjaman/suratUkur"),
+        ]);
+
+        setBtData(btResponse.data);
+        setSuData(suResponse.data);
+      } catch (error) {
+        console.error("Gagal ambil data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    console.log("BT Data:", btData);
+    console.log("SU Data:", suData);
+
+    fetchData();
   }, []);
 
-  const handleAccept = async (id) => {
+  const handleAccept = async (id, jenis) => {
     try {
-      const response = await axios.patch(
-        `http://localhost:3000/peminjaman/${id}`,
-        {
-          status: "diterima",
-        }
-      );
+      // Pilih endpoint berdasarkan jenis
+      const endpoint =
+        jenis === "bt"
+          ? `http://localhost:3000/peminjaman/bukuTanah/${id}`
+          : `http://localhost:3000/peminjaman/suratUkur/${id}`;
 
-      // Update state setelah sukses
-      setLoanData((prevData) =>
-        prevData.map((loan) =>
-          loan.id === id ? { ...loan, status: "disetujui" } : loan
-        )
-      );
+      const response = await axios.patch(endpoint, {
+        status: "disetujui",
+      });
+
+      // Update state sesuai jenis
+      if (jenis === "bt") {
+        setBtData((prevData) =>
+          prevData.map((loan) =>
+            loan.id === id ? { ...loan, status: "disetujui" } : loan
+          )
+        );
+      } else {
+        setSuData((prevData) =>
+          prevData.map((loan) =>
+            loan.id === id ? { ...loan, status: "disetujui" } : loan
+          )
+        );
+      }
 
       console.log("Status berhasil diubah:", response.data);
+      console.log(btData);
     } catch (error) {
       console.error("Gagal update status:", error);
     }
@@ -190,14 +212,18 @@ function DaftarPengajuan() {
         {/* Table */}
         {activeTab === "bukuTanah" && (
           <RequestTable
-            data={loanData.filter((loan) => loan.status === "menunggu")}
+            data={btData.filter((row) => row.status === "menunggu")}
             handleAccept={handleAccept}
             handleRejectModal={handleRejectModal}
+            jenis="bt"
           />
         )}
         {activeTab === "suratUkur" && (
           <RequestTable
-            data={loanData.filter((loan) => loan.status === "menunggu")}
+            data={suData.filter((row) => row.status === "menunggu")}
+            handleAccept={handleAccept}
+            handleRejectModal={handleRejectModal}
+            jenis="su"
           />
         )}
 

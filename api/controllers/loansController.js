@@ -241,7 +241,38 @@ const getSu = async (req, res) => {
   }
 }
 
+// PATCH untuk update status peminjaman
+const updateBt = async (req, res) => {
+  const { id } = req.params;
+  const dataUpdate = req.body;
+
+  try {
+    await db.collection("bukuTanah").doc(id).update(dataUpdate);
+    res
+      .status(200)
+      .json({ status: "sukses", message: "Data berhasil diperbarui." });
+  } catch (err) {
+    res.status(500).json({ status: "error", message: "Gagal update data." });
+  }
+}
+
+// PATCH untuk update status peminjaman
+const updateSu = async (req, res) => {
+  const { id } = req.params;
+  const dataUpdate = req.body;
+
+  try {
+    await db.collection("suratUkur").doc(id).update(dataUpdate);
+    res
+      .status(200)
+      .json({ status: "sukses", message: "Data berhasil diperbarui." });
+  } catch (err) {
+    res.status(500).json({ status: "error", message: "Gagal update data." });
+  }
+}
 
 
 
-module.exports = { createLoan, getLoans, updateLoan, deleteLoan, getBt, getSu, createBt, createSu };
+
+
+module.exports = { createLoan, getLoans, updateLoan, deleteLoan, getBt, getSu, createBt, createSu, updateBt, updateSu };
