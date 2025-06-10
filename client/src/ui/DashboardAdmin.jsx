@@ -27,9 +27,6 @@ const DashboardAdmin = () => {
       }
     };
 
-    console.log("BT Data:", btData);
-    console.log("SU Data:", suData);
-
     fetchData();
   }, []);
 
