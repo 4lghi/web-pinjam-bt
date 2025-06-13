@@ -25,7 +25,7 @@ const getTokenPayload = () => {
 
     const remaining = `${hours} jam ${minutes} menit ${seconds} detik`;
 
-    console.log("Token masih aktif:");
+    console.log("Token masih aktif:", token);
     console.log("Role:", payload.role);
     console.log("Waktu tersisa:", remaining);
     console.log("Tanggal Exp:", new Date(exp).toLocaleString());

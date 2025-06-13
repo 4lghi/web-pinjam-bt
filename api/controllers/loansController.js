@@ -1,5 +1,4 @@
 const { admin, db } = require("../firebase");
-// const { isAdmin, isUser } = require("../middlewares/auth");
 const isAdmin = true; // Simulasi untuk contoh ini, ganti dengan middleware autentikasi yang sesuai
 
 // Endpoint POST /peminjaman

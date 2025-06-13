@@ -1,7 +1,7 @@
 // controllers/authController.js
+require('dotenv').config();
 const jwt = require("jsonwebtoken");
 const { db } = require("../firebase"); // gunakan firebase-admin
-const SECRET_KEY = "RAHASIAKAMU"; // ganti dengan process.env.JWT_SECRET di produksi
 
 const login = async (req, res) => {
   const { username, password } = req.body;
@@ -25,8 +25,8 @@ const login = async (req, res) => {
         username: userData.username,
         role: userData.role,
       },
-      SECRET_KEY,
-      { expiresIn: "1h" }
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
     );
 
     // Kirim response dengan token dan role
