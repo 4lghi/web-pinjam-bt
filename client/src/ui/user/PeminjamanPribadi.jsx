@@ -26,10 +26,6 @@ function PeminjamanPribadi() {
   const openModal = () => setIsModalOpen(true);
   const closeModalForm = () => setIsModalOpen(false);
 
-  const exportToExcel = () => {
-    // tambahkan logika export di sini
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -173,13 +169,7 @@ function PeminjamanPribadi() {
               )}
             </div>
 
-            {/* Export & Tambah */}
-            <button
-              onClick={exportToExcel}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg"
-            >
-              Export
-            </button>
+            {/* Tambah */}
             <button
               onClick={openModal}
               className="px-4 py-2 bg-sky-900 text-white rounded-lg"

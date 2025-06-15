@@ -1,69 +1,16 @@
 import React, { useEffect, useState } from "react";
 import SidebarUser from "../components/SidebarUser";
 import LoanTable from "../components/LoanTable";
-import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
 
 function PeminjamanUser() {
   const [activeTab, setActiveTab] = useState("bukuTanah");
 
-  const showStatusModal = () => {
-    alert("Fungsi ubah status belum diimplementasikan");
-  };
-
-  const toggleMenu = (e) => {
-    const menu = e.currentTarget.nextElementSibling;
-    menu.classList.toggle("hidden");
-  };
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModalForm = () => setIsModalOpen(false);
-
-  const exportToExcel = () => {
-    // tambahkan logika export di sini
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async () => {
-    const endpoint =
-      formData.jenisPeminjaman === "Buku Tanah"
-        ? "http://localhost:3000/peminjaman/bukuTanah"
-        : "http://localhost:3000/peminjaman/suratUkur";
-
-    try {
-      await axiosInstance.post(endpoint, formData);
-      alert("Data berhasil disimpan!");
-      closeModalForm();
-      // Reload data jika perlu
-    } catch (error) {
-      console.error("Gagal simpan data:", error);
-      alert("Gagal menyimpan data.");
-    }
-  };
-
-  const [formData, setFormData] = useState({
-    jenisPeminjaman: "Buku Tanah",
-    namaPeminjam: "",
-    jenisHak: "",
-    nomorHak: "",
-    seksi: "",
-    kecamatan: "",
-    kelurahan: "",
-    tanggalPeminjaman: "",
-    durasi: "",
-    keperluan: "",
-  });
 
   const [btData, setBtData] = useState([]);
   const [suData, setSuData] = useState([]);
@@ -173,162 +120,12 @@ function PeminjamanUser() {
               )}
             </div>
 
-            {/* Export & Tambah */}
-            <button
-              onClick={exportToExcel}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg"
-            >
-              Export
-            </button>
-            <button
-              onClick={openModal}
-              className="px-4 py-2 bg-sky-900 text-white rounded-lg"
-            >
-              + Tambah
-            </button>
-
             {/* Admin Info */}
             <div className="flex items-center gap-2">
               <i className="bi bi-person-circle text-xl"></i> <span>Admin</span>
             </div>
           </div>
 
-          {/* Modal Tambah Peminjaman */}
-          {isModalOpen && (
-            <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-              <div className="bg-white rounded-xl p-6 w-[700px] relative">
-                <div className="flex justify-between items-start mb-4">
-                  <h2 className="text-xl font-semibold">Tambah Peminjaman</h2>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  {/* Kolom kiri */}
-                  <div className="space-y-3">
-                    <div>
-                      <label>Jenis Peminjaman</label>
-                      <select
-                        className="w-full border rounded-lg px-3 py-2"
-                        name="jenisPeminjaman"
-                        value={formData.jenisPeminjaman}
-                        onChange={handleChange}
-                      >
-                        <option value="Buku Tanah">Buku Tanah</option>
-                        <option value="Surat Ukur">Surat Ukur</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label>Nama Peminjam</label>
-                      <input
-                        type="text"
-                        name="namaPeminjam"
-                        className="w-full border rounded-lg px-3 py-2"
-                        value={formData.namaPeminjam}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div>
-                      <label>Jenis Hak</label>
-                      <select
-                        className="w-full border rounded-lg px-3 py-2"
-                        name="jenisHak"
-                        value={formData.jenisHak}
-                        onChange={handleChange}
-                      >
-                        <option value="Hak Milik">Hak Milik</option>
-                        <option value="Hak Guna Bangunan">
-                          Hak Guna Bangunan
-                        </option>
-                        <option value="Hak Pakai">Hak Pakai</option>
-                        <option value="Hak Pakai">Hak Wakaf</option>
-                        <option value="Hak Tanggungan">Hak Tanggungan</option>
-                        <option value="Hak Pengelolaan">Hak Pengelolaan</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label>Nomor Hak</label>
-                      <input
-                        type="text"
-                        name="nomorHak"
-                        className="w-full border rounded-lg px-3 py-2"
-                        value={formData.nomorHak}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div>
-                      <label>Pilih Seksi</label>
-                      <select className="w-full border rounded-lg px-3 py-2">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>TU</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Kolom kanan */}
-                  <div className="space-y-3">
-                    <div>
-                      <label>Kecamatan</label>
-                      <select className="w-full border rounded-lg px-3 py-2">
-                        <option>...</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label>Kelurahan</label>
-                      <select className="w-full border rounded-lg px-3 py-2">
-                        <option>...</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label>Tanggal Peminjaman</label>
-                      <input
-                        type="date"
-                        className="w-full border rounded-lg px-3 py-2"
-                        name="dateBorrowed"
-                        value={formData.dateBorrowed}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div>
-                      <label>Durasi Peminjaman</label>
-                      <select className="w-full border rounded-lg px-3 py-2">
-                        <option>1 Hari</option>
-                        <option>3 Hari</option>
-                        <option>1 Minggu</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label>Keperluan</label>
-                      <textarea
-                        className="w-full border rounded-lg px-3 py-2"
-                        rows="2"
-                        name="keperluan"
-                        value={formData.keperluan}
-                        onChange={handleChange}
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex justify-end gap-2">
-                  <button
-                    onClick={closeModalForm}
-                    className="px-4 py-2 border rounded-lg"
-                  >
-                    Batalkan
-                  </button>
-                  <button
-                    className="px-4 py-2 bg-sky-900 text-white rounded-lg"
-                    onClick={handleSubmit}
-                  >
-                    Simpan
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Tabs */}
