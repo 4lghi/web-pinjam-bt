@@ -1,12 +1,12 @@
 // utils/checkToken.js
-import jwt_decode from "jwt-decode"; // <== library (khusus frontend)
+import { jwtDecode } from "jwt-decode";// <== library (khusus backend)
 
 const getTokenPayload = () => {
   const token = localStorage.getItem("token");
   if (!token) return null;
 
   try {
-    return jwt_decode(token); // decode tanpa verify
+    return jwtDecode(token); // decode tanpa verify
   } catch (err) {
     return null;
   }
