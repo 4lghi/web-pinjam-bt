@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import SidebarAdmin from "./components/SidebarAdmin";
-import LoanTable from "./components/LoanTable";
+import SidebarAdmin from "../components/SidebarAdmin";
+import LoanTable from "../components/LoanTable";
 import axios from "axios";
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance from "../../utils/axiosInstance";
 
 const DashboardAdmin = () => {
   const [activeTab, setActiveTab] = useState("bukuTanah");

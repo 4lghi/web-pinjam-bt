@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SidebarAdmin from "./components/SidebarAdmin";
+import SidebarAdmin from "../components/SidebarAdmin";
 
 const dataBukuTanah = [
   ["TU", "User", "TU123", ""],

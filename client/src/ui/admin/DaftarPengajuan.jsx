@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import SidebarAdmin from "./components/SidebarAdmin";
-import RequestTable from "./components/RequestTable";
-import axiosInstance from "../utils/axiosInstance";
-
+import SidebarAdmin from "../components/SidebarAdmin";
+import RequestTable from "../components/RequestTable";
+import axiosInstance from "../../utils/axiosInstance";
 
 function DaftarPengajuan() {
   const [activeTab, setActiveTab] = useState("bukuTanah");

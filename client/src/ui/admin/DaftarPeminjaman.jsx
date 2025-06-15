@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import SidebarAdmin from "./components/SidebarAdmin";
-import LoanTable from "./components/LoanTable";
+import SidebarAdmin from "../components/SidebarAdmin";
+import LoanTable from "../components/LoanTable";
 import axios from "axios";
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance from "../../utils/axiosInstance";
 
 function DaftarPeminjaman() {
   const [activeTab, setActiveTab] = useState("bukuTanah");
@@ -235,7 +235,9 @@ function DaftarPeminjaman() {
                         onChange={handleChange}
                       >
                         <option value="Hak Milik">Hak Milik</option>
-                        <option value="Hak Guna Bangunan">Hak Guna Bangunan</option>
+                        <option value="Hak Guna Bangunan">
+                          Hak Guna Bangunan
+                        </option>
                         <option value="Hak Pakai">Hak Pakai</option>
                         <option value="Hak Pakai">Hak Wakaf</option>
                         <option value="Hak Tanggungan">Hak Tanggungan</option>
