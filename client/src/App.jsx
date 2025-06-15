@@ -6,7 +6,7 @@ import DaftarPengajuan from "./ui/admin/DaftarPengajuan";
 import DaftarPengguna from "./ui/admin/DaftarPengguna";
 import DashboardUser from "./ui/user/DashboardUser";
 import PeminjamanUser from "./ui/user/PeminjamanUser";
-// import PeminjamanPribadi from "./ui/user/PeminjamanPribadi";
+import PeminjamanPribadi from "./ui/user/PeminjamanPribadi";
 import ProtectedRoute from "./utils/ProtectedRoute";
 
 function App() {
@@ -58,12 +58,12 @@ function App() {
         }
       />
 
-      {/* <Route
+      <Route
         path="/peminjaman-seksi"
         element={
           <ProtectedRoute element={PeminjamanPribadi} allowedRoles={["user"]} />
         }
-      /> */}
+      />
     </Routes>
   );
 }
