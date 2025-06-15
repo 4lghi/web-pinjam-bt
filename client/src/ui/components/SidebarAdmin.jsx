@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import getTokenPayload from "../../utils/checkToken";
 
 const SidebarAdmin = () => {
   const [showLogout, setShowLogout] = useState(false);
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const handleLogout = () => {
     setShowLogout(false);
@@ -31,7 +34,11 @@ const SidebarAdmin = () => {
         <nav className="flex flex-col text-sm font-medium mt-10 px-4">
           <Link
             to="/dashboardAdmin"
-            className="flex items-center p-2 rounded-md hover:bg-[#022B3A] hover:text-white"
+            className={`flex items-center p-2 rounded-md ${
+                currentPath === "/dashboardAdmin"
+                  ? "bg-[#022B3A] text-white"
+                  : "hover:bg-[#022B3A] hover:text-white"
+              }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +56,11 @@ const SidebarAdmin = () => {
 
           <Link
             to="/daftarPeminjaman"
-            className="flex items-center p-2 rounded-md hover:bg-[#022B3A] hover:text-white mt-4"
+            className={`flex items-center p-2 rounded-md mt-4 ${
+                currentPath === "/daftarPeminjaman"
+                  ? "bg-[#022B3A] text-white"
+                  : "hover:bg-[#022B3A] hover:text-white"
+              }`}          
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +78,11 @@ const SidebarAdmin = () => {
 
           <Link
             to="/daftarPengajuan"
-            className="flex items-center p-2 rounded-md hover:bg-[#022B3A] hover:text-white mt-4"
+            className={`flex items-center p-2 rounded-md mt-4 ${
+                currentPath === "/daftarPengajuan"
+                  ? "bg-[#022B3A] text-white"
+                  : "hover:bg-[#022B3A] hover:text-white"
+              }`}          
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -85,8 +100,11 @@ const SidebarAdmin = () => {
 
           <Link
             to="/daftarPengguna"
-            className="flex items-center p-2 rounded-md hover:bg-[#022B3A] hover:text-white mt-4"
-          >
+            className={`flex items-center p-2 rounded-md mt-4 ${
+                currentPath === "/daftarPengguna"
+                  ? "bg-[#022B3A] text-white"
+                  : "hover:bg-[#022B3A] hover:text-white"
+              }`}          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"

@@ -104,12 +104,12 @@ function DaftarPeminjaman() {
           {/* Search */}
           <div className="relative w-[550px]">
             <input
-              type="text"
+              type="search"
               placeholder="Cari peminjaman"
               className="w-full pl-10 pr-20 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
             />
             <i className="bi bi-search absolute left-3 top-2.5 text-gray-400"></i>
-            <button className="h-full absolute right-[0.5px] top-[0.5px] bottom-1 px-4 bg-transparent text-black rounded-full hover:bg-slate-200 transition">
+            <button className="h-full absolute right-[0.5px] top-[0.3px] bottom-1 px-4 bg-transparent text-black rounded-full hover:bg-slate-200 transition">
               Search
             </button>
           </div>

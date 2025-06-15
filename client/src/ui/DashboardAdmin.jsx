@@ -49,7 +49,7 @@ const DashboardAdmin = () => {
             </a>
             <div className="flex items-center gap-2">
               <i className="bi bi-person-circle text-xl"></i>{" "}
-              <span className="font-semibold">User</span>
+              <span className="font-semibold">Admin</span>
             </div>
           </div>
         </div>
