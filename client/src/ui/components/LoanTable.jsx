@@ -1,16 +1,18 @@
 import React from "react";
+import getTokenPayload from "../../utils/checkToken";
 
 const statusColorMap = {
-  menunggu: "bg-yellow-100 text-yellow-700",     // Menunggu persetujuan
-  disetujui: "bg-blue-100 text-blue-700",         // Sudah disetujui, belum diambil
-  diterima: "bg-purple-100 text-purple-700",      // Sedang dipinjam
-  telat: "bg-orange-100 text-orange-700",         // Melebihi waktu peminjaman
-  dikembalikan: "bg-green-100 text-green-700",    // Sudah dikembalikan
-  ditolak: "bg-red-100 text-red-700",             // Tidak disetujui
+  menunggu: "bg-yellow-100 text-yellow-700", // Menunggu persetujuan
+  disetujui: "bg-blue-100 text-blue-700", // Sudah disetujui, belum diambil
+  diterima: "bg-purple-100 text-purple-700", // Sedang dipinjam
+  telat: "bg-orange-100 text-orange-700", // Melebihi waktu peminjaman
+  dikembalikan: "bg-green-100 text-green-700", // Sudah dikembalikan
+  ditolak: "bg-red-100 text-red-700", // Tidak disetujui
 };
 
-
 function LoanTable({ data }) {
+  const user = getTokenPayload();
+  const userRole = user?.role;
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full border rounded-xl overflow-hidden">
@@ -55,7 +57,8 @@ function LoanTable({ data }) {
                 >
                   !
                 </button>
-                <div className="inline-block relative group">
+                {userRole === "admin" && (
+                  <div className="inline-block relative group">
                   <button className="text-black text-lg">⋮</button>
                   <div className="dropdown-menu hidden group-hover:block absolute bg-white border rounded shadow-md right-0 mt-2 z-10">
                     <ul>
@@ -77,6 +80,7 @@ function LoanTable({ data }) {
                     </ul>
                   </div>
                 </div>
+                )}
               </td>
             </tr>
           ))}
