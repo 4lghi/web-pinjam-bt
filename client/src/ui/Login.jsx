@@ -30,7 +30,7 @@ const Login = () => {
         getTokenPayload();
         navigate("/dashboardAdmin");
       } else if (role === "user") {
-        navigate("/dashboardUser");
+        navigate("/dashboard");
       } else {
         alert("Role tidak dikenali");
       }

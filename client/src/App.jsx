@@ -4,6 +4,9 @@ import DashboardAdmin from "./ui/admin/DashboardAdmin";
 import DaftarPeminjaman from "./ui/admin/DaftarPeminjaman";
 import DaftarPengajuan from "./ui/admin/DaftarPengajuan";
 import DaftarPengguna from "./ui/admin/DaftarPengguna";
+import DashboardUser from "./ui/user/DashboardUser";
+import PeminjamanUser from "./ui/user/PeminjamanUser";
+// import PeminjamanPribadi from "./ui/user/PeminjamanPribadi";
 import ProtectedRoute from "./utils/ProtectedRoute";
 
 function App() {
@@ -11,6 +14,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Login />} />
 
+      {/* Admin Routes */}
       <Route
         path="/dashboardAdmin"
         element={
@@ -38,6 +42,28 @@ function App() {
           <ProtectedRoute element={DaftarPengguna} allowedRoles={["admin"]} />
         }
       />
+
+      {/* User Routes */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute element={DashboardUser} allowedRoles={["user"]} />
+        }
+      />
+
+      <Route
+        path="/peminjaman"
+        element={
+          <ProtectedRoute element={PeminjamanUser} allowedRoles={["user"]} />
+        }
+      />
+
+      {/* <Route
+        path="/peminjaman-seksi"
+        element={
+          <ProtectedRoute element={PeminjamanPribadi} allowedRoles={["user"]} />
+        }
+      /> */}
     </Routes>
   );
 }
