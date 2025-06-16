@@ -77,7 +77,7 @@ const DashboardUser = () => {
         <div className="flex items-center justify-between gap-4 mb-6">
           <h1 className="text-xl font-bold">Pinjam BT/SU</h1>
           <div className="flex items-center space-x-4">
-            <a href="/src/notif_user.html" className="relative cursor-pointer">
+            <a href="/notifikasi-user" className="relative cursor-pointer">
               <span className="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                 1
               </span>
