@@ -5,6 +5,8 @@ import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
 
 const DashboardAdmin = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  
   const [activeTab, setActiveTab] = useState("bukuTanah");
 
   const [btData, setBtData] = useState([]);
@@ -31,6 +33,31 @@ const DashboardAdmin = () => {
     fetchData();
   }, []);
 
+  // search
+  const filterData = (data) => {
+    const keywords = searchQuery.toLowerCase().split(" ");
+
+    return data.filter((item) => {
+      const valuesToSearch = [
+        item.namaPeminjam,
+        item.jenisHak,
+        item.nomorHak,
+        item.kecamatan,
+        item.kelurahan,
+      ];
+
+      const combinedString = valuesToSearch
+        .map((val) => String(val).toLowerCase())
+        .join(" ");
+
+      return keywords.every((kw) => combinedString.includes(kw));
+    });
+  };
+
+  const filteredBTData = filterData(btData);
+  const filteredSUData = filterData(suData);
+
+
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
@@ -48,7 +75,7 @@ const DashboardAdmin = () => {
               <ion-icon class="text-xl mt-2" name="notifications"></ion-icon>
             </a>
             <div className="flex items-center gap-2">
-              <i className="bi bi-person-circle text-xl"></i>{" "}
+              <ion-icon className="text-2xl" name="person-circle-outline"></ion-icon>{" "}
               <span className="font-semibold">Admin</span>
             </div>
           </div>
@@ -77,13 +104,19 @@ const DashboardAdmin = () => {
           <div className="p-4 font-semibold text-lg text-gray-800">
             Daftar Peminjaman Belum Dikembalikan
           </div>
-
+          
           <div className="p-4">
-            <input
-              type="text"
-              placeholder="Cari nama peminjam atau nomor dokumen..."
-              className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
-            />
+          {/* Search */}
+            <div className="relative">
+              <input
+                type="search"
+                placeholder="Cari peminjam yang belum dikembalikan"
+                className="w-full pl-10 px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <ion-icon className="absolute left-3 top-2 text-black text-xl" name="search-outline"></ion-icon>
+            </div>
 
             <div className="flex space-x-2 mb-4">
               <button
@@ -114,7 +147,7 @@ const DashboardAdmin = () => {
               <>
                 {activeTab === "bukuTanah" && (
                   <LoanTable
-                    data={btData.filter(
+                    data={filteredBTData.filter(
                       (row) =>
                         row.status === "diterima" || row.status === "telat"
                     )}
@@ -122,7 +155,7 @@ const DashboardAdmin = () => {
                 )}
                 {activeTab === "suratUkur" && (
                   <LoanTable
-                    data={suData.filter(
+                    data={filteredSUData.filter(
                       (row) =>
                         row.status == "diterima" || row.status === "telat"
                     )}

@@ -5,6 +5,8 @@ import RequestTable from "../components/RequestTable";
 import axiosInstance from "../../utils/axiosInstance";
 
 function DaftarPengajuan() {
+  const [searchQuery, setSearchQuery] = useState("");
+  
   const [activeTab, setActiveTab] = useState("bukuTanah");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,6 +43,30 @@ function DaftarPengajuan() {
 
     fetchData();
   }, []);
+
+  // search
+  const filterData = (data) => {
+    const keywords = searchQuery.toLowerCase().split(" ");
+
+    return data.filter((item) => {
+      const valuesToSearch = [
+        item.namaPeminjam,
+        item.jenisHak,
+        item.nomorHak,
+        item.kecamatan,
+        item.kelurahan,
+      ];
+
+      const combinedString = valuesToSearch
+        .map((val) => String(val).toLowerCase())
+        .join(" ");
+
+      return keywords.every((kw) => combinedString.includes(kw));
+    });
+  };
+
+  const filteredBTData = filterData(btData);
+  const filteredSUData = filterData(suData);
 
   const handleAccept = async (id, jenis) => {
     try {
@@ -110,14 +136,13 @@ function DaftarPengajuan() {
           {/* Search */}
           <div className="relative w-[550px]">
             <input
-              type="text"
-              placeholder="Cari peminjaman"
-              className="w-full pl-10 pr-20 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              type="search"
+              placeholder="Cari pengajuan peminjaman"
+              className="w-full pl-10 pr-5 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <i className="bi bi-search absolute left-3 top-2.5 text-gray-400"></i>
-            <button className="h-full absolute right-[0.5px] top-[0.5px] bottom-1 px-4 bg-transparent text-black rounded-full hover:bg-slate-200 transition">
-              Search
-            </button>
+            <ion-icon className="absolute left-3 top-2 text-black text-xl" name="search-outline"></ion-icon>
           </div>
 
           <div className="flex items-center gap-4">
@@ -181,7 +206,8 @@ function DaftarPengajuan() {
 
             {/* Admin Info */}
             <div className="flex items-center gap-2">
-              <i className="bi bi-person-circle text-xl"></i> <span>Admin</span>
+              <ion-icon className="text-2xl" name="person-circle-outline"></ion-icon>
+              <span className="font-semibold">Admin</span>
             </div>
           </div>
         </div>
@@ -213,7 +239,7 @@ function DaftarPengajuan() {
         {/* Table */}
         {activeTab === "bukuTanah" && (
           <RequestTable
-            data={btData.filter((row) => row.status === "menunggu")}
+            data={filteredBTData.filter((row) => row.status === "menunggu")}
             handleAccept={handleAccept}
             handleRejectModal={handleRejectModal}
             jenis="bt"
@@ -221,7 +247,7 @@ function DaftarPengajuan() {
         )}
         {activeTab === "suratUkur" && (
           <RequestTable
-            data={suData.filter((row) => row.status === "menunggu")}
+            data={filteredSUData.filter((row) => row.status === "menunggu")}
             handleAccept={handleAccept}
             handleRejectModal={handleRejectModal}
             jenis="su"

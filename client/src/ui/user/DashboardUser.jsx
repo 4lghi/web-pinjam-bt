@@ -4,6 +4,8 @@ import LoanTable from "../components/LoanTable";
 import axiosInstance from "../../utils/axiosInstance";
 
 const DashboardUser = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  
   const [activeTab, setActiveTab] = useState("bukuTanah");
 
   const [btData, setBtData] = useState([]);
@@ -30,6 +32,30 @@ const DashboardUser = () => {
     fetchData();
   }, []);
 
+  // search
+  const filterData = (data) => {
+    const keywords = searchQuery.toLowerCase().split(" ");
+
+    return data.filter((item) => {
+      const valuesToSearch = [
+        item.namaPeminjam,
+        item.jenisHak,
+        item.nomorHak,
+        item.kecamatan,
+        item.kelurahan,
+      ];
+
+      const combinedString = valuesToSearch
+        .map((val) => String(val).toLowerCase())
+        .join(" ");
+
+      return keywords.every((kw) => combinedString.includes(kw));
+    });
+  };
+
+  const filteredBTData = filterData(btData);
+  const filteredSUData = filterData(suData);
+
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
@@ -47,21 +73,14 @@ const DashboardUser = () => {
               <ion-icon class="text-xl mt-2" name="notifications"></ion-icon>
             </a>
             <div className="flex items-center gap-2">
-              <i className="bi bi-person-circle text-xl"></i>{" "}
-              <span className="font-semibold">Admin</span>
+              <ion-icon className="text-2xl" name="person-circle-outline"></ion-icon>{" "}
+              <span className="font-semibold">User</span>
             </div>
           </div>
         </div>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="flex items-center gap-4 bg-yellow-100 p-6 rounded-lg shadow">
-            <div className="text-yellow-800 text-3xl">⚠️</div>
-            <div>
-              <div className="text-gray-700">Terlambat</div>
-              <div className="text-2xl font-bold">0</div>
-            </div>
-          </div>
           <div className="flex items-center gap-4 bg-red-100 p-6 rounded-lg shadow">
             <div className="text-red-800 text-3xl">❌</div>
             <div>
@@ -78,11 +97,17 @@ const DashboardUser = () => {
           </div>
 
           <div className="p-4">
-            <input
-              type="text"
-              placeholder="Cari nama peminjam atau nomor dokumen..."
-              className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
-            />
+            {/* Search */}
+            <div className="relative">
+              <input
+                type="search"
+                placeholder="Cari nama peminjam atau nomor dokumen..."
+                className="w-full pl-10 px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <ion-icon className="absolute left-3 top-2 text-black text-xl" name="search-outline"></ion-icon>
+            </div>
 
             <div className="flex space-x-2 mb-4">
               <button
@@ -113,7 +138,7 @@ const DashboardUser = () => {
               <>
                 {activeTab === "bukuTanah" && (
                   <LoanTable
-                    data={btData.filter(
+                    data={filteredBTData.filter(
                       (row) =>
                         row.status === "diterima" || row.status === "telat"
                     )}
@@ -121,7 +146,7 @@ const DashboardUser = () => {
                 )}
                 {activeTab === "suratUkur" && (
                   <LoanTable
-                    data={suData.filter(
+                    data={filteredSUData.filter(
                       (row) =>
                         row.status == "diterima" || row.status === "telat"
                     )}

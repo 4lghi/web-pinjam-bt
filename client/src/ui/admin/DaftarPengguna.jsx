@@ -46,12 +46,12 @@ export default function DaftarPengguna() {
                 </span>
                 <ion-icon class="text-xl mt-2" name="notifications"></ion-icon>
               </span>
-              <button className="px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-teal-900">
+              <button className="px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-sky-700 font-semibold cursor-pointer">
                 + Tambah
               </button>
               <div className="flex items-center gap-2">
-                <i className="bi bi-person-circle text-xl"></i>{" "}
-                <span>Admin</span>
+                <ion-icon className="text-2xl" name="person-circle-outline"></ion-icon>{" "}
+                <span className="font-semibold">Admin</span>
               </div>
             </div>
           </div>

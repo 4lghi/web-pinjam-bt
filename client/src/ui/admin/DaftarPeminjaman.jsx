@@ -5,6 +5,8 @@ import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
 
 function DaftarPeminjaman() {
+  const [searchQuery, setSearchQuery] = useState("");
+
   const [activeTab, setActiveTab] = useState("bukuTanah");
 
   const showStatusModal = () => {
@@ -92,6 +94,31 @@ function DaftarPeminjaman() {
     fetchData();
   }, []);
 
+  // search
+  const filterData = (data) => {
+    const keywords = searchQuery.toLowerCase().split(" ");
+
+    return data.filter((item) => {
+      const valuesToSearch = [
+        item.namaPeminjam,
+        item.jenisHak,
+        item.nomorHak,
+        item.kecamatan,
+        item.kelurahan,
+      ];
+
+      const combinedString = valuesToSearch
+        .map((val) => String(val).toLowerCase())
+        .join(" ");
+
+      return keywords.every((kw) => combinedString.includes(kw));
+    });
+  };
+
+  const filteredBTData = filterData(btData);
+  const filteredSUData = filterData(suData);
+
+
   return (
     <div className="flex min-h-screen font-sans bg-gray-100 text-sm text-gray-800">
       {/* Sidebar */}
@@ -106,12 +133,11 @@ function DaftarPeminjaman() {
             <input
               type="search"
               placeholder="Cari peminjaman"
-              className="w-full pl-10 pr-20 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              className="w-full pl-10 pr-5 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <i className="bi bi-search absolute left-3 top-2.5 text-gray-400"></i>
-            <button className="h-full absolute right-[0.5px] top-[0.3px] bottom-1 px-4 bg-transparent text-black rounded-full hover:bg-slate-200 transition">
-              Search
-            </button>
+            <ion-icon className="absolute left-3 top-2 text-black text-xl" name="search-outline"></ion-icon>
           </div>
 
           <div className="flex items-center gap-4">
@@ -121,7 +147,7 @@ function DaftarPeminjaman() {
                 <span className="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                   1
                 </span>
-                <ion-icon class="text-xl mt-2" name="notifications"></ion-icon>
+                <ion-icon className="text-xl mt-2 ml-2" name="notifications"></ion-icon>
               </span>
             </a>
 
@@ -134,6 +160,7 @@ function DaftarPeminjaman() {
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
+                    name="filter"
                   >
                     <path
                       fill="currentColor"
@@ -176,20 +203,21 @@ function DaftarPeminjaman() {
             {/* Export & Tambah */}
             <button
               onClick={exportToExcel}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg"
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-400 font-semibold cursor-pointer"
             >
               Export
             </button>
             <button
               onClick={openModal}
-              className="px-4 py-2 bg-sky-900 text-white rounded-lg"
+              className="px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-sky-700 font-semibold cursor-pointer"
             >
               + Tambah
             </button>
 
             {/* Admin Info */}
             <div className="flex items-center gap-2">
-              <i className="bi bi-person-circle text-xl"></i> <span>Admin</span>
+              <ion-icon className="text-2xl" name="person-circle-outline"></ion-icon>
+              <span className="font-semibold">Admin</span>
             </div>
           </div>
 
@@ -360,8 +388,8 @@ function DaftarPeminjaman() {
           <p>Loading...</p>
         ) : (
           <>
-            {activeTab === "bukuTanah" && <LoanTable data={btData} />}
-            {activeTab === "suratUkur" && <LoanTable data={suData} />}
+            {activeTab === "bukuTanah" && <LoanTable data={filteredBTData} />}
+            {activeTab === "suratUkur" && <LoanTable data={filteredSUData} />}
           </>
         )}
         {/* Pagination */}

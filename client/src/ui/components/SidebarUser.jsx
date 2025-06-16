@@ -19,7 +19,7 @@ const SidebarUser = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen z-50">
       {/* Sidebar */}
       <aside className="sidebar fixed top-0 bottom-0 left-0 w-60 bg-[#bfdbf7] text-black h-screen rounded-tr-3xl rounded-br-3xl flex flex-col">
         <Link to="/dashboard" className="text-center mt-4">
@@ -34,7 +34,7 @@ const SidebarUser = () => {
           <Link
             to="/dashboard"
             className={`flex items-center p-2 rounded-md ${
-                currentPath === "/dashboardAdmin"
+                currentPath === "/dashboard"
                   ? "bg-[#022B3A] text-white"
                   : "hover:bg-[#022B3A] hover:text-white"
               }`}
@@ -56,7 +56,7 @@ const SidebarUser = () => {
           <Link
             to="/peminjaman"
             className={`flex items-center p-2 rounded-md mt-4 ${
-                currentPath === "/daftar-peminjaman"
+                currentPath === "/peminjaman"
                   ? "bg-[#022B3A] text-white"
                   : "hover:bg-[#022B3A] hover:text-white"
               }`}          
