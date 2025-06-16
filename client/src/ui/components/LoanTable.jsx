@@ -51,35 +51,38 @@ function LoanTable({ data }) {
                 </span>
               </td>
               <td className="px-4 py-2 relative">
-                <button
-                  onClick={() => alert(row.keperluan || "Tidak ada info")}
-                  className="text-lg font-bold mr-2"
-                >
-                  !
-                </button>
-                {userRole === "admin" && (
-                  <div className="inline-block relative group">
-                  <button className="text-black text-lg">⋮</button>
-                  <div className="dropdown-menu hidden group-hover:block absolute bg-white border rounded shadow-md right-0 mt-2 z-10">
-                    <ul>
-                      <li>
-                        <button className="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">
-                          ✏️ Edit
-                        </button>
-                      </li>
-                      <li>
-                        <button className="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">
-                          🗑️ Hapus
-                        </button>
-                      </li>
-                      <li>
-                        <button className="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">
-                          🔄 Edit Status
-                        </button>
-                      </li>
-                    </ul>
+                <div className="relative inline-block group">
+                  <span className="text-lg font-bold cursor-default">!</span>
+
+                  {/* Tooltip muncul saat hover */}
+                  <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 w-48 p-2 text-sm bg-gray-800 text-white rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10 whitespace-pre-wrap">
+                    {row.keperluan}
                   </div>
                 </div>
+
+                {userRole === "admin" && (
+                  <div className="inline-block relative group">
+                    <button className="text-black text-lg">⋮</button>
+                    <div className="dropdown-menu hidden group-hover:block absolute bg-white border rounded shadow-md right-0 mt-2 z-10">
+                      <ul>
+                        <li>
+                          <button className="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">
+                            ✏️ Edit
+                          </button>
+                        </li>
+                        <li>
+                          <button className="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">
+                            🗑️ Hapus
+                          </button>
+                        </li>
+                        <li>
+                          <button className="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100">
+                            🔄 Edit Status
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
                 )}
               </td>
             </tr>

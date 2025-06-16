@@ -4,8 +4,10 @@ import LoanTable from "../components/LoanTable";
 import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
 import getTokenPayload from "../../utils/checkToken";
+import wilayah from "../../assets/wilayah-medan.json";
 
 function PeminjamanPribadi() {
+
   const [searchQuery, setSearchQuery] = useState("");
 
   const [activeTab, setActiveTab] = useState("bukuTanah");
@@ -70,6 +72,14 @@ function PeminjamanPribadi() {
 
   const payload = getTokenPayload();
   const loggedInUserId = payload.username;
+ 
+  useEffect(() => {
+  const payload = getTokenPayload();
+  if (payload) {
+    setFormData((prev) => ({ ...prev, userId: payload.username }));
+  }
+}, []);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -125,6 +135,20 @@ function PeminjamanPribadi() {
 
   const filteredBTData = filterData(btData);
   const filteredSUData = filterData(suData);
+
+  const [selectedKecamatan, setSelectedKecamatan] = useState("");
+  const [kelurahanOptions, setKelurahanOptions] = useState([]);
+
+  const handleKecamatanChange = (e) => {
+    const selected = e.target.value;
+    setSelectedKecamatan(selected);
+    setKelurahanOptions(wilayah[selected] || []);
+    setFormData((prev) => ({ ...prev, kecamatan: selected, kelurahan: "" }));
+  };
+
+  const handleKelurahanChange = (e) => {
+    setFormData((prev) => ({ ...prev, kelurahan: e.target.value }));
+  };
 
   return (
     <div className="flex min-h-screen font-sans bg-gray-100 text-sm text-gray-800">
@@ -234,21 +258,24 @@ function PeminjamanPribadi() {
           {isModalOpen && (
             <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
               <div className="bg-white rounded-xl p-6 w-[700px] relative">
+                {/* Header */}
                 <div className="flex justify-between items-start mb-4">
                   <h2 className="text-xl font-semibold">Tambah Peminjaman</h2>
                 </div>
 
+                {/* Form */}
                 <div className="grid grid-cols-2 gap-4">
                   {/* Kolom kiri */}
                   <div className="space-y-3">
                     <div>
                       <label>Jenis Peminjaman</label>
                       <select
-                        className="w-full border rounded-lg px-3 py-2"
                         name="jenisPeminjaman"
+                        className="w-full border rounded-lg px-3 py-2"
                         value={formData.jenisPeminjaman}
                         onChange={handleChange}
                       >
+                        <option value="">-- Pilih --</option>
                         <option value="Buku Tanah">Buku Tanah</option>
                         <option value="Surat Ukur">Surat Ukur</option>
                       </select>
@@ -266,17 +293,18 @@ function PeminjamanPribadi() {
                     <div>
                       <label>Jenis Hak</label>
                       <select
-                        className="w-full border rounded-lg px-3 py-2"
                         name="jenisHak"
+                        className="w-full border rounded-lg px-3 py-2"
                         value={formData.jenisHak}
                         onChange={handleChange}
                       >
+                        <option value="">-- Pilih --</option>
                         <option value="Hak Milik">Hak Milik</option>
                         <option value="Hak Guna Bangunan">
                           Hak Guna Bangunan
                         </option>
                         <option value="Hak Pakai">Hak Pakai</option>
-                        <option value="Hak Pakai">Hak Wakaf</option>
+                        <option value="Hak Wakaf">Hak Wakaf</option>
                         <option value="Hak Tanggungan">Hak Tanggungan</option>
                         <option value="Hak Pengelolaan">Hak Pengelolaan</option>
                       </select>
@@ -292,15 +320,14 @@ function PeminjamanPribadi() {
                       />
                     </div>
                     <div>
-                      <label>Pilih Seksi</label>
-                      <select className="w-full border rounded-lg px-3 py-2">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>TU</option>
-                      </select>
+                      <label>Keperluan</label>
+                      <textarea
+                        name="keperluan"
+                        className="w-full border rounded-lg px-3 py-2"
+                        rows="2"
+                        value={formData.keperluan}
+                        onChange={handleChange}
+                      />
                     </div>
                   </div>
 
@@ -308,47 +335,63 @@ function PeminjamanPribadi() {
                   <div className="space-y-3">
                     <div>
                       <label>Kecamatan</label>
-                      <select className="w-full border rounded-lg px-3 py-2">
-                        <option>...</option>
+                      <select
+                        className="w-full border rounded-lg px-3 py-2"
+                        value={formData.kecamatan || ""}
+                        onChange={handleKecamatanChange}
+                      >
+                        <option value="">-- Pilih Kecamatan --</option>
+                        {Object.keys(wilayah).map((kec) => (
+                          <option key={kec} value={kec}>
+                            {kec}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div>
                       <label>Kelurahan</label>
-                      <select className="w-full border rounded-lg px-3 py-2">
-                        <option>...</option>
+                      <select
+                        className="w-full border rounded-lg px-3 py-2"
+                        value={formData.kelurahan || ""}
+                        onChange={handleKelurahanChange}
+                        disabled={!selectedKecamatan}
+                      >
+                        <option value="">-- Pilih Kelurahan --</option>
+                        {kelurahanOptions.map((kel) => (
+                          <option key={kel} value={kel}>
+                            {kel}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div>
                       <label>Tanggal Peminjaman</label>
                       <input
                         type="date"
-                        className="w-full border rounded-lg px-3 py-2"
                         name="dateBorrowed"
+                        className="w-full border rounded-lg px-3 py-2"
                         value={formData.dateBorrowed}
                         onChange={handleChange}
                       />
                     </div>
                     <div>
                       <label>Durasi Peminjaman</label>
-                      <select className="w-full border rounded-lg px-3 py-2">
-                        <option>1 Hari</option>
-                        <option>3 Hari</option>
-                        <option>1 Minggu</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label>Keperluan</label>
-                      <textarea
+                      <select
+                        name="durasi"
                         className="w-full border rounded-lg px-3 py-2"
-                        rows="2"
-                        name="keperluan"
-                        value={formData.keperluan}
+                        value={formData.durasi}
                         onChange={handleChange}
-                      ></textarea>
+                      >
+                        <option value="">-- Pilih Durasi --</option>
+                        <option value="1 Hari">1 Hari</option>
+                        <option value="3 Hari">3 Hari</option>
+                        <option value="1 Minggu">1 Minggu</option>
+                      </select>
                     </div>
                   </div>
                 </div>
 
+                {/* Tombol Aksi */}
                 <div className="mt-6 flex justify-end gap-2">
                   <button
                     onClick={closeModalForm}
@@ -357,8 +400,8 @@ function PeminjamanPribadi() {
                     Batalkan
                   </button>
                   <button
-                    className="px-4 py-2 bg-sky-900 text-white rounded-lg"
                     onClick={handleSubmit}
+                    className="px-4 py-2 bg-sky-900 text-white rounded-lg"
                   >
                     Simpan
                   </button>
