@@ -2,16 +2,19 @@ import React, { useEffect, useState } from "react";
 import SidebarUser from "../components/SidebarUser";
 import LoanTable from "../components/LoanTable";
 import axiosInstance from "../../utils/axiosInstance";
+import getTokenPayload from "../../utils/checkToken";
 
 const DashboardUser = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   const [activeTab, setActiveTab] = useState("bukuTanah");
 
   const [btData, setBtData] = useState([]);
   const [suData, setSuData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const payload = getTokenPayload();
+  const loggedInUserId = payload.username;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -20,8 +23,16 @@ const DashboardUser = () => {
           axiosInstance.get("http://localhost:3000/peminjaman/suratUkur"),
         ]);
 
-        setBtData(btResponse.data);
-        setSuData(suResponse.data);
+        const filteredBt = btResponse.data.filter(
+          (item) => item.userId === loggedInUserId
+        );
+
+        const filteredSu = suResponse.data.filter(
+          (item) => item.userId === loggedInUserId
+        );
+
+        setBtData(filteredBt);
+        setSuData(filteredSu);
       } catch (error) {
         console.error("Gagal ambil data:", error);
       } finally {
@@ -73,7 +84,10 @@ const DashboardUser = () => {
               <ion-icon class="text-xl mt-2" name="notifications"></ion-icon>
             </a>
             <div className="flex items-center gap-2">
-              <ion-icon className="text-2xl" name="person-circle-outline"></ion-icon>{" "}
+              <ion-icon
+                className="text-2xl"
+                name="person-circle-outline"
+              ></ion-icon>{" "}
               <span className="font-semibold">User</span>
             </div>
           </div>
@@ -106,7 +120,10 @@ const DashboardUser = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <ion-icon className="absolute left-3 top-2 text-black text-xl" name="search-outline"></ion-icon>
+              <ion-icon
+                className="absolute left-3 top-2 text-black text-xl"
+                name="search-outline"
+              ></ion-icon>
             </div>
 
             <div className="flex space-x-2 mb-4">

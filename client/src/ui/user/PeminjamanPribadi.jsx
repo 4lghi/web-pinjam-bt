@@ -3,10 +3,11 @@ import SidebarUser from "../components/SidebarUser";
 import LoanTable from "../components/LoanTable";
 import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
+import getTokenPayload from "../../utils/checkToken";
 
 function PeminjamanPribadi() {
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   const [activeTab, setActiveTab] = useState("bukuTanah");
 
   const showStatusModal = () => {
@@ -67,6 +68,9 @@ function PeminjamanPribadi() {
   const [suData, setSuData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const payload = getTokenPayload();
+  const loggedInUserId = payload.username;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -75,8 +79,16 @@ function PeminjamanPribadi() {
           axiosInstance.get("http://localhost:3000/peminjaman/suratUkur"),
         ]);
 
-        setBtData(btResponse.data);
-        setSuData(suResponse.data);
+        const filteredBt = btResponse.data.filter(
+          (item) => item.userId === loggedInUserId
+        );
+
+        const filteredSu = suResponse.data.filter(
+          (item) => item.userId === loggedInUserId
+        );
+
+        setBtData(filteredBt);
+        setSuData(filteredSu);
       } catch (error) {
         console.error("Gagal ambil data:", error);
       } finally {
@@ -132,7 +144,10 @@ function PeminjamanPribadi() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <ion-icon className="absolute left-3 top-2 text-black text-xl" name="search-outline"></ion-icon>
+            <ion-icon
+              className="absolute left-3 top-2 text-black text-xl"
+              name="search-outline"
+            ></ion-icon>
           </div>
 
           <div className="flex items-center gap-4">
@@ -142,7 +157,10 @@ function PeminjamanPribadi() {
                 <span className="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                   1
                 </span>
-                <ion-icon className="text-xl mt-2 ml-2" name="notifications"></ion-icon>
+                <ion-icon
+                  className="text-xl mt-2 ml-2"
+                  name="notifications"
+                ></ion-icon>
               </span>
             </a>
 
@@ -204,7 +222,10 @@ function PeminjamanPribadi() {
 
             {/* User Info */}
             <div className="flex items-center gap-2">
-              <ion-icon className="text-2xl" name="person-circle-outline"></ion-icon>
+              <ion-icon
+                className="text-2xl"
+                name="person-circle-outline"
+              ></ion-icon>
               <span className="font-semibold">User</span>
             </div>
           </div>
