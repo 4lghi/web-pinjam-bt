@@ -3,6 +3,7 @@ import SidebarAdmin from "../components/SidebarAdmin";
 import LoanTable from "../components/LoanTable";
 import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
+import wilayah from "../../assets/wilayah-medan.json";
 
 function DaftarPeminjaman() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -65,6 +66,7 @@ function DaftarPeminjaman() {
     tanggalPeminjaman: "",
     durasi: "",
     keperluan: "",
+    userId: "",
   });
 
   const [btData, setBtData] = useState([]);
@@ -118,6 +120,44 @@ function DaftarPeminjaman() {
   const filteredBTData = filterData(btData);
   const filteredSUData = filterData(suData);
 
+  const [seksiOptions, setSeksiOptions] = useState([]);
+  console.log("Seksi Options:", seksiOptions);
+  useEffect(() => {
+    const fetchSeksiOptions = async () => {
+      try {
+        const response = await axiosInstance.get("http://localhost:3000/users");
+
+        // Ambil seksi unik dari users dengan role "user"
+        const seksiUnik = [
+          ...new Set(
+            response.data
+              .filter((user) => user.role === "user")
+              .map((user) => user.username)
+          ),
+        ];
+
+        setSeksiOptions(seksiUnik);
+      } catch (error) {
+        console.error("Gagal ambil user:", error);
+      }
+    };
+
+    fetchSeksiOptions();
+  }, []);
+
+  const [selectedKecamatan, setSelectedKecamatan] = useState("");
+  const [kelurahanOptions, setKelurahanOptions] = useState([]);
+
+  const handleKecamatanChange = (e) => {
+    const selected = e.target.value;
+    setSelectedKecamatan(selected);
+    setKelurahanOptions(wilayah[selected] || []);
+    setFormData((prev) => ({ ...prev, kecamatan: selected, kelurahan: "" }));
+  };
+
+  const handleKelurahanChange = (e) => {
+    setFormData((prev) => ({ ...prev, kelurahan: e.target.value }));
+  };
 
   return (
     <div className="flex min-h-screen font-sans bg-gray-100 text-sm text-gray-800">
@@ -137,7 +177,10 @@ function DaftarPeminjaman() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <ion-icon className="absolute left-3 top-2 text-black text-xl" name="search-outline"></ion-icon>
+            <ion-icon
+              className="absolute left-3 top-2 text-black text-xl"
+              name="search-outline"
+            ></ion-icon>
           </div>
 
           <div className="flex items-center gap-4">
@@ -147,7 +190,10 @@ function DaftarPeminjaman() {
                 <span className="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                   1
                 </span>
-                <ion-icon className="text-xl mt-2 ml-2" name="notifications"></ion-icon>
+                <ion-icon
+                  className="text-xl mt-2 ml-2"
+                  name="notifications"
+                ></ion-icon>
               </span>
             </a>
 
@@ -216,7 +262,10 @@ function DaftarPeminjaman() {
 
             {/* Admin Info */}
             <div className="flex items-center gap-2">
-              <ion-icon className="text-2xl" name="person-circle-outline"></ion-icon>
+              <ion-icon
+                className="text-2xl"
+                name="person-circle-outline"
+              ></ion-icon>
               <span className="font-semibold">Admin</span>
             </div>
           </div>
@@ -284,13 +333,18 @@ function DaftarPeminjaman() {
                     </div>
                     <div>
                       <label>Pilih Seksi</label>
-                      <select className="w-full border rounded-lg px-3 py-2">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>TU</option>
+                      <select
+                        name="userId"
+                        className="w-full border rounded-lg px-3 py-2"
+                        value={formData.userId}
+                        onChange={handleChange}
+                      >
+                        <option value="">-- Pilih Seksi --</option>
+                        {seksiOptions.map((seksi, idx) => (
+                          <option key={idx} value={seksi}>
+                            {seksi}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -299,14 +353,33 @@ function DaftarPeminjaman() {
                   <div className="space-y-3">
                     <div>
                       <label>Kecamatan</label>
-                      <select className="w-full border rounded-lg px-3 py-2">
-                        <option>...</option>
+                      <select
+                        className="w-full border rounded-lg px-3 py-2"
+                        value={formData.kecamatan || ""}
+                        onChange={handleKecamatanChange}
+                      >
+                        <option value="">-- Pilih Kecamatan --</option>
+                        {Object.keys(wilayah).map((kec) => (
+                          <option key={kec} value={kec}>
+                            {kec}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div>
                       <label>Kelurahan</label>
-                      <select className="w-full border rounded-lg px-3 py-2">
-                        <option>...</option>
+                      <select
+                        className="w-full border rounded-lg px-3 py-2"
+                        value={formData.kelurahan || ""}
+                        onChange={handleKelurahanChange}
+                        disabled={!selectedKecamatan}
+                      >
+                        <option value="">-- Pilih Kelurahan --</option>
+                        {kelurahanOptions.map((kel) => (
+                          <option key={kel} value={kel}>
+                            {kel}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div>
