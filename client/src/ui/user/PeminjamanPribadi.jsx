@@ -444,17 +444,6 @@ function PeminjamanPribadi() {
             {activeTab === "suratUkur" && <LoanTable data={filteredSUData} />}
           </>
         )}
-        {/* Pagination */}
-        <div className="flex justify-center mt-4 space-x-2">
-          {[1, 2, 3, "…"].map((page, index) => (
-            <button
-              key={index}
-              className="w-8 h-8 rounded-full bg-white border"
-            >
-              {page}
-            </button>
-          ))}
-        </div>
       </main>
     </div>
   );

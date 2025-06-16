@@ -157,7 +157,7 @@ const DashboardUser = () => {
                   <LoanTable
                     data={filteredBTData.filter(
                       (row) =>
-                        row.status === "diterima" || row.status === "telat"
+                        row.status === "dipinjam" || row.status === "telat"
                     )}
                   />
                 )}
@@ -165,7 +165,7 @@ const DashboardUser = () => {
                   <LoanTable
                     data={filteredSUData.filter(
                       (row) =>
-                        row.status == "diterima" || row.status === "telat"
+                        row.status == "dipinjam" || row.status === "telat"
                     )}
                   />
                 )}

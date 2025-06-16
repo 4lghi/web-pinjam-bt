@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 
 const RequestTable = ({
   data,
@@ -8,6 +8,19 @@ const RequestTable = ({
   handleAccept = (id) => {console.log("Default accept", id);},
   jenis
 }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentData = data.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
   
   return (
     <div className="overflow-x-auto">
@@ -29,9 +42,9 @@ const RequestTable = ({
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {data.map((item, index) => (
+          {currentData.map((item, index) => (
             <tr key={index}>
-              <td className="px-4 py-2">{index + 1}</td>
+              <td className="px-4 py-2">{startIndex + index + 1}</td>
               <td className="px-4 py-2">{item.namaPeminjam}</td>
               <td className="px-4 py-2">{item.seksi}</td>
               <td className="px-4 py-2">{item.jenisHak}</td>
@@ -74,6 +87,74 @@ const RequestTable = ({
           ))}
         </tbody>
       </table>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-4 gap-2 items-center">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          className="px-2 py-1 rounded border bg-white hover:bg-[#022B3A] hover:text-white cursor-pointer"
+          disabled={currentPage === 1}
+        >
+          &lt;
+        </button>
+
+        {(() => {
+          const pages = [];
+          const maxVisible = 10;
+          const currentGroup = Math.floor((currentPage - 1) / maxVisible);
+          const start = currentGroup * maxVisible + 1;
+          const end = Math.min(start + maxVisible - 1, totalPages);
+
+          if (start > 1) {
+            pages.push(
+              <button
+                key="prevGroup"
+                onClick={() => handlePageChange(start - 1)}
+                className="px-3 py-1 rounded-full border bg-white hover:bg-gray-100 cursor-pointer"
+              >
+                ...
+              </button>
+            );
+          }
+
+          for (let i = start; i <= end; i++) {
+            pages.push(
+              <button
+                key={i}
+                onClick={() => handlePageChange(i)}
+                className={`px-3 py-1 rounded-full border ${
+                  i === currentPage ? "bg-[#022B3A] text-white" : "bg-white hover:bg-[#022B3A] hover:text-white cursor-pointer"
+                }`}
+              >
+                {i}
+              </button>
+            );
+          }
+
+          if (end < totalPages) {
+            pages.push(
+              <button
+                key="nextGroup"
+                onClick={() => handlePageChange(end + 1)}
+                className="px-3 py-1 rounded-full border bg-white hover:bg-gray-100 cursor-pointer"
+              >
+                ...
+              </button>
+            );
+          }
+
+          return pages;
+        })()}
+
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          className="px-2 py-1 rounded border bg-white hover:bg-[#022B3A] hover:text-white cursor-pointer"
+          disabled={currentPage === totalPages}
+        >
+          &gt;
+        </button>
+      </div>
+
     </div>
   );
 };
