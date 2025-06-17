@@ -3,11 +3,14 @@ import axios from "axios";
 import SidebarAdmin from "../components/SidebarAdmin";
 import RequestTable from "../components/RequestTable";
 import axiosInstance from "../../utils/axiosInstance";
+import User from "../components/User";
 
 function DaftarPengajuan() {
   const [searchQuery, setSearchQuery] = useState("");
   
   const [activeTab, setActiveTab] = useState("bukuTanah");
+
+  const [selectedFilter, setSelectedFilter] = useState("Semua"); 
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -65,8 +68,20 @@ function DaftarPengajuan() {
     });
   };
 
-  const filteredBTData = filterData(btData);
-  const filteredSUData = filterData(suData);
+  const applyStatusFilter = (data) => {
+    switch (selectedFilter) {
+      case "Terbaru":
+        case "Terbaru":
+          return [...data].sort((a, b) => new Date(b.dateRequested) - new Date(a.dateRequested));
+        case "Terlama":
+          return [...data].sort((a, b) => new Date(a.dateRequested) - new Date(b.dateRequested));
+      default:
+        return data;
+    }
+  }
+
+  const filteredBTData = applyStatusFilter(filterData(btData));
+  const filteredSUData = applyStatusFilter(filterData(suData));
 
   const handleAccept = async (id, jenis) => {
     try {
@@ -147,14 +162,14 @@ function DaftarPengajuan() {
 
           <div className="flex items-center gap-4">
             {/* Notifikasi */}
-            <a href="/notifikasi-admin">
+            {/* <a href="/notifikasi-admin">
               <span className="cursor-pointer relative">
                 <span className="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                   1
                 </span>
                 <ion-icon class="text-xl mt-2" name="notifications"></ion-icon>
               </span>
-            </a>
+            </a> */}
 
             {/* Filter Dropdown */}
             <div className="relative">
@@ -175,28 +190,27 @@ function DaftarPengajuan() {
               </button>
 
               {isDropdownOpen && (
-                <div className="absolute left-1/2 transform -translate-x-1/2 z-10 mt-2 w-32 bg-white shadow rounded">
+                <div className="absolute left-1/2 transform -translate-x-1/2 z-20 mt-2 w-32 bg-white shadow rounded">
                   <ul className="text-sm text-gray-700">
                     {[
+                      "Semua",
                       "Terbaru",
                       "Terlama",
-                      "Tenggat Waktu",
-                      "Dipinjam",
-                      "Dikembalikan",
-                      "Ditolak",
-                      "Telat",
-                    ].map((label, index) => (
-                      <li key={index}>
-                        <label className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            className="form-checkbox text-green-500 mr-2"
-                            defaultChecked={["Terbaru", "Terlama"].includes(
-                              label
-                            )}
-                          />
+                    ].map((label) => (
+                      <li key={label}>
+                        <button
+                          className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${
+                            selectedFilter === label
+                              ? "font-semibold text-blue-600"
+                              : ""
+                          }`}
+                          onClick={() => {
+                            setSelectedFilter(label);
+                            setIsDropdownOpen(false);
+                          }}
+                        >
                           {label}
-                        </label>
+                        </button>
                       </li>
                     ))}
                   </ul>
@@ -205,10 +219,7 @@ function DaftarPengajuan() {
             </div>
 
             {/* Admin Info */}
-            <div className="flex items-center gap-2">
-              <ion-icon className="text-2xl" name="person-circle-outline"></ion-icon>
-              <span className="font-semibold">Admin</span>
-            </div>
+            <User />
           </div>
         </div>
 

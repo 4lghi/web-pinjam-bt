@@ -3,6 +3,7 @@ import SidebarAdmin from "../components/SidebarAdmin";
 import LoanTable from "../components/LoanTable2";
 import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
+import User from "../components/User";
 
 const DashboardAdmin = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -74,10 +75,7 @@ const DashboardAdmin = () => {
               </span>
               <ion-icon class="text-xl mt-2" name="notifications"></ion-icon>
             </a>
-            <div className="flex items-center gap-2">
-              <ion-icon className="text-2xl" name="person-circle-outline"></ion-icon>{" "}
-              <span className="font-semibold">Admin</span>
-            </div>
+            <User />
           </div>
         </div>
 

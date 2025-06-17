@@ -3,6 +3,7 @@ import SidebarUser from "../components/SidebarUser";
 import LoanTable from "../components/LoanTable2";
 import axiosInstance from "../../utils/axiosInstance";
 import getTokenPayload from "../../utils/checkToken";
+import User from "../components/User"
 
 const DashboardUser = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -77,18 +78,14 @@ const DashboardUser = () => {
         <div className="flex items-center justify-between gap-4 mb-6">
           <h1 className="text-xl font-bold">Pinjam BT/SU</h1>
           <div className="flex items-center space-x-4">
-            <a href="/notifikasi-user" className="relative cursor-pointer">
+            {/* <a href="/notifikasi-user" className="relative cursor-pointer">
               <span className="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                 1
               </span>
               <ion-icon class="text-xl mt-2" name="notifications"></ion-icon>
-            </a>
+            </a> */}
             <div className="flex items-center gap-2">
-              <ion-icon
-                className="text-2xl"
-                name="person-circle-outline"
-              ></ion-icon>{" "}
-              <span className="font-semibold">User</span>
+              <User />
             </div>
           </div>
         </div>

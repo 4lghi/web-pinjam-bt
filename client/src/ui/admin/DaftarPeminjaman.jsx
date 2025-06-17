@@ -4,11 +4,16 @@ import LoanTable from "../components/LoanTable2";
 import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
 import wilayah from "../../assets/wilayah-medan.json";
+import SearchAndFilter from "../components/SearchAndFilter";
+import User from "../components/User";
 
 function DaftarPeminjaman() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const [activeTab, setActiveTab] = useState("bukuTanah");
+
+  const [selectedFilter, setSelectedFilter] = useState("Semua"); 
+  
 
   const showStatusModal = () => {
     alert("Fungsi ubah status belum diimplementasikan");
@@ -117,8 +122,35 @@ function DaftarPeminjaman() {
     });
   };
 
-  const filteredBTData = filterData(btData);
-  const filteredSUData = filterData(suData);
+  const applyStatusFilter = (data) => {
+    switch (selectedFilter) {
+      case "Mendekati Tenggat":
+        return data.filter((item) => {
+          const today = new Date();
+          const dateBorrowed = new Date(item.dateBorrowed);
+          const tenggat = new Date(dateBorrowed);
+          tenggat.setDate(tenggat.getDate() + parseInt(item.fixDurasi));
+
+          const diffTime = tenggat - today;
+          const diffDays = Math.ceil(diffTime / (1000 *60 * 60 * 24));
+
+          return diffDays = 1; //h-1 tenggat
+        });
+      case "Disetujui":
+      case "Dipinjam":
+      case "Dikembalikan":
+      case "Ditolak":
+      case "Telat":
+        return data.filter((item) => item.status?.toLowerCase() === selectedFilter.toLowerCase());
+      default:
+        return data;
+    }
+  };
+
+
+  const filteredBTData = applyStatusFilter(filterData(btData));
+  const filteredSUData = applyStatusFilter(filterData(suData));
+
 
   const [seksiOptions, setSeksiOptions] = useState([]);
   console.log("Seksi Options:", seksiOptions);
@@ -168,84 +200,15 @@ function DaftarPeminjaman() {
       <main className="flex-1 ml-60 p-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          {/* Search */}
-          <div className="relative w-[550px]">
-            <input
-              type="search"
-              placeholder="Cari peminjaman"
-              className="w-full pl-10 pr-5 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <ion-icon
-              className="absolute left-3 top-2 text-black text-xl"
-              name="search-outline"
-            ></ion-icon>
-          </div>
-
+          <SearchAndFilter
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedFilter={selectedFilter}
+            setSelectedFilter={setSelectedFilter}
+            isDropdownOpen={isDropdownOpen}
+            setIsDropdownOpen={setIsDropdownOpen}
+          />
           <div className="flex items-center gap-4">
-            {/* Notifikasi */}
-            <a href="/notifikasi-admin">
-              <span className="cursor-pointer relative">
-                <span className="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  1
-                </span>
-                <ion-icon
-                  className="text-xl mt-2 ml-2"
-                  name="notifications"
-                ></ion-icon>
-              </span>
-            </a>
-
-            {/* Filter Dropdown */}
-            <div className="relative">
-              <button onClick={toggleDropdown}>
-                <div className="cursor-pointer rounded-lg flex items-center gap-2 mt-1.5">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    name="filter"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M14 12v7.88c.04.3-.06.62-.29.83a.996.996 0 0 1-1.41 0l-2.01-2.01a.99.99 0 0 1-.29-.83V12h-.03L4.21 4.62a1 1 0 0 1 .17-1.4c.19-.14.4-.22.62-.22h14c.22 0 .43.08.62.22a1 1 0 0 1 .17 1.4L14.03 12z"
-                    />
-                  </svg>
-                </div>
-              </button>
-
-              {isDropdownOpen && (
-                <div className="absolute left-1/2 transform -translate-x-1/2 z-10 mt-2 w-32 bg-white shadow rounded">
-                  <ul className="text-sm text-gray-700">
-                    {[
-                      "Terbaru",
-                      "Terlama",
-                      "Tenggat Waktu",
-                      "Dipinjam",
-                      "Dikembalikan",
-                      "Ditolak",
-                      "Telat",
-                    ].map((label, index) => (
-                      <li key={index}>
-                        <label className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            className="form-checkbox text-green-500 mr-2"
-                            defaultChecked={["Terbaru", "Terlama"].includes(
-                              label
-                            )}
-                          />
-                          {label}
-                        </label>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
             {/* Export & Tambah */}
             <button
               onClick={exportToExcel}
@@ -255,19 +218,13 @@ function DaftarPeminjaman() {
             </button>
             <button
               onClick={openModal}
-              className="px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-sky-700 font-semibold cursor-pointer"
+              className="w-24 px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-sky-700 font-semibold cursor-pointer"
             >
               + Tambah
             </button>
 
             {/* Admin Info */}
-            <div className="flex items-center gap-2">
-              <ion-icon
-                className="text-2xl"
-                name="person-circle-outline"
-              ></ion-icon>
-              <span className="font-semibold">Admin</span>
-            </div>
+            <User />
           </div>
 
           {/* Modal Tambah Peminjaman */}

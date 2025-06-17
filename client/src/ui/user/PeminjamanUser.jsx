@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import SidebarUser from "../components/SidebarUser";
 import LoanTable from "../components/LoanTable2";
 import axiosInstance from "../../utils/axiosInstance";
+import SearchAndFilter from "../components/SearchAndFilter";
+import User from "../components/User";
 
 function PeminjamanUser() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -9,6 +11,8 @@ function PeminjamanUser() {
   const [activeTab, setActiveTab] = useState("bukuTanah");
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const [selectedFilter, setSelectedFilter] = useState("Semua"); 
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -62,8 +66,35 @@ function PeminjamanUser() {
     });
   };
 
-  const filteredBTData = filterData(btData);
-  const filteredSUData = filterData(suData);
+  const applyStatusFilter = (data) => {
+    switch (selectedFilter) {
+      case "Mendekati Tenggat":
+        return data.filter((item) => {
+          const today = new Date();
+          const dateBorrowed = new Date(item.dateBorrowed);
+          const tenggat = new Date(dateBorrowed);
+          tenggat.setDate(tenggat.getDate() + parseInt(item.fixDurasi));
+
+          const diffTime = tenggat - today;
+          const diffDays = Math.ceil(diffTime / (1000 *60 * 60 * 24));
+
+          return diffDays = 1; //h-1 tenggat
+        });
+      case "Disetujui":
+      case "Dipinjam":
+      case "Dikembalikan":
+      case "Ditolak":
+      case "Telat":
+        return data.filter((item) => item.status?.toLowerCase() === selectedFilter.toLowerCase());
+      default:
+        return data;
+    }
+  };
+
+
+  const filteredBTData = applyStatusFilter(filterData(btData));
+  const filteredSUData = applyStatusFilter(filterData(suData));
+
 
   return (
     <div className="flex min-h-screen font-sans bg-gray-100 text-sm text-gray-800">
@@ -72,86 +103,17 @@ function PeminjamanUser() {
 
       {/* Main Content */}
       <main className="flex-1 ml-60 p-6">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          {/* Search */}
-          <div className="relative w-[550px]">
-            <input
-              type="search"
-              placeholder="Cari peminjaman"
-              className="w-full pl-10 pr-5 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <ion-icon className="absolute left-3 top-2 text-black text-xl" name="search-outline"></ion-icon>
-          </div>
+        <div className="flex justify-between items-center mb-6"> 
+          <SearchAndFilter
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedFilter={selectedFilter}
+            setSelectedFilter={setSelectedFilter}
+            isDropdownOpen={isDropdownOpen}
+            setIsDropdownOpen={setIsDropdownOpen}
+          />
 
-          <div className="flex items-center gap-4">
-            {/* Notifikasi */}
-            <a href="/notifikasi-user">
-              <span className="cursor-pointer relative">
-                <span className="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  1
-                </span>
-                <ion-icon class="text-xl mt-2" name="notifications"></ion-icon>
-              </span>
-            </a>
-
-            {/* Filter Dropdown */}
-            <div className="relative">
-              <button onClick={toggleDropdown}>
-                <div className="cursor-pointer rounded-lg flex items-center gap-2 mt-1.5">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M14 12v7.88c.04.3-.06.62-.29.83a.996.996 0 0 1-1.41 0l-2.01-2.01a.99.99 0 0 1-.29-.83V12h-.03L4.21 4.62a1 1 0 0 1 .17-1.4c.19-.14.4-.22.62-.22h14c.22 0 .43.08.62.22a1 1 0 0 1 .17 1.4L14.03 12z"
-                    />
-                  </svg>
-                </div>
-              </button>
-
-              {isDropdownOpen && (
-                <div className="absolute left-1/2 transform -translate-x-1/2 z-10 mt-2 w-32 bg-white shadow rounded">
-                  <ul className="text-sm text-gray-700">
-                    {[
-                      "Terbaru",
-                      "Terlama",
-                      "Tenggat Waktu",
-                      "Dipinjam",
-                      "Dikembalikan",
-                      "Ditolak",
-                      "Telat",
-                    ].map((label, index) => (
-                      <li key={index}>
-                        <label className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            className="form-checkbox text-green-500 mr-2"
-                            defaultChecked={["Terbaru", "Terlama"].includes(
-                              label
-                            )}
-                          />
-                          {label}
-                        </label>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            {/* user Info */}
-            <div className="flex items-center gap-2">
-              <ion-icon className="text-2xl" name="person-circle-outline"></ion-icon>
-              <span className="font-semibold">User</span>
-            </div>
-          </div>
-
+          <User />
         </div>
 
         {/* Tabs */}
