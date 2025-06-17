@@ -11,107 +11,7 @@ const statusColorMap = {
   telat: "bg-red-100 text-red-800 border-red-200", // untuk data sample
 }
 
-// Sample data dengan seksi
-const sampleData = [
-  {
-    namaPeminjam: "John Doe",
-    seksi: "Seksi Pertanahan",
-    jenisHak: "Hak Milik",
-    nomorHak: "12345/2024",
-    kecamatan: "Menteng",
-    kelurahan: "Menteng",
-    dateBorrowed: "2024-01-15",
-    fixDurasi: "30 hari",
-    status: "Dipinjam",
-    keperluan: "Untuk keperluan pengajuan kredit bank dan proses jual beli properti",
-  },
-  {
-    namaPeminjam: "Jane Smith",
-    seksi: "Seksi Hukum",
-    jenisHak: "Hak Guna Bangunan",
-    nomorHak: "67890/2024",
-    kecamatan: "Kebayoran",
-    kelurahan: "Senayan",
-    dateBorrowed: "2024-01-10",
-    fixDurasi: "14 hari",
-    status: "Dikembalikan",
-    keperluan: "Untuk keperluan administrasi perusahaan",
-  },
-  {
-    namaPeminjam: "Bob Johnson",
-    seksi: "Seksi Administrasi",
-    jenisHak: "Hak Pakai",
-    nomorHak: "11111/2024",
-    kecamatan: "Tanah Abang",
-    kelurahan: "Bendungan Hilir",
-    dateBorrowed: "2023-12-20",
-    fixDurasi: "21 hari",
-    status: "Terlambat",
-    keperluan: "Untuk keperluan pengajuan izin usaha dan dokumen legal lainnya yang membutuhkan sertifikat asli",
-  },
-  {
-    namaPeminjam: "Alice Brown",
-    seksi: "Seksi Pertanahan",
-    jenisHak: "Hak Milik",
-    nomorHak: "22222/2024",
-    kecamatan: "Cempaka Putih",
-    kelurahan: "Cempaka Putih Timur",
-    dateBorrowed: "2024-01-20",
-    fixDurasi: "45 hari",
-    status: "Dipinjam",
-    keperluan: "Untuk keperluan pengajuan KPR dan verifikasi dokumen",
-  },
-  {
-    namaPeminjam: "Charlie Wilson",
-    seksi: "Seksi Hukum",
-    jenisHak: "Hak Guna Usaha",
-    nomorHak: "33333/2024",
-    kecamatan: "Gambir",
-    kelurahan: "Gambir",
-    dateBorrowed: "2024-01-18",
-    fixDurasi: "60 hari",
-    status: "Pending",
-    keperluan: "Untuk keperluan audit dan compliance perusahaan",
-  },
-  {
-    namaPeminjam: "Diana Prince",
-    seksi: "Seksi Administrasi",
-    jenisHak: "Hak Milik",
-    nomorHak: "44444/2024",
-    kecamatan: "Sawah Besar",
-    kelurahan: "Pasar Baru",
-    dateBorrowed: "2024-01-12",
-    fixDurasi: "30 hari",
-    status: "Dikembalikan",
-    keperluan: "Untuk keperluan notaris dan akta jual beli",
-  },
-  {
-    namaPeminjam: "Edward Clark",
-    seksi: "Seksi Pertanahan",
-    jenisHak: "Hak Pakai",
-    nomorHak: "55555/2024",
-    kecamatan: "Johar Baru",
-    kelurahan: "Tanah Tinggi",
-    dateBorrowed: "2024-01-08",
-    fixDurasi: "21 hari",
-    status: "Terlambat",
-    keperluan: "Untuk keperluan pengajuan izin mendirikan bangunan",
-  },
-  {
-    namaPeminjam: "Fiona Davis",
-    seksi: "Seksi Hukum",
-    jenisHak: "Hak Guna Bangunan",
-    nomorHak: "66666/2024",
-    kecamatan: "Kemayoran",
-    kelurahan: "Kemayoran",
-    dateBorrowed: "2024-01-25",
-    fixDurasi: "14 hari",
-    status: "Dipinjam",
-    keperluan: "Untuk keperluan legal opinion dan due diligence",
-  },
-]
-
-export default function LoanTable({ data = sampleData }) {
+export default function LoanTable({ data }) {
   const [dropdownOpen, setDropdownOpen] = useState(null)
   const [tooltipOpen, setTooltipOpen] = useState(null)
   const [dropdownPosition, setDropdownPosition] = useState({})
@@ -288,7 +188,7 @@ export default function LoanTable({ data = sampleData }) {
                     </td>
                     <td className="px-2 py-2 text-center">
                       <span className="text-sm text-gray-700 truncate inline-block">
-                        {row.seksi || row.section || "N/A"}
+                        {row.userId || row.section || "N/A"}
                       </span>
                     </td>
                     <td className="px-2 py-2 text-center">
@@ -304,9 +204,9 @@ export default function LoanTable({ data = sampleData }) {
                     <td className="px-2 py-2 text-center">
                       <div className="text-sm">
                         <div className="font-medium text-gray-900 truncate text-xs">
-                          {row.kecamatan || row.district || "N/A"}
+                          {row.kelurahan || "N/A"}
                         </div>
-                        <div className="text-gray-500 truncate text-xs">{row.kelurahan || row.village || "N/A"}</div>
+                        <div className="text-gray-500 truncate text-xs">{row.kecamatan || "N/A"}</div>
                       </div>
                     </td>
                     <td className="px-2 py-2 text-center">
@@ -417,7 +317,7 @@ export default function LoanTable({ data = sampleData }) {
                     {row.namaPeminjam || row.nama_peminjam || row.name || "N/A"}
                   </h3>
                   <p className="text-xs text-gray-500">
-                    #{actualIndex + 1} • {row.seksi || "N/A"}
+                    #{actualIndex + 1} • {row.userId || "N/A"}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -487,8 +387,8 @@ export default function LoanTable({ data = sampleData }) {
                 </div>
                 <div>
                   <span className="text-gray-500">Lokasi:</span>
-                  <p className="font-medium text-sm">{row.kecamatan || "N/A"}</p>
-                  <p className="text-gray-600 text-xs">{row.kelurahan || "N/A"}</p>
+                  <p className="font-medium text-sm">{row.kelurahan || "N/A"}</p>
+                  <p className="text-gray-600 text-xs">{row.kecamatan || "N/A"}</p>
                 </div>
                 <div>
                   <span className="text-gray-500">Durasi:</span>
