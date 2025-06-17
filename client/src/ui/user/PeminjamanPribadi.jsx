@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SidebarUser from "../components/SidebarUser";
-import LoanTable from "../components/LoanTable";
+import LoanTable from "../components/LoanTable2";
 import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
 import getTokenPayload from "../../utils/checkToken";

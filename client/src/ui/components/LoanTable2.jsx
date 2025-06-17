@@ -11,7 +11,107 @@ const statusColorMap = {
   telat: "bg-red-100 text-red-800 border-red-200", // untuk data sample
 }
 
-export default function LoanTable({ data }) {
+// Sample data dengan seksi
+const sampleData = [
+  {
+    namaPeminjam: "John Doe",
+    seksi: "Seksi Pertanahan",
+    jenisHak: "Hak Milik",
+    nomorHak: "12345/2024",
+    kecamatan: "Menteng",
+    kelurahan: "Menteng",
+    dateBorrowed: "2024-01-15",
+    fixDurasi: "30 hari",
+    status: "Dipinjam",
+    keperluan: "Untuk keperluan pengajuan kredit bank dan proses jual beli properti",
+  },
+  {
+    namaPeminjam: "Jane Smith",
+    seksi: "Seksi Hukum",
+    jenisHak: "Hak Guna Bangunan",
+    nomorHak: "67890/2024",
+    kecamatan: "Kebayoran",
+    kelurahan: "Senayan",
+    dateBorrowed: "2024-01-10",
+    fixDurasi: "14 hari",
+    status: "Dikembalikan",
+    keperluan: "Untuk keperluan administrasi perusahaan",
+  },
+  {
+    namaPeminjam: "Bob Johnson",
+    seksi: "Seksi Administrasi",
+    jenisHak: "Hak Pakai",
+    nomorHak: "11111/2024",
+    kecamatan: "Tanah Abang",
+    kelurahan: "Bendungan Hilir",
+    dateBorrowed: "2023-12-20",
+    fixDurasi: "21 hari",
+    status: "Terlambat",
+    keperluan: "Untuk keperluan pengajuan izin usaha dan dokumen legal lainnya yang membutuhkan sertifikat asli",
+  },
+  {
+    namaPeminjam: "Alice Brown",
+    seksi: "Seksi Pertanahan",
+    jenisHak: "Hak Milik",
+    nomorHak: "22222/2024",
+    kecamatan: "Cempaka Putih",
+    kelurahan: "Cempaka Putih Timur",
+    dateBorrowed: "2024-01-20",
+    fixDurasi: "45 hari",
+    status: "Dipinjam",
+    keperluan: "Untuk keperluan pengajuan KPR dan verifikasi dokumen",
+  },
+  {
+    namaPeminjam: "Charlie Wilson",
+    seksi: "Seksi Hukum",
+    jenisHak: "Hak Guna Usaha",
+    nomorHak: "33333/2024",
+    kecamatan: "Gambir",
+    kelurahan: "Gambir",
+    dateBorrowed: "2024-01-18",
+    fixDurasi: "60 hari",
+    status: "Pending",
+    keperluan: "Untuk keperluan audit dan compliance perusahaan",
+  },
+  {
+    namaPeminjam: "Diana Prince",
+    seksi: "Seksi Administrasi",
+    jenisHak: "Hak Milik",
+    nomorHak: "44444/2024",
+    kecamatan: "Sawah Besar",
+    kelurahan: "Pasar Baru",
+    dateBorrowed: "2024-01-12",
+    fixDurasi: "30 hari",
+    status: "Dikembalikan",
+    keperluan: "Untuk keperluan notaris dan akta jual beli",
+  },
+  {
+    namaPeminjam: "Edward Clark",
+    seksi: "Seksi Pertanahan",
+    jenisHak: "Hak Pakai",
+    nomorHak: "55555/2024",
+    kecamatan: "Johar Baru",
+    kelurahan: "Tanah Tinggi",
+    dateBorrowed: "2024-01-08",
+    fixDurasi: "21 hari",
+    status: "Terlambat",
+    keperluan: "Untuk keperluan pengajuan izin mendirikan bangunan",
+  },
+  {
+    namaPeminjam: "Fiona Davis",
+    seksi: "Seksi Hukum",
+    jenisHak: "Hak Guna Bangunan",
+    nomorHak: "66666/2024",
+    kecamatan: "Kemayoran",
+    kelurahan: "Kemayoran",
+    dateBorrowed: "2024-01-25",
+    fixDurasi: "14 hari",
+    status: "Dipinjam",
+    keperluan: "Untuk keperluan legal opinion dan due diligence",
+  },
+]
+
+export default function LoanTable({ data = sampleData }) {
   const [dropdownOpen, setDropdownOpen] = useState(null)
   const [tooltipOpen, setTooltipOpen] = useState(null)
   const [dropdownPosition, setDropdownPosition] = useState({})
@@ -26,9 +126,7 @@ export default function LoanTable({ data }) {
     console.log("LoanTable received data:", data)
     console.log("Data type:", typeof data)
     console.log("Is array:", Array.isArray(data))
-    if (data && data.length > 0) {
-      console.log("First item structure:", data[0])
-    }
+    console.log("First item structure:", data[0])
   }, [data])
 
   // Pagination calculations
@@ -129,7 +227,7 @@ export default function LoanTable({ data }) {
   }
 
   return (
-    <div className="space-y-4 relative z-10">
+    <div className="mt-6 space-y-4 relative z-10">
       {/* Items per page selector */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
@@ -155,10 +253,10 @@ export default function LoanTable({ data }) {
             <thead className="bg-gray-50">
               <tr className="border-b">
                 <th className="w-[3%] px-2 py-2 text-center text-sm font-semibold text-gray-900">No</th>
-                <th className="w-[14%] px-2 py-2 text-left text-sm font-semibold text-gray-900">Peminjam</th>
-                <th className="w-[12%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Seksi</th>
+                <th className="w-[8%] px-2 py-2 text-left text-sm font-semibold text-gray-900">Peminjam</th>
+                <th className="w-[9%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Seksi</th>
                 <th className="w-[11%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Jenis Hak</th>
-                <th className="w-[9%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Nomor Hak</th>
+                <th className="w-[12%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Nomor Hak</th>
                 <th className="w-[13%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Lokasi</th>
                 <th className="w-[10%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Tanggal Pinjam</th>
                 <th className="w-[7%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Durasi</th>
@@ -418,19 +516,19 @@ export default function LoanTable({ data }) {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center justify-between  px-4 py-3">
           <div className="flex flex-1 justify-between sm:hidden">
             <button
               onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
-              className="relative inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="relative inline-flex items-center rounded-md border border-gray-300  px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Previous
             </button>
             <button
               onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
               disabled={currentPage === totalPages}
-              className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="relative ml-3 inline-flex items-center rounded-md border border-gray-300  px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
             </button>
