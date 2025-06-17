@@ -149,7 +149,7 @@ function PeminjamanPribadi() {
           const diffTime = tenggat - today;
           const diffDays = Math.ceil(diffTime / (1000 *60 * 60 * 24));
 
-          return diffDays = 1; //h-1 tenggat
+          return diffDays >= 0 && diffDays <= 1; //h-1 tenggat
         });
       case "Disetujui":
       case "Dipinjam":

@@ -6,6 +6,8 @@ import axiosInstance from "../../utils/axiosInstance";
 import wilayah from "../../assets/wilayah-medan.json";
 import SearchAndFilter from "../components/SearchAndFilter";
 import User from "../components/User";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 
 function DaftarPeminjaman() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,9 +36,148 @@ function DaftarPeminjaman() {
   const openModal = () => setIsModalOpen(true);
   const closeModalForm = () => setIsModalOpen(false);
 
-  const exportToExcel = () => {
-    // tambahkan logika export di sini
+  // export to excel
+  const exportToExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+
+    // Styling function
+    const styleWorksheet = (worksheet) => {
+      // Bold + background header
+      worksheet.getRow(1).eachCell((cell) => {
+        cell.font = { bold: true, color: { argb: "FF000000" } };
+        cell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "D3D3D3" }, 
+        };
+      });
+
+      // All borders
+      worksheet.eachRow((row) => {
+        row.eachCell((cell) => {
+          cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin" },
+          };
+        });
+      });
+    };
+
+     //styling status
+    const styleStatusCells = (worksheet) => {
+      worksheet.eachRow((row, rowNumber) => {
+        if (rowNumber === 1) return; // skip header
+
+        const statusCell = row.getCell("status");
+
+        const status = statusCell.value?.toLowerCase();
+
+        let fillColor = null;
+        switch (status) {
+          case "menunggu":
+            fillColor = "FFFFF9C4"; 
+            break;
+          case "disetujui":
+            fillColor = "FFBBDEFB"; 
+            break;
+          case "dipinjam":
+            fillColor = "FFE1BEE7"
+            break;
+          case "telat":
+            fillColor = "FFFFE0B2"; 
+            break;
+          case "dikembalikan":
+            fillColor = "FFC8E6C9"; 
+            break;
+          case "ditolak":
+            fillColor = "FFFFCDD2";
+            break;
+          default:
+            fillColor = null;
+        }
+
+        if (fillColor) {
+          statusCell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: fillColor },
+          };
+        }
+      });
+    };
+
+    // --- Sheet Buku Tanah ---
+    const sheetBT = workbook.addWorksheet("Buku Tanah");
+    sheetBT.columns = [
+      { header: "No.", key: "no", width: 5 },
+      { header: "Nama Peminjam", key: "namaPeminjam", width: 25 },
+      { header: "Seksi", key: "userId", width: 15 },
+      { header: "Jenis Hak", key: "jenisHak", width: 20 },
+      { header: "Nomor Hak", key: "nomorHak", width: 15 },
+      { header: "Kecamatan", key: "kecamatan", width: 25 },
+      { header: "Kelurahan", key: "kelurahan", width: 25 },
+      { header: "Tanggal Pinjam", key: "dateBorrowed", width: 20 },
+      { header: "Durasi", key: "fixDurasi", width: 10 },
+      { header: "Status", key: "status", width: 15 },
+    ];
+    filteredBTData.forEach((item, index) => {
+      sheetBT.addRow({
+        no: index + 1,
+        namaPeminjam: item.namaPeminjam,
+        userId: item.userId,
+        jenisHak: item.jenisHak,
+        nomorHak: item.nomorHak,
+        kecamatan: item.kecamatan,
+        kelurahan: item.kelurahan,
+        dateBorrowed: item.dateBorrowed?.split("T")[0] || "",
+        fixDurasi: item.fixDurasi + " hari" || "",
+        status: item.status || "",
+      });
+    });
+    styleWorksheet(sheetBT);
+    styleStatusCells(sheetBT);
+
+    // --- Sheet Surat Ukur ---
+    const sheetSU = workbook.addWorksheet("Surat Ukur");
+    sheetSU.columns = [
+      { header: "No.", key: "no", width: 5 },
+      { header: "Nama Peminjam", key: "namaPeminjam", width: 25 },
+      { header: "Seksi", key: "userId", width: 15 },
+      { header: "Jenis Hak", key: "jenisHak", width: 20 },
+      { header: "Nomor Hak", key: "nomorHak", width: 15 },
+      { header: "Kecamatan", key: "kecamatan", width: 25 },
+      { header: "Kelurahan", key: "kelurahan", width: 25 },
+      { header: "Tanggal Pinjam", key: "dateBorrowed", width: 20 },
+      { header: "Durasi", key: "fixDurasi", width: 10 },
+      { header: "Status", key: "status", width: 15 },
+    ];
+    filteredSUData.forEach((item, index) => {
+      sheetSU.addRow({
+        no: index + 1,
+        namaPeminjam: item.namaPeminjam,
+        userId: item.userId,
+        jenisHak: item.jenisHak,
+        nomorHak: item.nomorHak,
+        kecamatan: item.kecamatan,
+        kelurahan: item.kelurahan,
+        dateBorrowed: item.dateBorrowed?.split("T")[0] || "",
+        fixDurasi: item.fixDurasi + " hari" || "",
+        status: item.status || "",
+      });
+    });
+    styleWorksheet(sheetSU);
+    styleStatusCells(sheetSU);
+
+    // --- Save File ---
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(
+      new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
+      "data_peminjaman.xlsx"
+    );
   };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -134,7 +275,7 @@ function DaftarPeminjaman() {
           const diffTime = tenggat - today;
           const diffDays = Math.ceil(diffTime / (1000 *60 * 60 * 24));
 
-          return diffDays = 1; //h-1 tenggat
+          return diffDays >= 0 && diffDays <= 1; //h-1 tenggat
         });
       case "Disetujui":
       case "Dipinjam":

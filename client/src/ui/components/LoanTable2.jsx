@@ -216,7 +216,7 @@ export default function LoanTable({ data }) {
                     </td>
                     <td className="px-2 py-2 text-center">
                       <span className="text-sm font-medium text-gray-900 inline-block truncate">
-                        {row.fixDurasi || row.fix_durasi || row.durasi || row.duration || "N/A"}
+                        {row.fixDurasi || row.fix_durasi || row.durasi || row.duration || "N/A"} Hari
                       </span>
                     </td>
                     <td className="px-2 py-2 text-center">
