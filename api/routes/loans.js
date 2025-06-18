@@ -3,6 +3,7 @@ const router = express.Router();
 const loansController = require("../controllers/loansController");
 const verifyToken = require("../middlewares/verifyToken");
 const updateStatus = require("../middlewares/updateStatus");
+const cekTelat = require("../middlewares/cekTelat");
 
 
 router.post("/", verifyToken, loansController.createLoan);
@@ -23,10 +24,13 @@ router.get("/suratUkur", verifyToken, loansController.getSu);
 router.patch("/bukuTanah/:id", verifyToken, loansController.updateBt);
 router.patch("/suratUkur/:id", verifyToken, loansController.updateSu);
 
-// edit status
-router.patch("/:collection/:id/status", verifyToken, updateStatus);
-
 router.delete("/bukuTanah/:id", loansController.deleteBtLoan);
 router.delete("/suratUkur/:id", loansController.deleteSuLoan);
+
+
+// edit status
+router.patch("/:collection/:id/status", verifyToken, updateStatus);
+// cek telat
+router.patch("/cekTelat", verifyToken, cekTelat);
 
 module.exports = router;

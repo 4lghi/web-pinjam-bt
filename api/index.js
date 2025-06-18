@@ -9,6 +9,8 @@ const loginRoutes = require("./routes/login");
 
 app.use(cors());
 app.use(express.json());
+// panggil cron
+require("./cronJobs");
 
 app.use("/peminjaman", loansRoutes);
 app.use("/users", usersRoutes);
