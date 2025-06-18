@@ -24,9 +24,16 @@ function DaftarPeminjaman() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // Status modal states
-  const [selectedStatus, setSelectedStatus] = useState("Dikembalikan");
+  const [selectedStatus, setSelectedStatus] = useState(null);
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+  if (selectedItem?.status) {
+    setSelectedStatus(selectedItem.status);
+  }
+}, [selectedItem]);
+
 
   const statusColorMap = {
     Dipinjam: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -821,7 +828,7 @@ function DaftarPeminjaman() {
                   {/* Dropdown Options */}
                   {statusDropdownOpen && (
                     <div className="absolute mt-2 w-full bg-white border rounded-lg shadow-lg z-50">
-                      {["dikembalikan", "dipinjam", "telat"].map((status) => (
+                      {["menunggu", "disetujui", "ditolak", "dipinjam", "dikembalikan"].map((status) => (
                         <button
                           key={status}
                           onClick={() => handleSelectStatus(status)}
@@ -829,8 +836,12 @@ function DaftarPeminjaman() {
                         >
                           <span
                             className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                              status === "dikembalikan"
+                              status === "menunggu"
                                 ? "bg-green-100 text-green-700"
+                                : status === "disetujui"
+                                ? "bg-blue-100 text-blue-700"
+                                : status === "ditolak"
+                                ? "bg-yellow-100 text-yellow-700"
                                 : status === "dipinjam"
                                 ? "bg-blue-100 text-blue-700"
                                 : "bg-red-100 text-red-700"

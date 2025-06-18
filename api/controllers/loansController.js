@@ -1,4 +1,5 @@
 const { admin, db } = require("../firebase");
+const now = new Date().toISOString();
 
 // Endpoint POST /peminjaman
 const createLoan = async (req, res) => {
@@ -16,20 +17,20 @@ const createLoan = async (req, res) => {
 
   const docData = {
     userId: data.userId || "",
-    namaPeminjam: data.namaPeminjam || "",
+    namaPeminjam: data.namaPeminjam,
     status: isAdmin ? "disetujui" : "menunggu persetujuan",
-    dateApproved: isAdmin ? admin.firestore.Timestamp.now() : null,
-    dateRequested: admin.firestore.Timestamp.now(),
+    dateApproved: isAdmin ? now : null,
+    dateRequested: now,
     dateBorrowed: null,
     dateReturned: null,
     reasonIfRejected: null,
     fixDurasi: data.fixDurasi || 1,
-    jenisHak: data.jenisHak || "",
+    jenisHak: data.jenisHak || "Hak Milik",
     kecamatan: data.kecamatan || "",
     kelurahan: data.kelurahan || "",
-    keperluan: data.keperluan || "",
+    keperluan: data.keperluan,
     nomorHak: data.nomorHak || 0,
-    requestDurasi: data.requestDurasi || 1,
+    prevDateBorrowed: null,
   };
 
   try {
@@ -121,8 +122,8 @@ const createBt = async (req, res) => {
     userId: data.userId || "",
     namaPeminjam: data.namaPeminjam,
     status: isAdmin ? "disetujui" : "menunggu persetujuan",
-    dateApproved: isAdmin ? admin.firestore.Timestamp.now() : null,
-    dateRequested: admin.firestore.Timestamp.now(),
+    dateApproved: isAdmin ? now : null,
+    dateRequested: now,
     dateBorrowed: null,
     dateReturned: null,
     reasonIfRejected: null,
@@ -132,7 +133,7 @@ const createBt = async (req, res) => {
     kelurahan: data.kelurahan || "",
     keperluan: data.keperluan,
     nomorHak: data.nomorHak || 0,
-    requestDurasi: data.requestDurasi || 1,
+    prevDateBorrowed: null,
   };
 
   try {
@@ -170,8 +171,8 @@ const createSu = async (req, res) => {
     userId: data.userId || "",
     namaPeminjam: data.namaPeminjam,
     status: isAdmin ? "disetujui" : "menunggu persetujuan",
-    dateApproved: isAdmin ? admin.firestore.Timestamp.now() : null,
-    dateRequested: admin.firestore.Timestamp.now(),
+    dateApproved: isAdmin ? now : null,
+    dateRequested: now,
     dateBorrowed: null,
     dateReturned: null,
     reasonIfRejected: null,
@@ -181,7 +182,7 @@ const createSu = async (req, res) => {
     kelurahan: data.kelurahan || "",
     keperluan: data.keperluan,
     nomorHak: data.nomorHak || 0,
-    requestDurasi: data.requestDurasi || 1,
+    prevDateBorrowed: null,
   };
 
   try {
