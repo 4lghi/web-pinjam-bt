@@ -321,16 +321,6 @@ function PeminjamanPribadi() {
                       </select>
                     </div>
                     <div>
-                      <label>Tanggal Peminjaman</label>
-                      <input
-                        type="date"
-                        name="dateBorrowed"
-                        className="w-full border rounded-lg px-3 py-2"
-                        value={formData.dateBorrowed}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div>
                       <label>Durasi Peminjaman</label>
                       <select
                         name="durasi"

@@ -21,7 +21,7 @@ router.get("/suratUkur", verifyToken, loansController.getSu);
 router.patch("/bukuTanah/:id", verifyToken, loansController.updateBt);
 router.patch("/suratUkur/:id", verifyToken, loansController.updateSu);
 
-// router.delete("/bukuTanah/:id", loansController.deleteBtLoan);
-// router.delete("/suratUkur/:id", loansController.deleteSuLoan);
+router.delete("/bukuTanah/:id", loansController.deleteBtLoan);
+router.delete("/suratUkur/:id", loansController.deleteSuLoan);
 
 module.exports = router;

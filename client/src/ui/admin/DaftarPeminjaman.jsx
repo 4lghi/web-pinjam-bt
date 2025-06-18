@@ -14,12 +14,11 @@ function DaftarPeminjaman() {
 
   const [activeTab, setActiveTab] = useState("bukuTanah");
 
-  const [selectedFilter, setSelectedFilter] = useState("Semua"); 
-  
+  const [selectedFilter, setSelectedFilter] = useState("Semua");
 
-  const showStatusModal = () => {
-    alert("Fungsi ubah status belum diimplementasikan");
-  };
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const toggleMenu = (e) => {
     const menu = e.currentTarget.nextElementSibling;
@@ -48,7 +47,7 @@ function DaftarPeminjaman() {
         cell.fill = {
           type: "pattern",
           pattern: "solid",
-          fgColor: { argb: "D3D3D3" }, 
+          fgColor: { argb: "D3D3D3" },
         };
       });
 
@@ -65,7 +64,7 @@ function DaftarPeminjaman() {
       });
     };
 
-     //styling status
+    //styling status
     const styleStatusCells = (worksheet) => {
       worksheet.eachRow((row, rowNumber) => {
         if (rowNumber === 1) return; // skip header
@@ -77,19 +76,19 @@ function DaftarPeminjaman() {
         let fillColor = null;
         switch (status) {
           case "menunggu":
-            fillColor = "FFFFF9C4"; 
+            fillColor = "FFFFF9C4";
             break;
           case "disetujui":
-            fillColor = "FFBBDEFB"; 
+            fillColor = "FFBBDEFB";
             break;
           case "dipinjam":
-            fillColor = "FFE1BEE7"
+            fillColor = "FFE1BEE7";
             break;
           case "telat":
-            fillColor = "FFFFE0B2"; 
+            fillColor = "FFFFE0B2";
             break;
           case "dikembalikan":
-            fillColor = "FFC8E6C9"; 
+            fillColor = "FFC8E6C9";
             break;
           case "ditolak":
             fillColor = "FFFFCDD2";
@@ -173,11 +172,12 @@ function DaftarPeminjaman() {
     // --- Save File ---
     const buffer = await workbook.xlsx.writeBuffer();
     saveAs(
-      new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
+      new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      }),
       "data_peminjaman.xlsx"
     );
   };
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -198,6 +198,59 @@ function DaftarPeminjaman() {
     } catch (error) {
       console.error("Gagal simpan data:", error);
       alert("Gagal menyimpan data.");
+    }
+  };
+
+  // Modal handlers
+  const handleAction = (action, item) => {
+    setSelectedItem(item);
+    console.log("Selected Item:", item);
+
+    switch (action) {
+      case "edit":
+        setShowEditModal(true);
+        break;
+      case "status":
+        // setSelectedStatus(item?.status || "Dikembalikan")
+        setShowEditStatusModal(true);
+        break;
+      case "delete":
+        setShowDeleteModal(true);
+        break;
+      default:
+        console.warn(`Aksi "${action}" tidak dikenali.`);
+    }
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedItem) return;
+
+    setIsSubmitting(true);
+    try {
+      // Determine the endpoint based on active tab
+      const endpoint =
+        activeTab === "bukuTanah"
+          ? `http://localhost:3000/peminjaman/bukuTanah/${selectedItem.id}`
+          : `http://localhost:3000/peminjaman/suratUkur/${selectedItem.id}`;
+
+      await axiosInstance.delete(endpoint);
+
+      // Update local data
+      if (activeTab === "bukuTanah") {
+        setBtData((prev) => prev.filter((item) => item.id !== selectedItem.id));
+      } else {
+        setSuData((prev) => prev.filter((item) => item.id !== selectedItem.id));
+      }
+
+      // Show success message
+      console.log("Data berhasil dihapus!");
+      alert("Data berhasil dihapus!");
+      setShowDeleteModal(false);
+    } catch (error) {
+      console.error("Gagal menghapus data:", error);
+      alert("Gagal menghapus data!");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -273,7 +326,7 @@ function DaftarPeminjaman() {
           tenggat.setDate(tenggat.getDate() + parseInt(item.fixDurasi));
 
           const diffTime = tenggat - today;
-          const diffDays = Math.ceil(diffTime / (1000 *60 * 60 * 24));
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
           return diffDays >= 0 && diffDays <= 1; //h-1 tenggat
         });
@@ -282,16 +335,16 @@ function DaftarPeminjaman() {
       case "Dikembalikan":
       case "Ditolak":
       case "Telat":
-        return data.filter((item) => item.status?.toLowerCase() === selectedFilter.toLowerCase());
+        return data.filter(
+          (item) => item.status?.toLowerCase() === selectedFilter.toLowerCase()
+        );
       default:
         return data;
     }
   };
 
-
   const filteredBTData = applyStatusFilter(filterData(btData));
   const filteredSUData = applyStatusFilter(filterData(suData));
-
 
   const [seksiOptions, setSeksiOptions] = useState([]);
   console.log("Seksi Options:", seksiOptions);
@@ -480,16 +533,7 @@ function DaftarPeminjaman() {
                         ))}
                       </select>
                     </div>
-                    <div>
-                      <label>Tanggal Peminjaman</label>
-                      <input
-                        type="date"
-                        className="w-full border rounded-lg px-3 py-2"
-                        name="dateBorrowed"
-                        value={formData.dateBorrowed}
-                        onChange={handleChange}
-                      />
-                    </div>
+   
                     <div>
                       <label>Durasi Peminjaman</label>
                       <select className="w-full border rounded-lg px-3 py-2">
@@ -559,11 +603,44 @@ function DaftarPeminjaman() {
           <p>Loading...</p>
         ) : (
           <>
-            {activeTab === "bukuTanah" && <LoanTable data={filteredBTData} />}
-            {activeTab === "suratUkur" && <LoanTable data={filteredSUData} />}
+            {activeTab === "bukuTanah" && <LoanTable data={filteredBTData} onAction={handleAction} />}
+            {activeTab === "suratUkur" && <LoanTable data={filteredSUData} onAction={handleAction} />}
           </>
         )}
       </main>
+
+      {/* Modal Delete */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <h2 className="text-lg font-semibold mb-2">Apakah Anda yakin?</h2>
+            <p className="text-gray-500 mb-6">
+              Setelah dihapus, aksi Anda tidak bisa diulang. Data akan terhapus
+              secara permanen.
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 transition-colors disabled:opacity-50"
+              >
+                Batalkan
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                {isSubmitting && (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                )}
+                {isSubmitting ? "Menghapus..." : "Ya, Hapus"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

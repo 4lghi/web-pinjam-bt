@@ -1,7 +1,14 @@
-
-import { useState, useEffect, useRef } from "react"
-import { Edit, Info, MoreHorizontal, RotateCcw, Trash2, ChevronLeft, ChevronRight } from "lucide-react"
-import getTokenPayload from "../../utils/getTokenPayload"
+import { useState, useEffect, useRef } from "react";
+import {
+  Edit,
+  Info,
+  MoreHorizontal,
+  RotateCcw,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import getTokenPayload from "../../utils/getTokenPayload";
 
 const statusColorMap = {
   Dipinjam: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -9,121 +16,129 @@ const statusColorMap = {
   Terlambat: "bg-red-100 text-red-800 border-red-200",
   Pending: "bg-blue-100 text-blue-800 border-blue-200",
   telat: "bg-red-100 text-red-800 border-red-200", // untuk data sample
-}
+};
 
-export default function LoanTable({ data }) {
-  const [dropdownOpen, setDropdownOpen] = useState(null)
-  const [tooltipOpen, setTooltipOpen] = useState(null)
-  const [dropdownPosition, setDropdownPosition] = useState({})
-  const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage, setItemsPerPage] = useState(5)
-  const dropdownRefs = useRef({})
-  const user = getTokenPayload()
-  const userRole = user?.role
-
-  // Debug: Log data yang diterima
-  useEffect(() => {
-    console.log("LoanTable received data:", data)
-    console.log("Data type:", typeof data)
-    console.log("Is array:", Array.isArray(data))
-    console.log("First item structure:", data[0])
-  }, [data])
+export default function LoanTable({
+  data,
+  onAction = () => {
+    console.log("Action triggered");
+  },
+}) {
+  const [dropdownOpen, setDropdownOpen] = useState(null);
+  const [tooltipOpen, setTooltipOpen] = useState(null);
+  const [dropdownPosition, setDropdownPosition] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const dropdownRefs = useRef({});
+  const user = getTokenPayload();
+  const userRole = user?.role;
 
   // Pagination calculations
-  const totalItems = data.length
-  const totalPages = Math.ceil(totalItems / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const currentData = data.slice(startIndex, endIndex)
+  const totalItems = data.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentData = data.slice(startIndex, endIndex);
 
   const handleAction = (action, index) => {
-    console.log(`${action} for row ${index}`)
-    setDropdownOpen(null)
-  }
+    onAction(action, data[index]);
+    setDropdownOpen(null);
+  };
 
   const toggleTooltip = (index) => {
-    setTooltipOpen(tooltipOpen === index ? null : index)
-  }
+    setTooltipOpen(tooltipOpen === index ? null : index);
+  };
 
   const toggleDropdown = (index, isMobile = false) => {
-    const key = isMobile ? `mobile-${index}` : index
+    const key = isMobile ? `mobile-${index}` : index;
 
     if (dropdownOpen === key) {
-      setDropdownOpen(null)
-      return
+      setDropdownOpen(null);
+      return;
     }
 
     // Calculate position
-    const buttonElement = dropdownRefs.current[key]
+    const buttonElement = dropdownRefs.current[key];
     if (buttonElement) {
-      const rect = buttonElement.getBoundingClientRect()
-      const viewportHeight = window.innerHeight
-      const dropdownHeight = 120 // Approximate height of dropdown
+      const rect = buttonElement.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const dropdownHeight = 120; // Approximate height of dropdown
 
       // Check if there's enough space below
-      const spaceBelow = viewportHeight - rect.bottom
-      const shouldShowAbove = spaceBelow < dropdownHeight && rect.top > dropdownHeight
+      const spaceBelow = viewportHeight - rect.bottom;
+      const shouldShowAbove =
+        spaceBelow < dropdownHeight && rect.top > dropdownHeight;
 
       setDropdownPosition({
         [key]: shouldShowAbove ? "above" : "below",
-      })
+      });
     }
 
-    setDropdownOpen(key)
-  }
+    setDropdownOpen(key);
+  };
 
   const handlePageChange = (page) => {
-    setCurrentPage(page)
-    setDropdownOpen(null)
-    setTooltipOpen(null)
-  }
+    setCurrentPage(page);
+    setDropdownOpen(null);
+    setTooltipOpen(null);
+  };
 
   const handleItemsPerPageChange = (newItemsPerPage) => {
-    setItemsPerPage(newItemsPerPage)
-    setCurrentPage(1) // Reset to first page
-  }
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1); // Reset to first page
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = () => {
-      setDropdownOpen(null)
-      setTooltipOpen(null)
-    }
-    document.addEventListener("click", handleClickOutside)
-    return () => document.removeEventListener("click", handleClickOutside)
-  }, [])
+      setDropdownOpen(null);
+      setTooltipOpen(null);
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   // Validasi data
   if (!data) {
-    console.warn("LoanTable: data is null or undefined")
+    console.warn("LoanTable: data is null or undefined");
     return (
       <div className="text-center py-8">
         <div className="text-gray-400 text-xl mb-2">⚠️</div>
-        <h3 className="text-base font-medium text-gray-900 mb-1">Data tidak tersedia</h3>
-        <p className="text-sm text-gray-500">Data belum dimuat atau terjadi kesalahan.</p>
+        <h3 className="text-base font-medium text-gray-900 mb-1">
+          Data tidak tersedia
+        </h3>
+        <p className="text-sm text-gray-500">
+          Data belum dimuat atau terjadi kesalahan.
+        </p>
       </div>
-    )
+    );
   }
 
   if (!Array.isArray(data)) {
-    console.warn("LoanTable: data is not an array:", typeof data)
+    console.warn("LoanTable: data is not an array:", typeof data);
     return (
       <div className="text-center py-8">
         <div className="text-gray-400 text-xl mb-2">⚠️</div>
-        <h3 className="text-base font-medium text-gray-900 mb-1">Format data salah</h3>
+        <h3 className="text-base font-medium text-gray-900 mb-1">
+          Format data salah
+        </h3>
         <p className="text-sm text-gray-500">Data harus berupa array.</p>
       </div>
-    )
+    );
   }
 
   if (data.length === 0) {
     return (
       <div className="text-center py-8">
         <div className="text-gray-400 text-xl mb-2">📋</div>
-        <h3 className="text-base font-medium text-gray-900 mb-1">Tidak ada data</h3>
-        <p className="text-sm text-gray-500">Belum ada data peminjaman yang tersedia.</p>
+        <h3 className="text-base font-medium text-gray-900 mb-1">
+          Tidak ada data
+        </h3>
+        <p className="text-sm text-gray-500">
+          Belum ada data peminjaman yang tersedia.
+        </p>
       </div>
-    )
+    );
   }
 
   return (
@@ -152,18 +167,40 @@ export default function LoanTable({ data }) {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr className="border-b">
-                <th className="w-[3%] px-2 py-2 text-center text-sm font-semibold text-gray-900">No</th>
-                <th className="w-[8%] px-2 py-2 text-left text-sm font-semibold text-gray-900">Peminjam</th>
-                <th className="w-[9%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Seksi</th>
-                <th className="w-[11%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Jenis Hak</th>
-                <th className="w-[12%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Nomor Hak</th>
-                <th className="w-[13%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Lokasi</th>
-                <th className="w-[10%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Tanggal Pinjam</th>
-                <th className="w-[7%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Durasi</th>
-                <th className="w-[9%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Status</th>
-                <th className="w-[7%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Keperluan</th>
+                <th className="w-[3%] px-2 py-2 text-center text-sm font-semibold text-gray-900">
+                  No
+                </th>
+                <th className="w-[8%] px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                  Peminjam
+                </th>
+                <th className="w-[9%] px-2 py-2 text-center text-sm font-semibold text-gray-900">
+                  Seksi
+                </th>
+                <th className="w-[11%] px-2 py-2 text-center text-sm font-semibold text-gray-900">
+                  Jenis Hak
+                </th>
+                <th className="w-[12%] px-2 py-2 text-center text-sm font-semibold text-gray-900">
+                  Nomor Hak
+                </th>
+                <th className="w-[13%] px-2 py-2 text-center text-sm font-semibold text-gray-900">
+                  Lokasi
+                </th>
+                <th className="w-[10%] px-2 py-2 text-center text-sm font-semibold text-gray-900">
+                  Tanggal Pinjam
+                </th>
+                <th className="w-[7%] px-2 py-2 text-center text-sm font-semibold text-gray-900">
+                  Durasi
+                </th>
+                <th className="w-[9%] px-2 py-2 text-center text-sm font-semibold text-gray-900">
+                  Status
+                </th>
+                <th className="w-[7%] px-2 py-2 text-center text-sm font-semibold text-gray-900">
+                  Keperluan
+                </th>
                 {userRole === "admin" && (
-                  <th className="w-[5%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Actions</th>
+                  <th className="w-[5%] px-2 py-2 text-center text-sm font-semibold text-gray-900">
+                    Actions
+                  </th>
                 )}
               </tr>
             </thead>
@@ -171,19 +208,28 @@ export default function LoanTable({ data }) {
               {currentData.map((row, index) => {
                 // Validasi setiap row
                 if (!row) {
-                  console.warn(`Row ${index} is null or undefined`)
-                  return null
+                  console.warn(`Row ${index} is null or undefined`);
+                  return null;
                 }
 
-                const actualIndex = startIndex + index
-                const isDropdownAbove = dropdownPosition[actualIndex] === "above"
+                const actualIndex = startIndex + index;
+                const isDropdownAbove =
+                  dropdownPosition[actualIndex] === "above";
 
                 return (
-                  <tr key={row.id || actualIndex} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-2 py-2 text-center text-sm text-gray-600">{actualIndex + 1}</td>
+                  <tr
+                    key={row.id || actualIndex}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-2 py-2 text-center text-sm text-gray-600">
+                      {actualIndex + 1}
+                    </td>
                     <td className="px-2 py-2">
                       <div className="text-sm font-medium text-gray-900 truncate text-left">
-                        {row.namaPeminjam || row.nama_peminjam || row.name || "N/A"}
+                        {row.namaPeminjam ||
+                          row.nama_peminjam ||
+                          row.name ||
+                          "N/A"}
                       </div>
                     </td>
                     <td className="px-2 py-2 text-center">
@@ -206,23 +252,34 @@ export default function LoanTable({ data }) {
                         <div className="font-medium text-gray-900 truncate text-xs">
                           {row.kelurahan || "N/A"}
                         </div>
-                        <div className="text-gray-500 truncate text-xs">{row.kecamatan || "N/A"}</div>
+                        <div className="text-gray-500 truncate text-xs">
+                          {row.kecamatan || "N/A"}
+                        </div>
                       </div>
                     </td>
                     <td className="px-2 py-2 text-center">
                       <span className="text-sm text-gray-600 inline-block truncate">
-                        {row.dateBorrowed || row.date_borrowed || row.tanggal_pinjam || "N/A"}
+                        {row.dateBorrowed ||
+                          row.date_borrowed ||
+                          row.tanggal_pinjam ||
+                          "N/A"}
                       </span>
                     </td>
                     <td className="px-2 py-2 text-center">
                       <span className="text-sm font-medium text-gray-900 inline-block truncate">
-                        {row.fixDurasi || row.fix_durasi || row.durasi || row.duration || "N/A"} Hari
+                        {row.fixDurasi ||
+                          row.fix_durasi ||
+                          row.durasi ||
+                          row.duration ||
+                          "N/A"}{" "}
+                        Hari
                       </span>
                     </td>
                     <td className="px-2 py-2 text-center">
                       <span
                         className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium border ${
-                          statusColorMap[row.status] || "bg-gray-100 text-gray-800 border-gray-200"
+                          statusColorMap[row.status] ||
+                          "bg-gray-100 text-gray-800 border-gray-200"
                         }`}
                       >
                         {row.status || "Unknown"}
@@ -233,8 +290,8 @@ export default function LoanTable({ data }) {
                         <button
                           className="p-1 hover:bg-gray-100 rounded transition-colors"
                           onClick={(e) => {
-                            e.stopPropagation()
-                            toggleTooltip(actualIndex)
+                            e.stopPropagation();
+                            toggleTooltip(actualIndex);
                           }}
                         >
                           <Info className="h-4 w-4 text-gray-600" />
@@ -242,7 +299,10 @@ export default function LoanTable({ data }) {
                         {/* Tooltip dengan click */}
                         {tooltipOpen === actualIndex && (
                           <div className="absolute right-full top-1/2 -translate-y-1/2 mr-2 w-64 p-3 text-sm bg-white border border-gray-200 text-gray-800 rounded-lg shadow-lg z-[9998] whitespace-normal">
-                            {row.keperluan || row.purpose || row.keterangan || "Tidak ada keterangan"}
+                            {row.keperluan ||
+                              row.purpose ||
+                              row.keterangan ||
+                              "Tidak ada keterangan"}
                           </div>
                         )}
                       </div>
@@ -251,11 +311,13 @@ export default function LoanTable({ data }) {
                       <td className="px-2 py-2 text-center">
                         <div className="relative inline-block">
                           <button
-                            ref={(el) => (dropdownRefs.current[actualIndex] = el)}
+                            ref={(el) =>
+                              (dropdownRefs.current[actualIndex] = el)
+                            }
                             className="p-1 hover:bg-gray-100 rounded transition-colors"
                             onClick={(e) => {
-                              e.stopPropagation()
-                              toggleDropdown(actualIndex)
+                              e.stopPropagation();
+                              toggleDropdown(actualIndex);
                             }}
                           >
                             <MoreHorizontal className="h-4 w-4 text-gray-600" />
@@ -263,26 +325,34 @@ export default function LoanTable({ data }) {
                           {dropdownOpen === actualIndex && (
                             <div
                               className={`absolute right-0 ${
-                                isDropdownAbove ? "bottom-full mb-1" : "top-full mt-1"
+                                isDropdownAbove
+                                  ? "bottom-full mb-1"
+                                  : "top-full mt-1"
                               } min-w-[8rem] overflow-hidden rounded-md border bg-white p-1 shadow-lg z-[9999]`}
                             >
                               <button
                                 className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-gray-100 transition-colors"
-                                onClick={() => handleAction("edit", actualIndex)}
+                                onClick={() =>
+                                  handleAction("edit", actualIndex)
+                                }
                               >
                                 <Edit className="mr-2 h-4 w-4" />
                                 Edit
                               </button>
                               <button
                                 className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-gray-100 transition-colors"
-                                onClick={() => handleAction("status", actualIndex)}
+                                onClick={() =>
+                                  handleAction("status", actualIndex)
+                                }
                               >
                                 <RotateCcw className="mr-2 h-4 w-4" />
                                 Edit Status
                               </button>
                               <button
                                 className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-gray-100 text-red-600 transition-colors"
-                                onClick={() => handleAction("delete", actualIndex)}
+                                onClick={() =>
+                                  handleAction("delete", actualIndex)
+                                }
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Hapus
@@ -293,7 +363,7 @@ export default function LoanTable({ data }) {
                       </td>
                     )}
                   </tr>
-                )
+                );
               })}
             </tbody>
           </table>
@@ -303,14 +373,17 @@ export default function LoanTable({ data }) {
       {/* Mobile Cards */}
       <div className="lg:hidden space-y-3">
         {currentData.map((row, index) => {
-          if (!row) return null
+          if (!row) return null;
 
-          const actualIndex = startIndex + index
-          const mobileKey = `mobile-${actualIndex}`
-          const isDropdownAbove = dropdownPosition[mobileKey] === "above"
+          const actualIndex = startIndex + index;
+          const mobileKey = `mobile-${actualIndex}`;
+          const isDropdownAbove = dropdownPosition[mobileKey] === "above";
 
           return (
-            <div key={row.id || actualIndex} className="rounded-lg border bg-white shadow-sm p-3">
+            <div
+              key={row.id || actualIndex}
+              className="rounded-lg border bg-white shadow-sm p-3"
+            >
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <h3 className="font-semibold text-gray-900 text-sm">
@@ -323,7 +396,8 @@ export default function LoanTable({ data }) {
                 <div className="flex items-center gap-2">
                   <span
                     className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium border ${
-                      statusColorMap[row.status] || "bg-gray-100 text-gray-800 border-gray-200"
+                      statusColorMap[row.status] ||
+                      "bg-gray-100 text-gray-800 border-gray-200"
                     }`}
                   >
                     {row.status || "Unknown"}
@@ -334,8 +408,8 @@ export default function LoanTable({ data }) {
                         ref={(el) => (dropdownRefs.current[mobileKey] = el)}
                         className="p-1 hover:bg-gray-100 rounded"
                         onClick={(e) => {
-                          e.stopPropagation()
-                          toggleDropdown(actualIndex, true)
+                          e.stopPropagation();
+                          toggleDropdown(actualIndex, true);
                         }}
                       >
                         <MoreHorizontal className="h-4 w-4 text-gray-600" />
@@ -343,7 +417,9 @@ export default function LoanTable({ data }) {
                       {dropdownOpen === mobileKey && (
                         <div
                           className={`absolute right-0 ${
-                            isDropdownAbove ? "bottom-full mb-1" : "top-full mt-1"
+                            isDropdownAbove
+                              ? "bottom-full mb-1"
+                              : "top-full mt-1"
                           } min-w-[8rem] overflow-hidden rounded-md border bg-white p-1 shadow-lg z-50`}
                         >
                           <button
@@ -377,7 +453,9 @@ export default function LoanTable({ data }) {
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div>
                   <span className="text-gray-500">Jenis Hak:</span>
-                  <p className="font-medium text-sm">{row.jenisHak || row.jenis_hak || "N/A"}</p>
+                  <p className="font-medium text-sm">
+                    {row.jenisHak || row.jenis_hak || "N/A"}
+                  </p>
                 </div>
                 <div>
                   <span className="text-gray-500">Nomor Hak:</span>
@@ -387,12 +465,18 @@ export default function LoanTable({ data }) {
                 </div>
                 <div>
                   <span className="text-gray-500">Lokasi:</span>
-                  <p className="font-medium text-sm">{row.kelurahan || "N/A"}</p>
-                  <p className="text-gray-600 text-xs">{row.kecamatan || "N/A"}</p>
+                  <p className="font-medium text-sm">
+                    {row.kelurahan || "N/A"}
+                  </p>
+                  <p className="text-gray-600 text-xs">
+                    {row.kecamatan || "N/A"}
+                  </p>
                 </div>
                 <div>
                   <span className="text-gray-500">Durasi:</span>
-                  <p className="font-medium text-sm">{row.fixDurasi || row.durasi || "N/A"}</p>
+                  <p className="font-medium text-sm">
+                    {row.fixDurasi || row.durasi || "N/A"}
+                  </p>
                 </div>
               </div>
 
@@ -410,7 +494,7 @@ export default function LoanTable({ data }) {
                 </div>
               </div>
             </div>
-          )
+          );
         })}
       </div>
 
@@ -426,7 +510,9 @@ export default function LoanTable({ data }) {
               Previous
             </button>
             <button
-              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+              onClick={() =>
+                handlePageChange(Math.min(totalPages, currentPage + 1))
+              }
               disabled={currentPage === totalPages}
               className="relative ml-3 inline-flex items-center rounded-md border border-gray-300  px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -436,7 +522,8 @@ export default function LoanTable({ data }) {
           <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-gray-700">
-                {startIndex + 1}-{Math.min(endIndex, totalItems)} dari {totalItems}
+                {startIndex + 1}-{Math.min(endIndex, totalItems)} dari{" "}
+                {totalItems}
               </p>
             </div>
             <div>
@@ -449,36 +536,47 @@ export default function LoanTable({ data }) {
                   <ChevronLeft className="h-5 w-5" />
                 </button>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                  if (page === 1 || page === totalPages || (page >= currentPage - 1 && page <= currentPage + 1)) {
-                    return (
-                      <button
-                        key={page}
-                        onClick={() => handlePageChange(page)}
-                        className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
-                          page === currentPage
-                            ? "z-10 bg-blue-600 text-white"
-                            : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    )
-                  } else if (page === currentPage - 2 || page === currentPage + 2) {
-                    return (
-                      <span
-                        key={page}
-                        className="relative inline-flex items-center px-4 py-2 text-sm text-gray-700 ring-1 ring-inset ring-gray-300"
-                      >
-                        ...
-                      </span>
-                    )
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => {
+                    if (
+                      page === 1 ||
+                      page === totalPages ||
+                      (page >= currentPage - 1 && page <= currentPage + 1)
+                    ) {
+                      return (
+                        <button
+                          key={page}
+                          onClick={() => handlePageChange(page)}
+                          className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
+                            page === currentPage
+                              ? "z-10 bg-blue-600 text-white"
+                              : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      );
+                    } else if (
+                      page === currentPage - 2 ||
+                      page === currentPage + 2
+                    ) {
+                      return (
+                        <span
+                          key={page}
+                          className="relative inline-flex items-center px-4 py-2 text-sm text-gray-700 ring-1 ring-inset ring-gray-300"
+                        >
+                          ...
+                        </span>
+                      );
+                    }
+                    return null;
                   }
-                  return null
-                })}
+                )}
 
                 <button
-                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                  onClick={() =>
+                    handlePageChange(Math.min(totalPages, currentPage + 1))
+                  }
                   disabled={currentPage === totalPages}
                   className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -490,5 +588,5 @@ export default function LoanTable({ data }) {
         </div>
       )}
     </div>
-  )
+  );
 }

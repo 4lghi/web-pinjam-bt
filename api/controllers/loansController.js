@@ -1,10 +1,11 @@
 const { admin, db } = require("../firebase");
-const isAdmin = true; // Simulasi untuk contoh ini, ganti dengan middleware autentikasi yang sesuai
 
 // Endpoint POST /peminjaman
 const createLoan = async (req, res) => {
   const data = req.body;
   console.log("Data diterima:", data);
+
+  isAdmin = true;
 
   if (!data.namaPeminjam) {
     return res.status(400).json({
@@ -106,6 +107,9 @@ const createBt = async (req, res) => {
   const data = req.body;
   console.log("Data diterima:", data);
 
+  const role = req.user?.role;
+  const isAdmin = role === "admin";
+
   if (!data.namaPeminjam) {
     return res.status(400).json({
       status: "error",
@@ -151,6 +155,9 @@ const createBt = async (req, res) => {
 const createSu = async (req, res) => {
   const data = req.body;
   console.log("Data diterima:", data);
+
+  const role = req.user?.role;
+  const isAdmin = role === "admin";
 
   if (!data.namaPeminjam) {
     return res.status(400).json({
@@ -269,6 +276,33 @@ const updateSu = async (req, res) => {
   }
 };
 
+// DELETE permintaan berdasarkan ID
+const deleteBtLoan = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await db.collection("bukuTanah").doc(id).delete();
+    res
+      .status(200)
+      .json({ status: "sukses", message: "Data berhasil dihapus." });
+  } catch (err) {
+    res.status(500).json({ status: "error", message: "Gagal hapus data." });
+  }
+};
+
+const deleteSuLoan = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await db.collection("suratUkur").doc(id).delete();
+    res
+      .status(200)
+      .json({ status: "sukses", message: "Data berhasil dihapus." });
+  } catch (err) {
+    res.status(500).json({ status: "error", message: "Gagal hapus data." });
+  }
+};
+
 module.exports = {
   createLoan,
   getLoans,
@@ -280,4 +314,6 @@ module.exports = {
   createSu,
   updateBt,
   updateSu,
+  deleteBtLoan,
+  deleteSuLoan,
 };
