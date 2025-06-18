@@ -7,10 +7,10 @@ import User from "../components/User";
 
 function DaftarPengajuan() {
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   const [activeTab, setActiveTab] = useState("bukuTanah");
 
-  const [selectedFilter, setSelectedFilter] = useState("Semua"); 
+  const [selectedFilter, setSelectedFilter] = useState("Semua");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -23,6 +23,9 @@ function DaftarPengajuan() {
 
   const [btData, setBtData] = useState([]);
   const [suData, setSuData] = useState([]);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,14 +74,18 @@ function DaftarPengajuan() {
   const applyStatusFilter = (data) => {
     switch (selectedFilter) {
       case "Terbaru":
-        case "Terbaru":
-          return [...data].sort((a, b) => new Date(b.dateRequested) - new Date(a.dateRequested));
-        case "Terlama":
-          return [...data].sort((a, b) => new Date(a.dateRequested) - new Date(b.dateRequested));
+      case "Terbaru":
+        return [...data].sort(
+          (a, b) => new Date(b.dateRequested) - new Date(a.dateRequested)
+        );
+      case "Terlama":
+        return [...data].sort(
+          (a, b) => new Date(a.dateRequested) - new Date(b.dateRequested)
+        );
       default:
         return data;
     }
-  }
+  };
 
   const filteredBTData = applyStatusFilter(filterData(btData));
   const filteredSUData = applyStatusFilter(filterData(suData));
@@ -117,14 +124,16 @@ function DaftarPengajuan() {
     }
   };
 
-  const handleRejectModal = async (id) => {
+  const handleRejectModal = async (id, jenis) => {
     try {
-      const response = await axios.patch(
-        `http://localhost:3000/peminjaman/${id}`,
-        {
-          status: "ditolak",
-        }
-      );
+      const endpoint =
+        jenis === "bt"
+          ? `http://localhost:3000/peminjaman/bukuTanah/${id}`
+          : `http://localhost:3000/peminjaman/suratUkur/${id}`;
+
+      const response = await axios.patch(endpoint, {
+        status: "ditolak",
+      });
 
       // Update state setelah sukses
       setLoanData((prevData) =>
@@ -136,6 +145,31 @@ function DaftarPengajuan() {
       console.log("Status berhasil diubah:", response.data);
     } catch (error) {
       console.error("Gagal update status:", error);
+    }
+  };
+
+  const handleDelete = async (id, jenis) => {
+    setShowDeleteModal(true);
+    setIsSubmitting(true);
+    try {
+      // Pilih endpoint berdasarkan jenis
+      const endpoint =
+        jenis === "bt"
+          ? `http://localhost:3000/peminjaman/bukuTanah/${id}`
+          : `http://localhost:3000/peminjaman/suratUkur/${id}`;
+
+      const response = await axiosInstance.delete(endpoint);
+
+      // Update state sesuai jenis
+      if (jenis === "bt") {
+        setBtData((prevData) => prevData.filter((loan) => loan.id !== id));
+      } else {
+        setSuData((prevData) => prevData.filter((loan) => loan.id !== id));
+      }
+
+      console.log("Data berhasil dihapus:", response.data);
+    } catch (error) {
+      console.error("Gagal hapus data:", error);
     }
   };
 
@@ -157,7 +191,10 @@ function DaftarPengajuan() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <ion-icon className="absolute left-3 top-2 text-black text-xl" name="search-outline"></ion-icon>
+            <ion-icon
+              className="absolute left-3 top-2 text-black text-xl"
+              name="search-outline"
+            ></ion-icon>
           </div>
 
           <div className="flex items-center gap-4">
@@ -192,11 +229,7 @@ function DaftarPengajuan() {
               {isDropdownOpen && (
                 <div className="absolute left-1/2 transform -translate-x-1/2 z-20 mt-2 w-32 bg-white shadow rounded">
                   <ul className="text-sm text-gray-700">
-                    {[
-                      "Semua",
-                      "Terbaru",
-                      "Terlama",
-                    ].map((label) => (
+                    {["Semua", "Terbaru", "Terlama"].map((label) => (
                       <li key={label}>
                         <button
                           className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${
@@ -250,21 +283,60 @@ function DaftarPengajuan() {
         {/* Table */}
         {activeTab === "bukuTanah" && (
           <RequestTable
-            data={filteredBTData.filter((row) => row.status === "menunggu")}
+            data={filteredBTData.filter(
+              (row) => row.status === "menunggu persetujuan"
+            )}
             handleAccept={handleAccept}
             handleRejectModal={handleRejectModal}
+            handleDelete={handleDelete}
             jenis="bt"
           />
         )}
         {activeTab === "suratUkur" && (
           <RequestTable
-            data={filteredSUData.filter((row) => row.status === "menunggu")}
+            data={filteredSUData.filter(
+              (row) => row.status === "menunggu persetujuan"
+            )}
             handleAccept={handleAccept}
             handleRejectModal={handleRejectModal}
+            handleDelete={handleDelete}
             jenis="su"
           />
         )}
       </main>
+
+      {/* Modal Delete */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <h2 className="text-lg font-semibold mb-2">Apakah Anda yakin?</h2>
+            <p className="text-gray-500 mb-6">
+              Setelah dihapus, aksi Anda tidak bisa diulang. Data akan terhapus
+              secara permanen.
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 transition-colors disabled:opacity-50"
+              >
+                Batalkan
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                {isSubmitting && (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                )}
+                {isSubmitting ? "Menghapus..." : "Ya, Hapus"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

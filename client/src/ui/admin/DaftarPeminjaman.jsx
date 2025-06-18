@@ -587,7 +587,7 @@ function DaftarPeminjaman() {
             Buku Tanah
           </button>
           <button
-            onClick={() => setActiveTab("suratUkur").then}
+            onClick={() => setActiveTab("suratUkur")}
             className={`px-4 py-2 rounded-xl shadow font-semibold ${
               activeTab === "suratUkur"
                 ? "bg-[#022B3A] text-white"
