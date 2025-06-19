@@ -74,7 +74,6 @@ function DaftarPengajuan() {
   const applyStatusFilter = (data) => {
     switch (selectedFilter) {
       case "Terbaru":
-      case "Terbaru":
         return [...data].sort(
           (a, b) => new Date(b.dateRequested) - new Date(a.dateRequested)
         );

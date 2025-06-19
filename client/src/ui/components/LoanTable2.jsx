@@ -266,12 +266,18 @@ export default function LoanTable({
                     </td>
                     <td className="px-2 py-2 text-center">
                       <span className="text-sm font-medium text-gray-900 inline-block truncate">
-                        {row.fixDurasi ||
-                          row.fix_durasi ||
-                          row.durasi ||
-                          row.duration ||
-                          "N/A"}{" "}
-                        Hari
+                        {(() => {
+                          const durasi =
+                            row.fixDurasi ||
+                            row.fix_durasi ||
+                            row.durasi ||
+                            row.duration;
+
+                          if (durasi === 7) return "1 Minggu";
+                          if (durasi === 3) return "3 Hari";
+                          if (durasi === 1) return "1 Hari";
+                          return "N/A";
+                        })()}
                       </span>
                     </td>
                     <td className="px-2 py-2 text-center">

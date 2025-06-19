@@ -29,11 +29,10 @@ function DaftarPeminjaman() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-  if (selectedItem?.status) {
-    setSelectedStatus(selectedItem.status);
-  }
-}, [selectedItem]);
-
+    if (selectedItem?.status) {
+      setSelectedStatus(selectedItem.status);
+    }
+  }, [selectedItem]);
 
   const statusColorMap = {
     Dipinjam: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -350,8 +349,8 @@ function DaftarPeminjaman() {
     kecamatan: "",
     kelurahan: "",
     tanggalPeminjaman: "",
-    durasi: "",
     keperluan: "",
+    fixDurasi: "",
     userId: "",
   });
 
@@ -434,7 +433,7 @@ function DaftarPeminjaman() {
   const filteredSUData = applyStatusFilter(filterData(suData));
 
   const [seksiOptions, setSeksiOptions] = useState([]);
-  console.log("Seksi Options:", seksiOptions);
+
   useEffect(() => {
     const fetchSeksiOptions = async () => {
       try {
@@ -470,6 +469,14 @@ function DaftarPeminjaman() {
 
   const handleKelurahanChange = (e) => {
     setFormData((prev) => ({ ...prev, kelurahan: e.target.value }));
+  };
+
+  const handleDurasiChange = (e) => {
+    const durasi = Number(e.target.value); // konversi ke number
+    setFormData((prev) => ({
+      ...prev,
+      fixDurasi: durasi,
+    }));
   };
 
   return (
@@ -620,15 +627,19 @@ function DaftarPeminjaman() {
                         ))}
                       </select>
                     </div>
-
                     <div>
                       <label>Durasi Peminjaman</label>
-                      <select className="w-full border rounded-lg px-3 py-2">
-                        <option>1 Hari</option>
-                        <option>3 Hari</option>
-                        <option>1 Minggu</option>
+                      <select
+                        className="w-full border rounded-lg px-3 py-2"
+                        value={formData.fixDurasi || ""}
+                        onChange={handleDurasiChange}
+                      >
+                        <option value={1}>1 Hari</option>
+                        <option value={3}>3 Hari</option>
+                        <option value={7}>1 Minggu</option>
                       </select>
                     </div>
+
                     <div>
                       <label>Keperluan</label>
                       <textarea
@@ -828,7 +839,13 @@ function DaftarPeminjaman() {
                   {/* Dropdown Options */}
                   {statusDropdownOpen && (
                     <div className="absolute mt-2 w-full bg-white border rounded-lg shadow-lg z-50">
-                      {["menunggu", "disetujui", "ditolak", "dipinjam", "dikembalikan"].map((status) => (
+                      {[
+                        "menunggu",
+                        "disetujui",
+                        "ditolak",
+                        "dipinjam",
+                        "dikembalikan",
+                      ].map((status) => (
                         <button
                           key={status}
                           onClick={() => handleSelectStatus(status)}
