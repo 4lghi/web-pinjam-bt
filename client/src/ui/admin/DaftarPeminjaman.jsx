@@ -208,22 +208,30 @@ function DaftarPeminjaman() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async () => {
-    const endpoint =
-      formData.jenisPeminjaman === "Buku Tanah"
-        ? "http://localhost:3000/peminjaman/bukuTanah"
-        : "http://localhost:3000/peminjaman/suratUkur";
+const handleSubmit = async () => {
+  const endpoint =
+    formData.jenisPeminjaman === "Buku Tanah"
+      ? "/peminjaman/bukuTanah"
+      : "/peminjaman/suratUkur";
 
-    try {
-      await axiosInstance.post(endpoint, formData);
-      alert("Data berhasil disimpan!");
-      closeModalForm();
-      // Reload data jika perlu
-    } catch (error) {
-      console.error("Gagal simpan data:", error);
-      alert("Gagal menyimpan data.");
+  try {
+    const res = await axiosInstance.post(endpoint, formData);
+    const newItem = { id: res.data.id, ...res.data.data }; // ← Format respons kamu sebelumnya
+
+    // ✅ Update data lokal
+    if (formData.jenisPeminjaman === "Buku Tanah") {
+      setBtData((prev) => [...prev, newItem]);
+    } else {
+      setSuData((prev) => [...prev, newItem]);
     }
-  };
+
+    alert("Data berhasil disimpan!");
+    closeModalForm();
+  } catch (error) {
+    console.error("Gagal simpan data:", error.response?.data || error.message);
+    alert("Gagal menyimpan data.");
+  }
+};
 
   // Modal handlers
   const handleAction = (action, item) => {
@@ -232,7 +240,19 @@ function DaftarPeminjaman() {
 
     switch (action) {
       case "edit":
-        setShowEditModal(true);
+        setFormData({
+          jenisPeminjaman: item.jenisPeminjaman || "Buku Tanah",
+          namaPeminjam: item.namaPeminjam || "",
+          jenisHak: item.jenisHak || "Hak Milik",
+          nomorHak: item.nomorHak || "",
+          userId: item.userId || "",
+          kecamatan: item.kecamatan || "",
+          kelurahan: item.kelurahan || "",
+          keperluan: item.keperluan || "",
+          fixDurasi: item.fixDurasi || 1,
+        });
+        setSelectedKecamatan(item.kecamatan || "");
+        setShowEditModal(true); // modal edit
         break;
       case "status":
         // setSelectedStatus(item?.status || "Dikembalikan")
@@ -328,6 +348,36 @@ function DaftarPeminjaman() {
       alert("Gagal mengupdate status!");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleEditSubmit = async () => {
+    try {
+      const endpoint =
+        activeTab === "bukuTanah"
+          ? `/peminjaman/bukuTanah/${selectedItem.id}`
+          : `/peminjaman/suratUkur/${selectedItem.id}`;
+
+      await axiosInstance.patch(endpoint, formData); // Kirim update
+
+      setShowEditModal(false);
+
+      // ✅ Update data lokal
+      if (activeTab === "bukuTanah") {
+        setBtData((prev) =>
+          prev.map((item) =>
+            item.id === selectedItem.id ? { ...item, ...formData } : item
+          )
+        );
+      } else {
+        setSuData((prev) =>
+          prev.map((item) =>
+            item.id === selectedItem.id ? { ...item, ...formData } : item
+          )
+        );
+      }
+    } catch (err) {
+      console.error("Gagal edit:", err.response?.data || err.message);
     }
   };
 
@@ -515,12 +565,14 @@ function DaftarPeminjaman() {
             <User />
           </div>
 
-          {/* Modal Tambah Peminjaman */}
-          {isModalOpen && (
+          {/* Modal Tambah dan edit Peminjaman */}
+          {(isModalOpen || showEditModal) && (
             <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
               <div className="bg-white rounded-xl p-6 w-[700px] relative">
                 <div className="flex justify-between items-start mb-4">
-                  <h2 className="text-xl font-semibold">Tambah Peminjaman</h2>
+                  <h2 className="text-xl font-semibold">
+                    {showEditModal ? "Edit Peminjaman" : "Tambah Peminjaman"}
+                  </h2>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -655,14 +707,21 @@ function DaftarPeminjaman() {
 
                 <div className="mt-6 flex justify-end gap-2">
                   <button
-                    onClick={closeModalForm}
+                    onClick={
+                      showEditModal
+                        ? () => {
+                            setShowEditModal(false);
+                            setFormData({});
+                          }
+                        : closeModalForm
+                    }
                     className="px-4 py-2 border rounded-lg"
                   >
                     Batalkan
                   </button>
                   <button
                     className="px-4 py-2 bg-sky-900 text-white rounded-lg"
-                    onClick={handleSubmit}
+                    onClick={showEditModal ? handleEditSubmit : handleSubmit}
                   >
                     Simpan
                   </button>
