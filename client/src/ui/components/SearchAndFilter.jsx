@@ -11,9 +11,9 @@ export default function SearchAndFilter({
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   return (
-    <div className="flex justify-between w-full">
+    <div className="flex justify-between w-[577px]">
       {/* Search */}
-      <div className="relative w-[550px]">
+      <div className="relative w-[530px]">
         <input
           type="search"
           placeholder="Cari peminjaman"
@@ -28,7 +28,7 @@ export default function SearchAndFilter({
       </div>
 
       {/* Filter*/}
-      <div className="flex items-center mr-5">
+      <div className="flex items-center mr-3">
         {/* Notifikasi */}
         {/* <a href="/notifikasi-user">
           <span className="cursor-pointer relative">

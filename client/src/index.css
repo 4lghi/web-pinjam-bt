@@ -1,1 +1,33 @@
 @import "tailwindcss";
+
+@media print {
+  @page {
+    /* size: 105mm 148mm; A6 = 1/4 A4, kamu juga bisa coba 105mm 148mm */
+    margin: 15px;
+  }
+
+  body * {
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+  }
+  
+  .print-area, .print-area * {
+    visibility: visible;
+    height: auto;
+    overflow: hidden;
+  }
+
+  .print-area {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 20px;
+    width: 100%;
+    background: white;
+    gap: 20px;
+  }
+}

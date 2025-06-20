@@ -8,7 +8,10 @@ import SearchAndFilter from "../components/SearchAndFilter";
 import User from "../components/User";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import { X, ChevronLeft } from "lucide-react";
+import { X, ChevronLeft, Printer } from "lucide-react";
+import {
+  Download,
+} from "lucide-react";
 
 function DaftarPeminjaman() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -22,6 +25,7 @@ function DaftarPeminjaman() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showEditStatusModal, setShowEditStatusModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showPrintOption, setshowPrintOption] = useState(false);
 
   // Status modal states
   const [selectedStatus, setSelectedStatus] = useState(null);
@@ -208,30 +212,30 @@ function DaftarPeminjaman() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-const handleSubmit = async () => {
-  const endpoint =
-    formData.jenisPeminjaman === "Buku Tanah"
-      ? "/peminjaman/bukuTanah"
-      : "/peminjaman/suratUkur";
+  const handleSubmit = async () => {
+    const endpoint =
+      formData.jenisPeminjaman === "Buku Tanah"
+        ? "/peminjaman/bukuTanah"
+        : "/peminjaman/suratUkur";
 
-  try {
-    const res = await axiosInstance.post(endpoint, formData);
-    const newItem = { id: res.data.id, ...res.data.data }; // ← Format respons kamu sebelumnya
+    try {
+      const res = await axiosInstance.post(endpoint, formData);
+      const newItem = { id: res.data.id, ...res.data.data }; // ← Format respons kamu sebelumnya
 
-    // ✅ Update data lokal
-    if (formData.jenisPeminjaman === "Buku Tanah") {
-      setBtData((prev) => [...prev, newItem]);
-    } else {
-      setSuData((prev) => [...prev, newItem]);
+      // ✅ Update data lokal
+      if (formData.jenisPeminjaman === "Buku Tanah") {
+        setBtData((prev) => [...prev, newItem]);
+      } else {
+        setSuData((prev) => [...prev, newItem]);
+      }
+
+      alert("Data berhasil disimpan!");
+      closeModalForm();
+    } catch (error) {
+      console.error("Gagal simpan data:", error.response?.data || error.message);
+      alert("Gagal menyimpan data.");
     }
-
-    alert("Data berhasil disimpan!");
-    closeModalForm();
-  } catch (error) {
-    console.error("Gagal simpan data:", error.response?.data || error.message);
-    alert("Gagal menyimpan data.");
-  }
-};
+  };
 
   // Modal handlers
   const handleAction = (action, item) => {
@@ -529,6 +533,10 @@ const handleSubmit = async () => {
     }));
   };
 
+  // print (cetak bon)
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [dataUntukCetak, setDataUntukCetak] = useState([]);
+
   return (
     <div className="flex min-h-screen font-sans bg-gray-100 text-sm text-gray-800">
       {/* Sidebar */}
@@ -546,17 +554,36 @@ const handleSubmit = async () => {
             isDropdownOpen={isDropdownOpen}
             setIsDropdownOpen={setIsDropdownOpen}
           />
-          <div className="flex items-center gap-4">
-            {/* Export & Tambah */}
+          <div className="flex items-center gap-2">
+            {/* Export, Tambah & print */}
+            <button
+              onClick={() => {
+                const dataDipilih =
+                  activeTab === "bukuTanah"
+                    ? filteredBTData.filter((item) => selectedRows.includes(item.id))
+                    : filteredSUData.filter((item) => selectedRows.includes(item.id));
+
+                setDataUntukCetak(dataDipilih);
+                setTimeout(() => {
+                  window.print();
+                }, 500);
+              }}
+              disabled={selectedRows.length === 0}
+              className="flex items-center px-2 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-400 font-semibold cursor-pointer"
+            >
+              <Printer className="mr-2 h-4 w-4"/>
+              Cetak Bon ({selectedRows.length})
+            </button>
             <button
               onClick={exportToExcel}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-400 font-semibold cursor-pointer"
+              className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-400 font-semibold cursor-pointer"
             >
+              <Download className="mr-2 h-4 w-4"/>
               Export
             </button>
             <button
               onClick={openModal}
-              className="w-24 px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-sky-700 font-semibold cursor-pointer"
+              className="flex items-center w-24 px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-sky-700 font-semibold cursor-pointer"
             >
               + Tambah
             </button>
@@ -761,10 +788,20 @@ const handleSubmit = async () => {
         ) : (
           <>
             {activeTab === "bukuTanah" && (
-              <LoanTable data={filteredBTData} onAction={handleAction} />
+              <LoanTable
+                data={filteredBTData}
+                onAction={handleAction}
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
+              />            
             )}
             {activeTab === "suratUkur" && (
-              <LoanTable data={filteredSUData} onAction={handleAction} />
+              <LoanTable
+                data={filteredSUData}
+                onAction={handleAction}
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
+              />
             )}
           </>
         )}
@@ -956,6 +993,21 @@ const handleSubmit = async () => {
           </div>
         </div>
       )}
+
+      {/* print */}
+      <div className="hidden print:block print-area">
+        {dataUntukCetak.map((item) => (
+          <div key={item.id} className="w-[48%] print:w-[48%] p-4 mb-4 text-sm border-2 rounded-xl break-inside-avoid">
+            <h2 className="text-lg font-bold mb-2">Bon Peminjaman</h2>
+            <p><strong>Tanggal Peminjaman:</strong> {item.dateBorrowed}</p>
+            <p><strong>Nama Peminjam:</strong> {item.namaPeminjam}</p>
+            <p><strong>Seksi:</strong> {item.userId}</p>
+            <p><strong>Nomor Hak:</strong> {item.nomorHak}</p>
+            <p><strong>Kelurahan:</strong> {item.kelurahan}</p>
+            <p><strong>Kecamatan:</strong> {item.kecamatan}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

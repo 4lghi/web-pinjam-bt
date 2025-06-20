@@ -7,21 +7,24 @@ import {
   Trash2,
   ChevronLeft,
   ChevronRight,
+  Printer,
 } from "lucide-react";
 import getTokenPayload from "../../utils/getTokenPayload";
 
 const statusColorMap = {
-  dipinjam: "bg-yellow-100 text-yellow-800 border-yellow-200",
-  dikembalikan: "bg-green-100 text-green-800 border-green-200",
-  telat: "bg-red-100 text-red-800 border-red-200",
-  disetujui: "bg-red-100 text-red-800 border-red-200", // untuk data sample
+  menunggu: "bg-yellow-100 text-yellow-700",
+  dipinjam: "bg-purple-100 text-purple-700",
+  dikembalikan: "bg-green-100 text-green-700",
+  telat: "bg-orange-100 text-orange-700",
+  disetujui: "bg-blue-100 text-blue-700", 
+  ditolak: "bg-red-100 text-red-700", // untuk data sample
 };
 
 export default function LoanTable({
   data,
   onAction = () => {
     console.log("Action triggered");
-  },
+  }, selectedRows = [], setSelectedRows
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [tooltipOpen, setTooltipOpen] = useState(null);
@@ -167,6 +170,9 @@ export default function LoanTable({
             <thead className="bg-gray-50">
               <tr className="border-b">
                 <th className="w-[3%] px-2 py-2 text-center text-sm font-semibold text-gray-900">
+                  Pilih
+                </th>
+                <th className="w-[3%] px-2 py-2 text-center text-sm font-semibold text-gray-900">
                   No
                 </th>
                 <th className="w-[8%] px-2 py-2 text-left text-sm font-semibold text-gray-900">
@@ -220,6 +226,18 @@ export default function LoanTable({
                     key={row.id || actualIndex}
                     className="hover:bg-gray-50 transition-colors"
                   >
+                    <td className="px-2 py-2 text-center">
+                      <input type="checkbox" 
+                        checked={selectedRows.includes(row.id)}
+                          onChange={(e) => {
+                            const isChecked = e.target.checked;
+                            const newSelectedRows = isChecked
+                              ? [...selectedRows, row.id]
+                              : selectedRows.filter((id) => id !== row.id);
+                            setSelectedRows(newSelectedRows);
+                          }}
+                      />
+                    </td>
                     <td className="px-2 py-2 text-center text-sm text-gray-600">
                       {actualIndex + 1}
                     </td>
@@ -448,6 +466,7 @@ export default function LoanTable({
                             <Trash2 className="mr-2 h-4 w-4" />
                             Hapus
                           </button>
+                          
                         </div>
                       )}
                     </div>
