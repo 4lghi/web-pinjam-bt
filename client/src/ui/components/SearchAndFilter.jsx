@@ -68,6 +68,7 @@ export default function SearchAndFilter({
                   "Dikembalikan",
                   "Ditolak",
                   "Telat",
+                  "Menunggu",
                 ].map((label) => (
                   <li key={label}>
                     <button
