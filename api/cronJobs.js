@@ -33,7 +33,10 @@ const cekTelat = async () => {
 
         const deadline = hitungDeadline(dateBorrowed, fixDurasi);
 
-        if (new Date() > deadline) {
+        console.log("fixDurasi:", fixDurasi);
+        console.log("dateBorrowed:", dateBorrowed);
+
+        if (new Date() >= deadline) {
           const docRef = db.collection(koleksi).doc(doc.id);
           batch.update(docRef, {
             status: "telat",
@@ -51,7 +54,7 @@ const cekTelat = async () => {
 };
 
 // ⏰ Jadwalkan setiap jam
-cron.schedule("0 * * * *", () => {
+cron.schedule("* * * * *", () => {
   console.log("⏰ Menjalankan cekTelat (setiap jam)");
   cekTelat();
 });

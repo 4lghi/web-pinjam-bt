@@ -316,11 +316,11 @@ function DaftarPeminjaman() {
       // Determine the endpoint based on active tab
       const endpoint =
         activeTab === "bukuTanah"
-          ? `http://localhost:3000/peminjaman/bukuTanah/${selectedItem.id}`
-          : `http://localhost:3000/peminjaman/suratUkur/${selectedItem.id}`;
+          ? `http://localhost:3000/peminjaman/bukuTanah/${selectedItem.id}/status`
+          : `http://localhost:3000/peminjaman/suratUkur/${selectedItem.id}/status`;
 
       await axiosInstance.patch(endpoint, {
-        status: selectedStatus,
+        newStatus: selectedStatus,
       });
 
       // Update local data
@@ -390,7 +390,6 @@ function DaftarPeminjaman() {
     setShowEditStatusModal(false);
     setShowDeleteModal(false);
     setSelectedItem(null);
-    setSelectedStatus("Dikembalikan");
     setStatusDropdownOpen(false);
   };
 
@@ -402,7 +401,7 @@ function DaftarPeminjaman() {
     seksi: "",
     kecamatan: "",
     kelurahan: "",
-    tanggalPeminjaman: "",
+    dateBorrowed: "",
     keperluan: "",
     fixDurasi: "",
     userId: "",

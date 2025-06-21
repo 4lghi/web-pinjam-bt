@@ -65,7 +65,7 @@ function PeminjamanPribadi() {
     seksi: "",
     kecamatan: "",
     kelurahan: "",
-    tanggalPeminjaman: "",
+    dateBorrowed: "",
     durasi: "",
     keperluan: "",
   });
