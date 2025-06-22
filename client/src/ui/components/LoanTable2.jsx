@@ -213,6 +213,7 @@ export default function LoanTable({
                       <td className="px-2 py-2 text-center">
                         <input
                           type="checkbox"
+                          className="disabled:cursor-not-allowed"
                           checked={selectedRows.includes(row.id)}
                           onChange={(e) => {
                             const isChecked = e.target.checked
@@ -221,6 +222,7 @@ export default function LoanTable({
                               : selectedRows.filter((id) => id !== row.id)
                             setSelectedRows(newSelectedRows)
                           }}
+                          disabled={row.status?.toLowerCase() !== "dipinjam"}
                         />
                       </td>
                     }
