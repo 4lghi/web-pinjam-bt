@@ -10,6 +10,7 @@ import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { X, ChevronLeft, Printer } from "lucide-react";
 import { Download } from "lucide-react";
+import getTokenPayload from "../../utils/getTokenPayload";
 
 function DaftarPeminjaman() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,6 +31,8 @@ function DaftarPeminjaman() {
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const payload = getTokenPayload();
+  const loggedInUserId = payload.username;
   useEffect(() => {
     if (selectedItem?.status) {
       setSelectedStatus(selectedItem.status);
@@ -537,6 +540,16 @@ function DaftarPeminjaman() {
   // print (cetak bon)
   const [selectedRows, setSelectedRows] = useState([]);
   const [dataUntukCetak, setDataUntukCetak] = useState([]);
+  const allSelectedData =
+    activeTab === "bukuTanah"
+      ? filteredBTData.filter((item) => selectedRows.includes(item.id))
+      : filteredSUData.filter((item) => selectedRows.includes(item.id));
+
+  // Hanya ambil yang statusnya "dipinjam"
+  const selectedRowsValid = allSelectedData.filter(
+    (item) => item.status === "dipinjam"
+  );
+
 
   return (
     <div className="flex min-h-screen font-sans bg-gray-100 text-sm text-gray-800">
@@ -559,25 +572,16 @@ function DaftarPeminjaman() {
             {/* Export, Tambah & print */}
             <button
               onClick={() => {
-                const dataDipilih =
-                  activeTab === "bukuTanah"
-                    ? filteredBTData.filter((item) =>
-                        selectedRows.includes(item.id)
-                      )
-                    : filteredSUData.filter((item) =>
-                        selectedRows.includes(item.id)
-                      );
-
-                setDataUntukCetak(dataDipilih);
+                setDataUntukCetak(selectedRowsValid);
                 setTimeout(() => {
                   window.print();
                 }, 500);
               }}
-              disabled={selectedRows.length === 0}
-              className="flex items-center px-2 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-400 font-semibold cursor-pointer"
+              disabled={selectedRowsValid.length === 0}
+              className="flex items-center px-2 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-400 font-semibold cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               <Printer className="mr-2 h-4 w-4" />
-              Cetak Bon ({selectedRows.length})
+              Cetak Bon ({selectedRowsValid.length})
             </button>
             <button
               onClick={exportToExcel}
@@ -598,8 +602,8 @@ function DaftarPeminjaman() {
               <ion-icon
                 className="text-2xl"
                 name="person-circle-outline"
-              ></ion-icon>{" "}
-              <span className="font-semibold">Admin</span>
+              ></ion-icon>
+              <span className="font-semibold">{loggedInUserId}</span>
             </div>
           </div>
 
@@ -804,6 +808,8 @@ function DaftarPeminjaman() {
                 onAction={handleAction}
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
+                showCheckbox={true}
+
               />
             )}
             {activeTab === "suratUkur" && (
@@ -812,6 +818,8 @@ function DaftarPeminjaman() {
                 onAction={handleAction}
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
+                showCheckbox={true}
+
               />
             )}
           </>
@@ -1014,7 +1022,8 @@ function DaftarPeminjaman() {
           >
             <h2 className="text-lg font-bold mb-2">Bon Peminjaman</h2>
             <p>
-              <strong>Tanggal Peminjaman:</strong> {item.dateBorrowed}
+              <strong>Tanggal Peminjaman:</strong> {""}
+              {new Date(item.dateBorrowed).toLocaleDateString("id-ID")}
             </p>
             <p>
               <strong>Nama Peminjam:</strong> {item.namaPeminjam}

@@ -4,6 +4,8 @@ import SidebarAdmin from "../components/SidebarAdmin";
 import RequestTable from "../components/RequestTable";
 import axiosInstance from "../../utils/axiosInstance";
 import User from "../components/User";
+import { Search } from "lucide-react";
+import getTokenPayload from "../../utils/getTokenPayload";
 
 function DaftarPengajuan() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,6 +30,9 @@ function DaftarPengajuan() {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const payload = getTokenPayload();
+  const loggedInUserId = payload.username;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -192,33 +197,21 @@ function DaftarPengajuan() {
       {/* Main Content */}
       <main className="flex-1 ml-60 p-6">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center mb-6 gap-3">
           {/* Search */}
-          <div className="relative w-[550px]">
+          <div className="relative w-full">
             <input
               type="search"
               placeholder="Cari pengajuan peminjaman"
-              className="w-full pl-10 pr-5 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              className="w-full pl-10 pr-5 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <ion-icon
-              className="absolute left-3 top-2 text-black text-xl"
-              name="search-outline"
-            ></ion-icon>
+            <Search className="h-5 w-5 absolute left-3 top-2.5 text-gray-400" />
+
           </div>
 
-          <div className="flex items-center gap-4">
-            {/* Notifikasi */}
-            {/* <a href="/notifikasi-admin">
-              <span className="cursor-pointer relative">
-                <span className="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  1
-                </span>
-                <ion-icon class="text-xl mt-2" name="notifications"></ion-icon>
-              </span>
-            </a> */}
-
+          <div className="flex items-center w-[577px] justify-between gap-4">
             {/* Filter Dropdown */}
             <div className="relative">
               <button onClick={toggleDropdown}>
@@ -267,8 +260,8 @@ function DaftarPengajuan() {
               <ion-icon
                 className="text-2xl"
                 name="person-circle-outline"
-              ></ion-icon>{" "}
-              <span className="font-semibold">Admin</span>
+              ></ion-icon>
+              <span className="font-semibold">{loggedInUserId}</span>
             </div>
           </div>
         </div>

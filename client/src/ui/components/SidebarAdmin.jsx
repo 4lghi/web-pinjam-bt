@@ -119,7 +119,7 @@ const SidebarAdmin = () => {
           {/* Logout Button */}
           <button
             onClick={() => setShowLogout(true)}
-            className="mt-36 flex items-center p-3 rounded-xl hover:bg-red-200 hover:text-red-800 hover:shadow-md hover:transform hover:scale-102 transition-all duration-300"
+            className="mt-36 flex items-center p-3 rounded-xl hover:bg-red-200 hover:text-red-800 hover:shadow-md hover:transform hover:scale-102 transition-all duration-300 cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

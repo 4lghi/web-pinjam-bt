@@ -72,7 +72,7 @@ const SidebarUser = () => {
           {/* Logout Button */}
           <button
             onClick={() => setShowLogout(true)}
-            className="mt-36 flex items-center p-3 rounded-xl hover:bg-red-200 hover:text-red-800 hover:shadow-md hover:transform hover:scale-102 transition-all duration-300"
+            className="mt-36 flex items-center p-3 rounded-xl hover:bg-red-200 hover:text-red-800 hover:shadow-md hover:transform hover:scale-102 transition-all duration-300 cursor-pointer"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 30" className="drop-shadow-sm">
               <path fill="currentColor" d="M24.7917 11.6667L22.7354 13.7229L25.0396 16.0417H13.125V18.9583H25.0396L22.7354 21.2625L24.7917 23.3333L30.625 17.5L24.7917 11.6667ZM7.29167 7.29167H17.5V4.375H7.29167C5.6875 4.375 4.375 5.6875 4.375 7.29167V27.7083C4.375 29.3125 5.6875 30.625 7.29167 30.625H17.5V27.7083H7.29167V7.29167Z" />

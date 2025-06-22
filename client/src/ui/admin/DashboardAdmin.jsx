@@ -3,9 +3,13 @@ import SidebarAdmin from "../components/SidebarAdmin";
 import LoanTable from "../components/LoanTable2";
 import axiosInstance from "../../utils/axiosInstance";
 import User from "../components/User";
-import { X, ChevronLeft } from "lucide-react";
+import { X, ChevronLeft, Search } from "lucide-react";
+import getTokenPayload from "../../utils/getTokenPayload";
 
 const DashboardAdmin = () => {
+  const payload = getTokenPayload();
+  const loggedInUserId = payload.username;
+
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("bukuTanah");
   const [btData, setBtData] = useState([]);
@@ -206,8 +210,8 @@ const DashboardAdmin = () => {
               <ion-icon
                 className="text-2xl"
                 name="person-circle-outline"
-              ></ion-icon>{" "}
-              <span className="font-semibold">Admin</span>
+              ></ion-icon>
+              <span className="font-semibold">{loggedInUserId}</span>
             </div>
           </div>
         </div>
@@ -255,14 +259,12 @@ const DashboardAdmin = () => {
               <input
                 type="search"
                 placeholder="Cari peminjam yang belum dikembalikan"
-                className="w-full pl-10 px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="w-full pl-10 px-4 py-2 border border-gray-400 rounded-full mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <ion-icon
-                className="absolute left-3 top-2 text-black text-xl"
-                name="search-outline"
-              ></ion-icon>
+              <Search className="h-5 w-5 absolute left-3 top-2.5 text-gray-400" />
+
             </div>
 
             <div className="flex space-x-2 mb-4">

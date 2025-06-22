@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
-import { User, Lock, Eye, EyeOff } from "lucide-react"
+import { useEffect } from "react";
+import { User, Lock, Eye, EyeOff, X, CircleAlert, CircleCheck } from "lucide-react"
 import axios from "axios"
 import getTokenPayload from "../utils/checkToken"
 
@@ -10,10 +11,13 @@ const Login = () => {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [loginSuccess, setLoginSuccess] = useState(false)
 
   const handleLogin = async (e) => {
     e.preventDefault()
     setIsLoading(true)
+    setError("")
 
     try {
       const response = await axios.post("http://localhost:3000/login", {
@@ -27,20 +31,24 @@ const Login = () => {
       localStorage.setItem("token", token)
       localStorage.setItem("role", role) // opsional, kalau mau pakai di UI
 
-      alert("Login berhasil")
+      setLoginSuccess(true);
 
-      // Arahkan ke dashboard sesuai role
-      if (role === "admin") {
-        getTokenPayload()
-        navigate("/dashboardAdmin")
-      } else if (role === "user") {
-        navigate("/dashboard")
-      } else {
-        alert("Role tidak dikenali")
-      }
+      setTimeout(() => {
+        setLoginSuccess(false)
+    
+        if (role === "admin") {
+          getTokenPayload()
+          navigate("/dashboardAdmin")
+        } else if (role === "user") {
+          navigate("/dashboard")
+        } else {
+          alert("Role tidak dikenali")
+        }
+      }, 1000); 
+
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("Username atau password salah")
+        setError("Username atau password salah. Silahkan coba lagi.")
       } else if (error.response && error.response.status === 403) {
         alert("Akses ditolak")
       } else {
@@ -52,14 +60,18 @@ const Login = () => {
     }
   }
 
+  const closeError = () => {
+    setError ("")
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-r bg-no-repeat from-green-200/70 via-amber-200/70 to-blue-200 flex items-center justify-center p-4">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
 
       {/* Login Card */}
       <div className="relative w-full max-w-md">
-        <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
+        <div className="bg-white/70 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
           {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-sky-900 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -67,6 +79,24 @@ const Login = () => {
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Selamat Datang</h1>
             <p className="text-gray-600">Silakan masuk ke akun Anda</p>
+          </div>
+
+          {/* error alert */}
+          <div className="flex space-y-4 ">
+            {error && (
+              <div variant="destructive" className="flex relative border-2 border-red-300 text-red-400 rounded-lg mb-4 px-3 py-2">
+                <CircleAlert className="mr-2 items-center h-5 w-5"/>
+                <div className="pr-8">{error}</div>
+                <button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-1 top-1 h-5 w-5 rounded-xl hover:bg-red-100"
+                  onClick={closeError}
+                >
+                  <X className="h-3 w-3 m-auto" />
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Form */}
@@ -78,7 +108,7 @@ const Login = () => {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400" />
+                  <User className="h-5 w-5 text-gray-900" />
                 </div>
                 <input
                   id="username"
@@ -99,7 +129,7 @@ const Login = () => {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className="h-5 w-5 text-gray-900" />
                 </div>
                 <input
                   id="password"
@@ -148,9 +178,21 @@ const Login = () => {
         </div>
 
         {/* Decorative Elements */}
-        <div className="absolute -top-4 -left-4 w-24 h-24 bg-sky-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-        <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-1000"></div>
+        {/* <div className="absolute -top-4 -left-4 w-24 h-24 bg-sky-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+        <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-1000"></div> */}
       </div>
+
+      {/* Modal login success */}
+      {loginSuccess && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm text-center transition-all duration-300 ease-in-out">
+            <CircleCheck className="w-15 h-15 mx-auto mb-3 text-green-700"/>
+            <h2 className="text-xl font-bold text-green-600 mb-2">Login Berhasil!</h2>
+            <p className="text-gray-600">Mengalihkan Anda ke dashboard...</p>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }

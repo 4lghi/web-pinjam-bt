@@ -90,7 +90,7 @@ const RequestTable = ({
 
       {/* Desktop Table */}
       <div className="hidden lg:block">
-        <div className="rounded-lg border bg-white shadow-sm overflow-visible">
+        <div className="rounded-lg bg-white shadow-sm overflow-visible">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr className="border-b">

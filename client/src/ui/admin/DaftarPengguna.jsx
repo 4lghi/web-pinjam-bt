@@ -4,6 +4,8 @@ import { UserIcon } from "lucide-react";
 import SidebarAdmin from "../components/SidebarAdmin";
 import UserTable from "../components/UserTable";
 import axiosInstance from "../../utils/axiosInstance";
+import User from "../components/User";
+import getTokenPayload from "../../utils/getTokenPayload";
 
 export default function DaftarPengguna() {
   const [users, setUsers] = useState([]);
@@ -27,6 +29,9 @@ export default function DaftarPengguna() {
       user.role === searchTerm.toLowerCase()
     );
   });
+
+  const payload = getTokenPayload();
+  const loggedInUserId = payload.username;
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -116,11 +121,11 @@ export default function DaftarPengguna() {
           <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
             <div className="relative w-full max-w-md">
               <input
-                type="text"
+                type="search"
                 placeholder="Cari nama pengguna atau role"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400 bg-white"
+                className="w-[577px] pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400 bg-white"
               />
               <Search className="h-5 w-5 absolute left-3 top-2.5 text-gray-400" />
             </div>
@@ -134,12 +139,12 @@ export default function DaftarPengguna() {
                 Tambah
               </button>
               <div className="flex items-center gap-2">
-                <ion-icon
-                  className="text-2xl"
-                  name="person-circle-outline"
-                ></ion-icon>{" "}
-                <span className="font-semibold">Admin</span>
-              </div>
+              <ion-icon
+                className="text-2xl"
+                name="person-circle-outline"
+              ></ion-icon>
+              <span className="font-semibold">{loggedInUserId}</span>
+            </div>
             </div>
           </div>
 

@@ -3,6 +3,7 @@ import SidebarUser from "../components/SidebarUser";
 import LoanTable from "../components/LoanTable2";
 import axiosInstance from "../../utils/axiosInstance";
 import getTokenPayload from "../../utils/checkToken";
+import { Search } from "lucide-react";
 import User from "../components/User";
 
 const DashboardUser = () => {
@@ -90,6 +91,19 @@ const DashboardUser = () => {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="flex items-center gap-4 bg-yellow-100 p-6 rounded-lg shadow">
+            <div className="text-yellow-800 text-3xl">⚠️</div>
+            <div>
+              <div className="text-gray-700">Terlambat</div>
+              <div className="text-2xl font-bold">
+                {
+                  [...filteredBTData, ...filteredSUData].filter(
+                    (item) => item.status === "telat"
+                  ).length
+                }
+              </div>
+            </div>
+          </div>
           <div className="flex items-center gap-4 bg-red-100 p-6 rounded-lg shadow">
             <div className="text-red-800 text-3xl">❌</div>
             <div>
@@ -111,14 +125,11 @@ const DashboardUser = () => {
               <input
                 type="search"
                 placeholder="Cari nama peminjam atau nomor dokumen..."
-                className="w-full pl-10 px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="w-full pl-10 px-4 py-2 border border-gray-400 rounded-full mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <ion-icon
-                className="absolute left-3 top-2 text-black text-xl"
-                name="search-outline"
-              ></ion-icon>
+              <Search className="h-5 w-5 absolute left-3 top-2.5 text-gray-400" />
             </div>
 
             <div className="flex space-x-2 mb-4">

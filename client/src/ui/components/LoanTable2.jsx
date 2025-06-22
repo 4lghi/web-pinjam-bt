@@ -44,6 +44,7 @@ export default function LoanTable({
   },
   selectedRows = [],
   setSelectedRows,
+  showCheckbox = false,
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(null)
   const [tooltipOpen, setTooltipOpen] = useState(null)
@@ -173,11 +174,13 @@ export default function LoanTable({
 
       {/* Desktop Table */}
       <div className="hidden lg:block">
-        <div className="rounded-lg border bg-white shadow-sm overflow-visible">
+        <div className="rounded-lg  bg-white shadow-sm overflow-visible">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr className="border-b">
-                <th className="w-[3%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Pilih</th>
+                {showCheckbox && (
+                  <th className="w-[3%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Pilih</th>
+                )}
                 <th className="w-[3%] px-2 py-2 text-center text-sm font-semibold text-gray-900">No</th>
                 <th className="w-[8%] px-2 py-2 text-left text-sm font-semibold text-gray-900">Peminjam</th>
                 <th className="w-[9%] px-2 py-2 text-center text-sm font-semibold text-gray-900">Seksi</th>
@@ -206,19 +209,21 @@ export default function LoanTable({
 
                 return (
                   <tr key={row.id || actualIndex} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-2 py-2 text-center">
-                      <input
-                        type="checkbox"
-                        checked={selectedRows.includes(row.id)}
-                        onChange={(e) => {
-                          const isChecked = e.target.checked
-                          const newSelectedRows = isChecked
-                            ? [...selectedRows, row.id]
-                            : selectedRows.filter((id) => id !== row.id)
-                          setSelectedRows(newSelectedRows)
-                        }}
-                      />
-                    </td>
+                    {showCheckbox &&
+                      <td className="px-2 py-2 text-center">
+                        <input
+                          type="checkbox"
+                          checked={selectedRows.includes(row.id)}
+                          onChange={(e) => {
+                            const isChecked = e.target.checked
+                            const newSelectedRows = isChecked
+                              ? [...selectedRows, row.id]
+                              : selectedRows.filter((id) => id !== row.id)
+                            setSelectedRows(newSelectedRows)
+                          }}
+                        />
+                      </td>
+                    }
                     <td className="px-2 py-2 text-center text-sm text-gray-600">{actualIndex + 1}</td>
                     <td className="px-2 py-2">
                       <div className="text-sm font-medium text-gray-900 truncate text-left">

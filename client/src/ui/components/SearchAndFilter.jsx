@@ -1,4 +1,5 @@
 import React from "react";
+import { Search } from "lucide-react";
 
 export default function SearchAndFilter({
   searchQuery,
@@ -17,14 +18,11 @@ export default function SearchAndFilter({
         <input
           type="search"
           placeholder="Cari peminjaman"
-          className="w-full pl-10 pr-5 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+          className="w-full pl-10 pr-5 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <ion-icon
-          className="absolute left-3 top-2 text-black text-xl"
-          name="search-outline"
-        ></ion-icon>
+        <Search className="h-5 w-5 absolute left-3 top-2.5 text-gray-400" />
       </div>
 
       {/* Filter*/}
