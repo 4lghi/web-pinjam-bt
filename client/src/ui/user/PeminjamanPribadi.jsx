@@ -65,7 +65,7 @@ function PeminjamanPribadi() {
     kecamatan: "",
     kelurahan: "",
     dateBorrowed: "",
-    durasi: "",
+    fixDurasi: "",
     keperluan: "",
   });
 
@@ -178,6 +178,14 @@ function PeminjamanPribadi() {
 
   const handleKelurahanChange = (e) => {
     setFormData((prev) => ({ ...prev, kelurahan: e.target.value }));
+  };
+
+  const handleDurasiChange = (e) => {
+    const durasi = Number(e.target.value); // konversi ke number
+    setFormData((prev) => ({
+      ...prev,
+      fixDurasi: durasi,
+    }));
   };
 
   return (
@@ -329,15 +337,13 @@ function PeminjamanPribadi() {
                     <div>
                       <label>Durasi Peminjaman</label>
                       <select
-                        name="durasi"
                         className="w-full border rounded-lg px-3 py-2"
-                        value={formData.durasi}
-                        onChange={handleChange}
+                        value={formData.fixDurasi || ""}
+                        onChange={handleDurasiChange}
                       >
-                        <option value="">-- Pilih Durasi --</option>
-                        <option value="1 Hari">1 Hari</option>
-                        <option value="3 Hari">3 Hari</option>
-                        <option value="1 Minggu">1 Minggu</option>
+                        <option value={1}>1 Hari</option>
+                        <option value={3}>3 Hari</option>
+                        <option value={7}>1 Minggu</option>
                       </select>
                     </div>
                   </div>

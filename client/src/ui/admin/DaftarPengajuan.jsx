@@ -105,7 +105,7 @@ function DaftarPengajuan() {
           : `http://localhost:3000/peminjaman/suratUkur/${id}`;
 
       const response = await axiosInstance.patch(endpoint, {
-        status: "disetujui",
+        newStatus: "disetujui",
       });
 
       // Update state sesuai jenis
@@ -134,19 +134,27 @@ function DaftarPengajuan() {
     try {
       const endpoint =
         jenis === "bt"
-          ? `http://localhost:3000/peminjaman/bukuTanah/${id}`
-          : `http://localhost:3000/peminjaman/suratUkur/${id}`;
+          ? `http://localhost:3000/peminjaman/bukuTanah/${id}/status`
+          : `http://localhost:3000/peminjaman/suratUkur/${id}/status`;
 
-      const response = await axios.patch(endpoint, {
-        status: "ditolak",
+      const response = await axiosInstance.patch(endpoint, {
+        newStatus: "ditolak",
       });
 
-      // Update state setelah sukses
-      setLoanData((prevData) =>
-        prevData.map((loan) =>
-          loan.id === id ? { ...loan, status: "ditolak" } : loan
-        )
-      );
+      // Update state sesuai jenis
+      if (jenis === "bt") {
+        setBtData((prevData) =>
+          prevData.map((loan) =>
+            loan.id === id ? { ...loan, status: "disetujui" } : loan
+          )
+        );
+      } else {
+        setSuData((prevData) =>
+          prevData.map((loan) =>
+            loan.id === id ? { ...loan, status: "disetujui" } : loan
+          )
+        );
+      }
 
       console.log("Status berhasil diubah:", response.data);
     } catch (error) {
@@ -208,7 +216,6 @@ function DaftarPengajuan() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <Search className="h-5 w-5 absolute left-3 top-2.5 text-gray-400" />
-
           </div>
 
           <div className="flex items-center w-[577px] justify-between gap-4">
