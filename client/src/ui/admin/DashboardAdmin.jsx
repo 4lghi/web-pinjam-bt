@@ -28,15 +28,20 @@ const DashboardAdmin = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const statusColorMap = {
-    Dipinjam: "bg-yellow-100 text-yellow-800 border-yellow-200",
-    Dikembalikan: "bg-green-100 text-green-800 border-green-200",
-    Terlambat: "bg-red-100 text-red-800 border-red-200",
-    Pending: "bg-blue-100 text-blue-800 border-blue-200",
-    telat: "bg-red-100 text-red-800 border-red-200",
-    diterima: "bg-green-100 text-green-800 border-green-200",
-    ditolak: "bg-red-100 text-red-800 border-red-200",
+    menunggu: "bg-yellow-100 text-yellow-700",
+    dipinjam: "bg-purple-100 text-purple-700",
+    dikembalikan: "bg-green-100 text-green-700",
+    telat: "bg-orange-100 text-orange-700",
+    disetujui: "bg-blue-100 text-blue-700",
+    ditolak: "bg-red-100 text-red-700", // untuk data sample
   };
 
+  useEffect(() => {
+    if (selectedItem?.status) {
+      setSelectedStatus(selectedItem.status);
+    }
+  }, [selectedItem]);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -152,7 +157,7 @@ const DashboardAdmin = () => {
           : `http://localhost:3000/peminjaman/suratUkur/${selectedItem.id}`;
 
       await axiosInstance.patch(endpoint, {
-        status: selectedStatus,
+        newStatus: selectedStatus,
       });
 
       // Update local data
@@ -264,7 +269,6 @@ const DashboardAdmin = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               <Search className="h-5 w-5 absolute left-3 top-2.5 text-gray-400" />
-
             </div>
 
             <div className="flex space-x-2 mb-4">
@@ -357,7 +361,7 @@ const DashboardAdmin = () => {
       {/* Modal Edit Status */}
       {showEditStatusModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl overflow-visible -translate-y-12">
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-800">
@@ -414,12 +418,9 @@ const DashboardAdmin = () => {
             )}
 
             {/* Form Content */}
-            <div className="space-y-6">
+            <div className="space-y-6 relative z-10">
               {/* Status Dropdown */}
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-700">
-                  Ubah Status
-                </label>
                 <div className="relative">
                   <button
                     onClick={() => setStatusDropdownOpen(!statusDropdownOpen)}
@@ -448,21 +449,22 @@ const DashboardAdmin = () => {
 
                   {/* Dropdown Options */}
                   {statusDropdownOpen && (
-                    <div className="absolute mt-2 w-full bg-white border rounded-lg shadow-lg z-50">
-                      {["dikembalikan", "dipinjam", "telat"].map((status) => (
+                    <div className="absolute mt-2 w-full bg-white border rounded-lg shadow-lg z-50 overflow-visible">
+                      {[
+                        "menunggu",
+                        "disetujui",
+                        "ditolak",
+                        "dipinjam",
+                        "dikembalikan",
+                        "telat",
+                      ].map((status) => (
                         <button
                           key={status}
                           onClick={() => handleSelectStatus(status)}
                           className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors first:rounded-t-lg last:rounded-b-lg"
                         >
                           <span
-                            className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                              status === "dikembalikan"
-                                ? "bg-green-100 text-green-700"
-                                : status === "dipinjam"
-                                ? "bg-blue-100 text-blue-700"
-                                : "bg-red-100 text-red-700"
-                            }`}
+                            className={`px-3 py-1 rounded-full text-sm font-semibold ${statusColorMap[status]}`}
                           >
                             {status}
                           </span>

@@ -40,13 +40,12 @@ function DaftarPeminjaman() {
   }, [selectedItem]);
 
   const statusColorMap = {
-    Dipinjam: "bg-yellow-100 text-yellow-800 border-yellow-200",
-    Dikembalikan: "bg-green-100 text-green-800 border-green-200",
-    Terlambat: "bg-red-100 text-red-800 border-red-200",
-    Pending: "bg-blue-100 text-blue-800 border-blue-200",
-    telat: "bg-red-100 text-red-800 border-red-200",
-    diterima: "bg-green-100 text-green-800 border-green-200",
-    ditolak: "bg-red-100 text-red-800 border-red-200",
+    menunggu: "bg-yellow-100 text-yellow-700",
+    dipinjam: "bg-purple-100 text-purple-700",
+    dikembalikan: "bg-green-100 text-green-700",
+    telat: "bg-orange-100 text-orange-700",
+    disetujui: "bg-blue-100 text-blue-700",
+    ditolak: "bg-red-100 text-red-700", // untuk data sample
   };
 
   const toggleMenu = (e) => {
@@ -550,7 +549,6 @@ function DaftarPeminjaman() {
     (item) => item.status === "dipinjam"
   );
 
-
   return (
     <div className="flex min-h-screen font-sans bg-gray-100 text-sm text-gray-800">
       {/* Sidebar */}
@@ -809,7 +807,6 @@ function DaftarPeminjaman() {
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
                 showCheckbox={true}
-
               />
             )}
             {activeTab === "suratUkur" && (
@@ -819,7 +816,6 @@ function DaftarPeminjaman() {
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
                 showCheckbox={true}
-
               />
             )}
           </>
@@ -862,7 +858,7 @@ function DaftarPeminjaman() {
       {/* Modal Edit Status */}
       {showEditStatusModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl overflow-visible">
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-800">
@@ -919,12 +915,9 @@ function DaftarPeminjaman() {
             )}
 
             {/* Form Content */}
-            <div className="space-y-6">
+            <div className="space-y-6 relative z-10">
               {/* Status Dropdown */}
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-700">
-                  Ubah Status
-                </label>
                 <div className="relative">
                   <button
                     onClick={() => setStatusDropdownOpen(!statusDropdownOpen)}
@@ -953,13 +946,14 @@ function DaftarPeminjaman() {
 
                   {/* Dropdown Options */}
                   {statusDropdownOpen && (
-                    <div className="absolute mt-2 w-full bg-white border rounded-lg shadow-lg z-50">
+                    <div className="absolute mt-2 w-full bg-white border rounded-lg shadow-lg z-50 overflow-visible">
                       {[
                         "menunggu",
                         "disetujui",
                         "ditolak",
                         "dipinjam",
                         "dikembalikan",
+                        "telat",
                       ].map((status) => (
                         <button
                           key={status}
@@ -967,17 +961,7 @@ function DaftarPeminjaman() {
                           className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors first:rounded-t-lg last:rounded-b-lg"
                         >
                           <span
-                            className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                              status === "menunggu"
-                                ? "bg-green-100 text-green-700"
-                                : status === "disetujui"
-                                ? "bg-blue-100 text-blue-700"
-                                : status === "ditolak"
-                                ? "bg-yellow-100 text-yellow-700"
-                                : status === "dipinjam"
-                                ? "bg-blue-100 text-blue-700"
-                                : "bg-red-100 text-red-700"
-                            }`}
+                            className={`px-3 py-1 rounded-full text-sm font-semibold ${statusColorMap[status]}`}
                           >
                             {status}
                           </span>
