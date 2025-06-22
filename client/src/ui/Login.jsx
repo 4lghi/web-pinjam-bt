@@ -1,104 +1,158 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import axios from "axios";
-import getTokenPayload from "../utils/checkToken";
+import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { User, Lock, Eye, EyeOff } from "lucide-react"
+import axios from "axios"
+import getTokenPayload from "../utils/checkToken"
 
 const Login = () => {
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate()
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
+    setIsLoading(true)
 
     try {
       const response = await axios.post("http://localhost:3000/login", {
         username,
         password,
-      });
+      })
 
-      const { token, role } = response.data;
+      const { token, role } = response.data
 
       // Simpan token ke localStorage
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", role); // opsional, kalau mau pakai di UI
+      localStorage.setItem("token", token)
+      localStorage.setItem("role", role) // opsional, kalau mau pakai di UI
 
-      alert("Login berhasil");
+      alert("Login berhasil")
 
       // Arahkan ke dashboard sesuai role
       if (role === "admin") {
-        getTokenPayload();
-        navigate("/dashboardAdmin");
+        getTokenPayload()
+        navigate("/dashboardAdmin")
       } else if (role === "user") {
-        navigate("/dashboard");
+        navigate("/dashboard")
       } else {
-        alert("Role tidak dikenali");
+        alert("Role tidak dikenali")
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("Username atau password salah");
+        alert("Username atau password salah")
       } else if (error.response && error.response.status === 403) {
-        alert("Akses ditolak");
+        alert("Akses ditolak")
       } else {
-        alert("Terjadi kesalahan server");
-        console.error(error);
+        alert("Terjadi kesalahan server")
+        console.error(error)
       }
+    } finally {
+      setIsLoading(false)
     }
-  };
-
+  }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-r bg-no-repeat from-green-200/70 via-amber-200/70 to-blue-200 flex items-center justify-center">
-      <div className="h-[430px] w-72 md:w-96 md:h-[500px] backdrop-blur-sm bg-gradient-to-b from-white/10 to-gray-300/30 overflow-hidden text-center rounded-[50px] shadow-[inset_0px_4px_4px_0px_rgba(0,0,0,0.25)]">
-        <h1 className="text-3xl opacity-100 text-teal-950 font-bold p-10">
-          Login
-        </h1>
-        <form
-          onSubmit={handleLogin}
-          className="flex flex-wrap px-5 opacity-100"
-        >
-          <div className="w-full">
-            <label className="relative block">
-              <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="form-input shadow-lg transition duration-200 ease-in-out focus:shadow-indigo-200 mt-1 py-2 px-3 rounded-xl w-full block text-sm bg-white placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:border-indigo-300"
-              />
-              <ion-icon
-                class="absolute top-1/2 right-3 -translate-y-1/2 text-2xl text-black"
-                name="person-circle-outline"
-              ></ion-icon>
-            </label>
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+
+      {/* Login Card */}
+      <div className="relative w-full max-w-md">
+        <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-sky-900 rounded-full flex items-center justify-center mx-auto mb-4">
+              <User className="h-8 w-8 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Selamat Datang</h1>
+            <p className="text-gray-600">Silakan masuk ke akun Anda</p>
           </div>
 
-          <div className="w-full mt-7">
-            <label className="relative block">
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="form-input shadow-lg transition duration-200 ease-in-out focus:shadow-indigo-200 mt-1 py-2 px-3 rounded-xl w-full block text-sm bg-white placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:border-indigo-300"
-              />
-              <ion-icon
-                class="absolute top-1/2 right-3 -translate-y-1/2 text-2xl text-black"
-                name="lock-closed"
-              ></ion-icon>
-            </label>
-          </div>
+          {/* Form */}
+          <form onSubmit={handleLogin} className="space-y-6">
+            {/* Username Field */}
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+                Username
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="username"
+                  type="text"
+                  placeholder="Masukkan username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                  required
+                />
+              </div>
+            </div>
 
-          <button
-            type="submit"
-            className="mx-auto mt-10 bg-teal-950 rounded-full w-full h-10 md:h-12 text-white text-lg font-bold hover:bg-teal-900 active:bg-teal-900"
-          >
-            Login
-          </button>
-        </form>
+            {/* Password Field */}
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Masukkan password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isLoading || !username || !password}
+              className="w-full bg-sky-900 hover:bg-sky-800 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+            >
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  Memproses...
+                </div>
+              ) : (
+                "Masuk"
+              )}
+            </button>
+          </form>
+
+          {/* Footer */}
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-600">Sistem Manajemen Pengguna</p>
+          </div>
+        </div>
+
+        {/* Decorative Elements */}
+        <div className="absolute -top-4 -left-4 w-24 h-24 bg-sky-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+        <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-1000"></div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

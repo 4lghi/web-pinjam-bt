@@ -1,72 +1,66 @@
-import { useState } from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
-import getTokenPayload from "../../utils/checkToken";
+import { useState } from "react"
+import { useNavigate, Link, useLocation } from "react-router-dom"
 
 const SidebarAdmin = () => {
-  const [showLogout, setShowLogout] = useState(false);
-  const navigate = useNavigate();
+  const [showLogout, setShowLogout] = useState(false)
+  const navigate = useNavigate()
 
-  const location = useLocation();
-  const currentPath = location.pathname;
+  const location = useLocation()
+  const currentPath = location.pathname
 
   const handleLogout = () => {
-    setShowLogout(false);
+    setShowLogout(false)
 
-    console.log("Token sebelum logout:", localStorage.getItem("token"));
-    localStorage.removeItem("token");
-    console.log("Token sesudah logout:", localStorage.getItem("token"));
+    console.log("Token sebelum logout:", localStorage.getItem("token"))
+    localStorage.removeItem("token")
+    console.log("Token sesudah logout:", localStorage.getItem("token"))
 
-    navigate("/"); // redirect ke halaman login
-  };
+    navigate("/") // redirect ke halaman login
+  }
 
   return (
     <div className="flex min-h-screen z-50">
       {/* Sidebar */}
-      <aside className="sidebar fixed top-0 bottom-0 left-0 w-60 bg-[#bfdbf7] text-black h-screen rounded-tr-3xl rounded-br-3xl flex flex-col">
+      <aside className="sidebar fixed top-0 bottom-0 left-0 w-60 bg-[#bfdbf7] text-gray-800 h-screen rounded-tr-3xl rounded-br-3xl flex flex-col shadow-2xl border-r border-blue-200/50">
         <Link to="/dashboardAdmin" className="text-center mt-4">
-          <img
-            src="/logo.png"
-            alt="Logo Pinjam BT/SU"
-            className="mx-auto h-32 w-auto mb-2"
-          />
+          <img src="/logo.png" alt="Logo Pinjam BT/SU" className="mx-auto h-32 w-auto mb-2 drop-shadow-sm" />
         </Link>
 
         <nav className="flex flex-col text-sm font-medium mt-10 px-4">
           <Link
             to="/dashboardAdmin"
-            className={`flex items-center p-2 rounded-md ${
-                currentPath === "/dashboardAdmin"
-                  ? "bg-[#022B3A] text-white"
-                  : "hover:bg-[#022B3A] hover:text-white"
-              }`}
+            className={`flex items-center p-3 rounded-xl transition-all duration-300 ${
+              currentPath === "/dashboardAdmin"
+                ? "bg-[#022b3a] text-white shadow-lg transform scale-105"
+                : "hover:bg-[#022b3a] hover:text-white hover:shadow-md hover:transform hover:scale-102"
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
               viewBox="0 0 24 24"
+              className="drop-shadow-sm"
             >
-              <path
-                fill="currentColor"
-                d="M13 9V3h8v6zM3 13V3h8v10zm10 8V11h8v10zM3 21v-6h8v6z"
-              />
+              <path fill="currentColor" d="M13 9V3h8v6zM3 13V3h8v10zm10 8V11h8v10zM3 21v-6h8v6z" />
             </svg>
             <span className="ml-4">Beranda</span>
           </Link>
 
           <Link
             to="/daftarPeminjaman"
-            className={`flex items-center p-2 rounded-md mt-4 ${
-                currentPath === "/daftarPeminjaman"
-                  ? "bg-[#022B3A] text-white"
-                  : "hover:bg-[#022B3A] hover:text-white"
-              }`}          
+            className={`flex items-center p-3 rounded-xl mt-4 transition-all duration-300 ${
+              currentPath === "/daftarPeminjaman"
+                ? "bg-[#022b3a] text-white shadow-lg transform scale-105"
+                : "hover:bg-[#022b3a] hover:text-white hover:shadow-md hover:transform hover:scale-102"
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
               viewBox="0 0 24 24"
+              className="drop-shadow-sm"
             >
               <path
                 fill="currentColor"
@@ -78,17 +72,18 @@ const SidebarAdmin = () => {
 
           <Link
             to="/daftarPengajuan"
-            className={`flex items-center p-2 rounded-md mt-4 ${
-                currentPath === "/daftarPengajuan"
-                  ? "bg-[#022B3A] text-white"
-                  : "hover:bg-[#022B3A] hover:text-white"
-              }`}          
+            className={`flex items-center p-3 rounded-xl mt-4 transition-all duration-300 ${
+              currentPath === "/daftarPengajuan"
+                ? "bg-[#022b3a] text-white shadow-lg transform scale-105"
+                : "hover:bg-[#022b3a] hover:text-white hover:shadow-md hover:transform hover:scale-102"
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
               viewBox="0 0 1024 1024"
+              className="drop-shadow-sm"
             >
               <path
                 fill="currentColor"
@@ -100,16 +95,18 @@ const SidebarAdmin = () => {
 
           <Link
             to="/daftarPengguna"
-            className={`flex items-center p-2 rounded-md mt-4 ${
-                currentPath === "/daftarPengguna"
-                  ? "bg-[#022B3A] text-white"
-                  : "hover:bg-[#022B3A] hover:text-white"
-              }`}          >
+            className={`flex items-center p-3 rounded-xl mt-4 transition-all duration-300 ${
+              currentPath === "/daftarPengguna"
+                ? "bg-[#022b3a] text-white shadow-lg transform scale-105"
+                : "hover:bg-[#022b3a] hover:text-white hover:shadow-md hover:transform hover:scale-102"
+            }`}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
               viewBox="0 0 24 24"
+              className="drop-shadow-sm"
             >
               <path
                 fill="currentColor"
@@ -122,13 +119,14 @@ const SidebarAdmin = () => {
           {/* Logout Button */}
           <button
             onClick={() => setShowLogout(true)}
-            className="mt-36 flex items-center p-2 rounded-md hover:bg-[#022B3A] hover:text-white"
+            className="mt-36 flex items-center p-3 rounded-xl hover:bg-red-200 hover:text-red-800 hover:shadow-md hover:transform hover:scale-102 transition-all duration-300"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
               viewBox="0 0 30 30"
+              className="drop-shadow-sm"
             >
               <path
                 fill="currentColor"
@@ -144,24 +142,13 @@ const SidebarAdmin = () => {
       {showLogout && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-            <h2 className="text-lg font-semibold mb-2">
-              Apakah Anda yakin ingin logout?
-            </h2>
-            <p className="text-gray-500 mb-6">
-              Setelah logout, Anda perlu login kembali untuk mengakses akun
-              Anda.
-            </p>
+            <h2 className="text-lg font-semibold mb-2">Apakah Anda yakin ingin logout?</h2>
+            <p className="text-gray-500 mb-6">Setelah logout, Anda perlu login kembali untuk mengakses akun Anda.</p>
             <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setShowLogout(false)}
-                className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200"
-              >
+              <button onClick={() => setShowLogout(false)} className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">
                 Batalkan
               </button>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-              >
+              <button onClick={handleLogout} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
                 Ya, Logout
               </button>
             </div>
@@ -169,7 +156,7 @@ const SidebarAdmin = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default SidebarAdmin;
+export default SidebarAdmin
