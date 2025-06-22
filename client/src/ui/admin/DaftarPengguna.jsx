@@ -1,95 +1,158 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { Search, Plus } from "lucide-react";
+import { UserIcon } from "lucide-react";
 import SidebarAdmin from "../components/SidebarAdmin";
-
-const dataBukuTanah = [
-  ["TU", "User", "TU123", ""],
-  [1, "User", "1123", ""],
-  [2, "User", "2123", ""],
-  [3, "User", "3123", ""],
-  [4, "User", "4123", ""],
-  [5, "User", "5123", ""],
-  ["", "Admin", "admin123", ""],
-];
+import UserTable from "../components/UserTable";
+import axiosInstance from "../../utils/axiosInstance";
 
 export default function DaftarPengguna() {
+  const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [deleteUserId, setDeleteUserId] = useState(null);
 
-  const handleDeleteConfirm = () => {
-    alert("Data berhasil dihapus.");
-    setShowDeleteModal(false);
+  const [formData, setFormData] = useState({
+    username: "",
+    role: "User",
+    password: "",
+  });
+
+  const filteredUsers = users.filter((user) => {
+    const username = user.username?.toLowerCase() || "";
+    return (
+      username.includes(searchTerm.toLowerCase()) ||
+      user.role === searchTerm.toLowerCase()
+    );
+  });
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axiosInstance.get("/users");
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  const handleEdit = (user) => {
+    setSelectedUser(user);
+    setFormData({
+      username: user.username,
+      role: user.role,
+      password: user.password,
+    });
+    setShowEditModal(true);
+  };
+
+  const handleDelete = (id) => {
+    setDeleteUserId(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      await axiosInstance.delete(`/users/${deleteUserId}`);
+      setUsers(users.filter((user) => user.id !== deleteUserId));
+      setShowDeleteModal(false);
+      setDeleteUserId(null);
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
+
+  const handleSaveEdit = async () => {
+    try {
+      const response = await axiosInstance.patch(
+        `/users/${selectedUser.id}`,
+        formData
+      );
+      setUsers(
+        users.map((user) =>
+          user.id === selectedUser.id ? response.data : user
+        )
+      );
+      setShowEditModal(false);
+      setSelectedUser(null);
+      resetForm();
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  };
+
+  const handleAddUser = async () => {
+    try {
+      const response = await axiosInstance.post("/users", {
+        ...formData,
+        role: formData.role.toLowerCase(),
+      });
+      setUsers([...users, response.data]);
+      setShowAddModal(false);
+      resetForm();
+    } catch (error) {
+      console.error("Error adding user:", error);
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      username: "",
+      role: "User",
+      password: "",
+    });
   };
 
   return (
-    <div className="font-sans bg-gray-100 text-sm text-gray-800">
-      <div className="flex min-h-screen">
+    <div className="font-sans bg-gray-100 text-sm text-gray-800 min-h-screen">
+      <div className="flex">
         <SidebarAdmin />
-        <main className="flex-1 ml-60 p-6 overflow-auto">
+
+        <main className="flex-1 lg:ml-60 p-6">
           <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
-            <div className="relative w-[550px]">
+            <div className="relative w-full max-w-md">
               <input
                 type="text"
-                placeholder="Cari nama pengguna"
-                className="w-full pl-10 pr-20 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+                placeholder="Cari nama pengguna atau role"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400 bg-white"
               />
-              <i className="bi bi-search absolute left-3 top-2.5 text-gray-400"></i>
-              <button className="h-full absolute right-[0.5px] top-[0.5px] bottom-1 px-4 bg-transparent text-black rounded-full hover:bg-slate-200 transition">
-                Search
-              </button>
+              <Search className="h-5 w-5 absolute left-3 top-2.5 text-gray-400" />
             </div>
 
             <div className="flex items-center gap-3 flex-wrap">
-              <button className="px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-sky-700 font-semibold cursor-pointer">
-                + Tambah
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-sky-700 font-semibold transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                Tambah
               </button>
               <div className="flex items-center gap-2">
-                <ion-icon className="text-2xl" name="person-circle-outline"></ion-icon>{" "}
+                <ion-icon
+                  className="text-2xl"
+                  name="person-circle-outline"
+                ></ion-icon>{" "}
                 <span className="font-semibold">Admin</span>
               </div>
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="min-w-full border rounded-xl overflow-hidden">
-              <thead className="bg-white text-gray-800">
-                <tr className="border border-gray-300">
-                  <th className="px-4 py-2 text-left">No</th>
-                  <th className="px-4 py-2 text-left">Nama Seksi</th>
-                  <th className="px-4 py-2 text-left">Role</th>
-                  <th className="px-4 py-2 text-left">Password</th>
-                  <th className="px-4 py-2 text-left"></th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-300">
-                {dataBukuTanah.map((data, index) => (
-                  <tr key={index}>
-                    <td className="px-4 py-2">{index + 1}</td>
-                    <td className="px-4 py-2">{data[0]}</td>
-                    <td className="px-4 py-2">{data[1]}</td>
-                    <td className="px-4 py-2">{data[2]}</td>
-                    <td className="flex px-4 gap-2 py-2">
-                      <button onClick={() => setShowDeleteModal(true)}>
-                        <span className="hover:bg-teal-950 hover:text-white p-0.5 rounded-md cursor-pointer text-xl mx-2">
-                          <ion-icon name="trash"></ion-icon>
-                        </span>
-                      </button>
-                      <button onClick={() => setShowEditModal(true)}>
-                        <span className="hover:bg-teal-950 hover:text-white p-0.5 rounded-md cursor-pointer text-xl mx-2">
-                          <ion-icon name="pencil"></ion-icon>
-                        </span>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <UserTable
+            data={filteredUsers}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
 
           {/* Delete Modal */}
           {showDeleteModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md mx-4">
                 <h2 className="text-lg font-semibold mb-2">
                   Apakah Anda yakin?
                 </h2>
@@ -100,13 +163,13 @@ export default function DaftarPengguna() {
                 <div className="flex justify-end gap-3">
                   <button
                     onClick={() => setShowDeleteModal(false)}
-                    className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200"
+                    className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
                   >
                     Batalkan
                   </button>
                   <button
                     onClick={handleDeleteConfirm}
-                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
                   >
                     Ya, Hapus
                   </button>
@@ -115,32 +178,79 @@ export default function DaftarPengguna() {
             </div>
           )}
 
-          {/* Logout Modal */}
-          {showLogoutModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-                <h2 className="text-lg font-semibold mb-2">
-                  Apakah Anda yakin ingin logout?
-                </h2>
-                <p className="text-gray-500 mb-6">
-                  Setelah logout, Anda perlu login kembali untuk mengakses akun
-                  Anda.
-                </p>
-                <div className="flex justify-end gap-3">
+          {/* Add Modal */}
+          {showAddModal && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="bg-white w-full max-w-md mx-4 p-6 rounded-lg shadow-lg">
+                <h2 className="text-xl font-semibold mb-4">Tambah Pengguna</h2>
+                <div className="space-y-4">
+                  {/* Username */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Username
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.username}
+                      onChange={(e) =>
+                        setFormData({ ...formData, username: e.target.value })
+                      }
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                      placeholder="Masukkan username"
+                    />
+                  </div>
+
+                  {/* Role */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Role
+                    </label>
+                    <select
+                      value={formData.role}
+                      onChange={(e) =>
+                        setFormData({ ...formData, role: e.target.value })
+                      }
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                    >
+                      <option value="User">User</option>
+                      <option value="Admin">Admin</option>
+                    </select>
+                  </div>
+
+                  {/* Password */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Password
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.password}
+                      onChange={(e) =>
+                        setFormData({ ...formData, password: e.target.value })
+                      }
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                      placeholder="Masukkan password"
+                    />
+                  </div>
+                </div>
+
+                {/* Tombol Aksi */}
+                <div className="mt-6 flex justify-end gap-2">
                   <button
-                    onClick={() => setShowLogoutModal(false)}
-                    className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200"
+                    onClick={() => {
+                      setShowAddModal(false);
+                      resetForm();
+                    }}
+                    className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                   >
                     Batalkan
                   </button>
                   <button
-                    onClick={() => {
-                      setShowLogoutModal(false);
-                      window.location.href = "/login";
-                    }}
-                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                    onClick={handleAddUser}
+                    disabled={!formData.username || !formData.password}
+                    className="px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-sky-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Ya, Logout
+                    Tambah
                   </button>
                 </div>
               </div>
@@ -149,44 +259,70 @@ export default function DaftarPengguna() {
 
           {/* Edit Modal */}
           {showEditModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-              <div className="bg-white w-full max-w-4xl p-6 rounded-lg shadow-lg">
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="bg-white w-full max-w-md mx-4 p-6 rounded-lg shadow-lg">
                 <h2 className="text-xl font-semibold mb-4">Edit Pengguna</h2>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div>
-                    <label>Nama Seksi</label>
-                    <select className="w-full border rounded-lg px-3 py-2">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                      <option>TU</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label>Role</label>
-                    <select className="w-full border rounded-lg px-3 py-2">
-                      <option>User</option>
-                      <option>Admin</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label>Password</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Username
+                    </label>
                     <input
                       type="text"
-                      className="w-full border rounded-lg px-3 py-2"
+                      value={formData.username}
+                      onChange={(e) =>
+                        setFormData({ ...formData, username: e.target.value })
+                      }
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                      placeholder="Masukkan username"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Role
+                    </label>
+                    <select
+                      value={formData.role}
+                      onChange={(e) =>
+                        setFormData({ ...formData, role: e.target.value })
+                      }
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                    >
+                      <option value="User">User</option>
+                      <option value="Admin">Admin</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Password
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.password}
+                      onChange={(e) =>
+                        setFormData({ ...formData, password: e.target.value })
+                      }
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                      placeholder="Masukkan password"
                     />
                   </div>
                 </div>
                 <div className="mt-6 flex justify-end gap-2">
                   <button
-                    onClick={() => setShowEditModal(false)}
-                    className="px-4 py-2 border rounded-lg"
+                    onClick={() => {
+                      setShowEditModal(false);
+                      resetForm();
+                    }}
+                    className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                   >
                     Batalkan
                   </button>
-                  <button className="px-4 py-2 bg-sky-900 text-white rounded-lg">
+                  <button
+                    onClick={handleSaveEdit}
+                    className="px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-sky-700 transition-colors"
+                  >
                     Simpan
                   </button>
                 </div>
