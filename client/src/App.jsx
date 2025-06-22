@@ -7,9 +7,7 @@ import DaftarPengguna from "./ui/admin/DaftarPengguna";
 import DashboardUser from "./ui/user/DashboardUser";
 import PeminjamanUser from "./ui/user/PeminjamanUser";
 import PeminjamanPribadi from "./ui/user/PeminjamanPribadi";
-import NotifikasiUser from "./ui/user/NotifikasiUser";
 import ProtectedRoute from "./utils/ProtectedRoute";
-import NotifikasiAdmin from "./ui/admin/NotifikasiAdmin";
 
 function App() {
   return (
@@ -45,13 +43,6 @@ function App() {
         }
       />
 
-      <Route
-        path="/notifikasi-admin"
-        element={
-          <ProtectedRoute element={NotifikasiAdmin} allowedRoles={["admin"]} />
-        }
-      />
-
       {/* User Routes */}
       <Route
         path="/dashboard"
@@ -71,13 +62,6 @@ function App() {
         path="/peminjaman-seksi"
         element={
           <ProtectedRoute element={PeminjamanPribadi} allowedRoles={["user"]} />
-        }
-      />
-
-      <Route
-        path="/notifikasi-user"
-        element={
-          <ProtectedRoute element={NotifikasiUser} allowedRoles={["user"]} />
         }
       />
 

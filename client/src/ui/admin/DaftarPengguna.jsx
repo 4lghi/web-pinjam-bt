@@ -40,14 +40,6 @@ export default function DaftarPengguna() {
             </div>
 
             <div className="flex items-center gap-3 flex-wrap">
-              <a href="/notifikasi-admin">
-                <span className="cursor-pointer relative">
-                  <span className="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                    1
-                  </span>
-                  <ion-icon class="text-xl mt-2" name="notifications"></ion-icon>
-                </span>
-              </a>
               <button className="px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-sky-700 font-semibold cursor-pointer">
                 + Tambah
               </button>

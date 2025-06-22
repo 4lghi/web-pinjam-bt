@@ -136,52 +136,52 @@ const DashboardAdmin = () => {
     setStatusDropdownOpen(false);
   };
 
-const handleSaveStatus = async () => {
-  if (!selectedItem) return;
+  const handleSaveStatus = async () => {
+    if (!selectedItem) return;
 
-  setIsSubmitting(true);
-  try {
-    // Determine the endpoint based on active tab
-    const endpoint =
-      activeTab === "bukuTanah"
-        ? `http://localhost:3000/peminjaman/bukuTanah/${selectedItem.id}`
-        : `http://localhost:3000/peminjaman/suratUkur/${selectedItem.id}`;
+    setIsSubmitting(true);
+    try {
+      // Determine the endpoint based on active tab
+      const endpoint =
+        activeTab === "bukuTanah"
+          ? `http://localhost:3000/peminjaman/bukuTanah/${selectedItem.id}`
+          : `http://localhost:3000/peminjaman/suratUkur/${selectedItem.id}`;
 
-    await axiosInstance.patch(endpoint, {
-      status: selectedStatus,
-    });
+      await axiosInstance.patch(endpoint, {
+        status: selectedStatus,
+      });
 
-    // Update local data
-    if (activeTab === "bukuTanah") {
-      setBtData((prev) =>
-        prev.map((item) =>
-          item.id === selectedItem.id
-            ? { ...item, status: selectedStatus }
-            : item
-        )
-      );
-    } else {
-      setSuData((prev) =>
-        prev.map((item) =>
-          item.id === selectedItem.id
-            ? { ...item, status: selectedStatus }
-            : item
-        )
-      );
+      // Update local data
+      if (activeTab === "bukuTanah") {
+        setBtData((prev) =>
+          prev.map((item) =>
+            item.id === selectedItem.id
+              ? { ...item, status: selectedStatus }
+              : item
+          )
+        );
+      } else {
+        setSuData((prev) =>
+          prev.map((item) =>
+            item.id === selectedItem.id
+              ? { ...item, status: selectedStatus }
+              : item
+          )
+        );
+      }
+
+      // Show success message (you can implement toast notification here)
+      console.log("Status berhasil diupdate!");
+      alert("Status berhasil diupdate!");
+
+      closeAllModals();
+    } catch (error) {
+      console.error("Gagal mengupdate status:", error);
+      alert("Gagal mengupdate status!");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // Show success message (you can implement toast notification here)
-    console.log("Status berhasil diupdate!");
-    alert("Status berhasil diupdate!");
-
-    closeAllModals();
-  } catch (error) {
-    console.error("Gagal mengupdate status:", error);
-    alert("Gagal mengupdate status!");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   const closeAllModals = () => {
     setShowEditModal(false);
@@ -202,13 +202,13 @@ const handleSaveStatus = async () => {
         <div className="flex items-center justify-between gap-4 mb-6">
           <h1 className="text-xl font-bold">Pinjam BT/SU</h1>
           <div className="flex items-center space-x-4">
-            <a href="/notifikasi-admin" className="relative cursor-pointer">
-              <span className="absolute z-50 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                1
-              </span>
-              <ion-icon class="text-xl mt-2" name="notifications"></ion-icon>
-            </a>
-            <User />
+            <div className="flex items-center gap-2">
+              <ion-icon
+                className="text-2xl"
+                name="person-circle-outline"
+              ></ion-icon>{" "}
+              <span className="font-semibold">Admin</span>
+            </div>
           </div>
         </div>
 

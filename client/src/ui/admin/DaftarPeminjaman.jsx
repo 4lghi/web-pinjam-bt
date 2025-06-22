@@ -9,9 +9,7 @@ import User from "../components/User";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { X, ChevronLeft, Printer } from "lucide-react";
-import {
-  Download,
-} from "lucide-react";
+import { Download } from "lucide-react";
 
 function DaftarPeminjaman() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -232,7 +230,10 @@ function DaftarPeminjaman() {
       alert("Data berhasil disimpan!");
       closeModalForm();
     } catch (error) {
-      console.error("Gagal simpan data:", error.response?.data || error.message);
+      console.error(
+        "Gagal simpan data:",
+        error.response?.data || error.message
+      );
       alert("Gagal menyimpan data.");
     }
   };
@@ -560,8 +561,12 @@ function DaftarPeminjaman() {
               onClick={() => {
                 const dataDipilih =
                   activeTab === "bukuTanah"
-                    ? filteredBTData.filter((item) => selectedRows.includes(item.id))
-                    : filteredSUData.filter((item) => selectedRows.includes(item.id));
+                    ? filteredBTData.filter((item) =>
+                        selectedRows.includes(item.id)
+                      )
+                    : filteredSUData.filter((item) =>
+                        selectedRows.includes(item.id)
+                      );
 
                 setDataUntukCetak(dataDipilih);
                 setTimeout(() => {
@@ -571,14 +576,14 @@ function DaftarPeminjaman() {
               disabled={selectedRows.length === 0}
               className="flex items-center px-2 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-400 font-semibold cursor-pointer"
             >
-              <Printer className="mr-2 h-4 w-4"/>
+              <Printer className="mr-2 h-4 w-4" />
               Cetak Bon ({selectedRows.length})
             </button>
             <button
               onClick={exportToExcel}
               className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-400 font-semibold cursor-pointer"
             >
-              <Download className="mr-2 h-4 w-4"/>
+              <Download className="mr-2 h-4 w-4" />
               Export
             </button>
             <button
@@ -589,7 +594,13 @@ function DaftarPeminjaman() {
             </button>
 
             {/* Admin Info */}
-            <User />
+            <div className="flex items-center gap-2">
+              <ion-icon
+                className="text-2xl"
+                name="person-circle-outline"
+              ></ion-icon>{" "}
+              <span className="font-semibold">Admin</span>
+            </div>
           </div>
 
           {/* Modal Tambah dan edit Peminjaman */}
@@ -793,7 +804,7 @@ function DaftarPeminjaman() {
                 onAction={handleAction}
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
-              />            
+              />
             )}
             {activeTab === "suratUkur" && (
               <LoanTable
@@ -997,14 +1008,29 @@ function DaftarPeminjaman() {
       {/* print */}
       <div className="hidden print:block print-area">
         {dataUntukCetak.map((item) => (
-          <div key={item.id} className="w-[48%] print:w-[48%] p-4 mb-4 text-sm border-2 rounded-xl break-inside-avoid">
+          <div
+            key={item.id}
+            className="w-[48%] print:w-[48%] p-4 mb-4 text-sm border-2 rounded-xl break-inside-avoid"
+          >
             <h2 className="text-lg font-bold mb-2">Bon Peminjaman</h2>
-            <p><strong>Tanggal Peminjaman:</strong> {item.dateBorrowed}</p>
-            <p><strong>Nama Peminjam:</strong> {item.namaPeminjam}</p>
-            <p><strong>Seksi:</strong> {item.userId}</p>
-            <p><strong>Nomor Hak:</strong> {item.nomorHak}</p>
-            <p><strong>Kelurahan:</strong> {item.kelurahan}</p>
-            <p><strong>Kecamatan:</strong> {item.kecamatan}</p>
+            <p>
+              <strong>Tanggal Peminjaman:</strong> {item.dateBorrowed}
+            </p>
+            <p>
+              <strong>Nama Peminjam:</strong> {item.namaPeminjam}
+            </p>
+            <p>
+              <strong>Seksi:</strong> {item.userId}
+            </p>
+            <p>
+              <strong>Nomor Hak:</strong> {item.nomorHak}
+            </p>
+            <p>
+              <strong>Kelurahan:</strong> {item.kelurahan}
+            </p>
+            <p>
+              <strong>Kecamatan:</strong> {item.kecamatan}
+            </p>
           </div>
         ))}
       </div>

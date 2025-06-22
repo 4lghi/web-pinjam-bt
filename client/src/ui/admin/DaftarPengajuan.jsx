@@ -15,6 +15,8 @@ function DaftarPengajuan() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const [deleteTarget, setDeleteTarget] = useState({ id: null, jenis: null });
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -147,11 +149,18 @@ function DaftarPengajuan() {
     }
   };
 
-  const handleDelete = async (id, jenis) => {
+  const handleDelete = (id, jenis) => {
+    setDeleteTarget({ id, jenis });
     setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteTarget) return;
+
     setIsSubmitting(true);
     try {
-      // Pilih endpoint berdasarkan jenis
+      const { id, jenis } = deleteTarget;
+
       const endpoint =
         jenis === "bt"
           ? `http://localhost:3000/peminjaman/bukuTanah/${id}`
@@ -159,7 +168,7 @@ function DaftarPengajuan() {
 
       const response = await axiosInstance.delete(endpoint);
 
-      // Update state sesuai jenis
+      // Update state lokal
       if (jenis === "bt") {
         setBtData((prevData) => prevData.filter((loan) => loan.id !== id));
       } else {
@@ -167,8 +176,11 @@ function DaftarPengajuan() {
       }
 
       console.log("Data berhasil dihapus:", response.data);
+      setShowDeleteModal(false); // Tutup modal setelah delete
     } catch (error) {
       console.error("Gagal hapus data:", error);
+    } finally {
+      setIsSubmitting(false); // Pastikan spinner berhenti
     }
   };
 
@@ -251,7 +263,13 @@ function DaftarPengajuan() {
             </div>
 
             {/* Admin Info */}
-            <User />
+            <div className="flex items-center gap-2">
+              <ion-icon
+                className="text-2xl"
+                name="person-circle-outline"
+              ></ion-icon>{" "}
+              <span className="font-semibold">Admin</span>
+            </div>
           </div>
         </div>
 

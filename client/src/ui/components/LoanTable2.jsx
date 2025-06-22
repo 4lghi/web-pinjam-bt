@@ -277,13 +277,24 @@ export default function LoanTable({
                       </span>
                     </td>
                     <td className="px-2 py-2 text-center">
-                      <span
-                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium border ${
-                          statusColorMap[row.status] || "bg-gray-100 text-gray-800 border-gray-200"
-                        }`}
-                      >
-                        {row.status || "Unknown"}
-                      </span>
+                      <div>
+                        <span
+                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium border ${
+                            statusColorMap[row.status] || "bg-gray-100 text-gray-800 border-gray-200"
+                          }`}
+                        >
+                          {row.status || "Unknown"}
+                        </span>
+                        {row.status === "dikembalikan" && row.dateReturned && (
+                          <div className="mt-1 text-xs text-gray-500">
+                            {(() => {
+                              const { date } = formatDateTime(row.dateReturned)
+                              if (date === "N/A") return "N/A"
+                              return <div className="font-medium text-gray-700">{date}</div>
+                            })()}
+                          </div>
+                        )}
+                      </div>
                     </td>
                     <td className="px-2 py-2 text-center">
                       <div className="relative inline-block">
@@ -378,13 +389,24 @@ export default function LoanTable({
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span
-                    className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium border ${
-                      statusColorMap[row.status] || "bg-gray-100 text-gray-800 border-gray-200"
-                    }`}
-                  >
-                    {row.status || "Unknown"}
-                  </span>
+                  <div className="text-right">
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium border ${
+                        statusColorMap[row.status] || "bg-gray-100 text-gray-800 border-gray-200"
+                      }`}
+                    >
+                      {row.status || "Unknown"}
+                    </span>
+                    {row.status === "dikembalikan" && row.dateReturned && (
+                      <div className="mt-1 text-xs text-gray-500">
+                        {(() => {
+                          const { date } = formatDateTime(row.dateReturned)
+                          if (date === "N/A") return "N/A"
+                          return <div className="font-medium text-gray-700">{date}</div>
+                        })()}
+                      </div>
+                    )}
+                  </div>
                   {userRole === "admin" && (
                     <div className="relative">
                       <button
