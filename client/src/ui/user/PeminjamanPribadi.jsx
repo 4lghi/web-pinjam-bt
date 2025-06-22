@@ -9,12 +9,11 @@ import SearchAndFilter from "../components/SearchAndFilter";
 import User from "../components/User";
 
 function PeminjamanPribadi() {
-
   const [searchQuery, setSearchQuery] = useState("");
 
   const [activeTab, setActiveTab] = useState("bukuTanah");
 
-  const [selectedFilter, setSelectedFilter] = useState("Semua"); 
+  const [selectedFilter, setSelectedFilter] = useState("Semua");
 
   const showStatusModal = () => {
     alert("Fungsi ubah status belum diimplementasikan");
@@ -76,14 +75,13 @@ function PeminjamanPribadi() {
 
   const payload = getTokenPayload();
   const loggedInUserId = payload.username;
- 
+
   useEffect(() => {
     const payload = getTokenPayload();
     if (payload) {
       setFormData((prev) => ({ ...prev, userId: payload.username }));
     }
   }, []);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -147,7 +145,7 @@ function PeminjamanPribadi() {
           tenggat.setDate(tenggat.getDate() + parseInt(item.fixDurasi));
 
           const diffTime = tenggat - today;
-          const diffDays = Math.ceil(diffTime / (1000 *60 * 60 * 24));
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
           return diffDays >= 0 && diffDays <= 1; //h-1 tenggat
         });
@@ -157,12 +155,13 @@ function PeminjamanPribadi() {
       case "Ditolak":
       case "Telat":
       case "Menunggu":
-        return data.filter((item) => item.status?.toLowerCase() === selectedFilter.toLowerCase());
+        return data.filter(
+          (item) => item.status?.toLowerCase() === selectedFilter.toLowerCase()
+        );
       default:
         return data;
     }
   };
-
 
   const filteredBTData = applyStatusFilter(filterData(btData));
   const filteredSUData = applyStatusFilter(filterData(suData));
@@ -208,7 +207,13 @@ function PeminjamanPribadi() {
             </button>
 
             {/* User Info */}
-            <User />
+            <div className="flex items-center gap-2">
+              <ion-icon
+                className="text-2xl"
+                name="person-circle-outline"
+              ></ion-icon>
+              <span className="font-semibold">{loggedInUserId}</span>
+            </div>
           </div>
 
           {/* Modal Tambah Peminjaman */}

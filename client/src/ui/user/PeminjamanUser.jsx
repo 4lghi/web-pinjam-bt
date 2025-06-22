@@ -3,16 +3,20 @@ import SidebarUser from "../components/SidebarUser";
 import LoanTable from "../components/LoanTable2";
 import axiosInstance from "../../utils/axiosInstance";
 import SearchAndFilter from "../components/SearchAndFilter";
+import getTokenPayload from "../../utils/getTokenPayload";
 import User from "../components/User";
 
 function PeminjamanUser() {
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   const [activeTab, setActiveTab] = useState("bukuTanah");
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const [selectedFilter, setSelectedFilter] = useState("Semua"); 
+  const [selectedFilter, setSelectedFilter] = useState("Semua");
+
+  const payload = getTokenPayload();
+  const loggedInUserId = payload.username;
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -76,7 +80,7 @@ function PeminjamanUser() {
           tenggat.setDate(tenggat.getDate() + parseInt(item.fixDurasi));
 
           const diffTime = tenggat - today;
-          const diffDays = Math.ceil(diffTime / (1000 *60 * 60 * 24));
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
           return diffDays >= 0 && diffDays <= 1; //h-1 tenggat
         });
@@ -86,16 +90,16 @@ function PeminjamanUser() {
       case "Ditolak":
       case "Telat":
       case "Menunggu":
-        return data.filter((item) => item.status?.toLowerCase() === selectedFilter.toLowerCase());
+        return data.filter(
+          (item) => item.status?.toLowerCase() === selectedFilter.toLowerCase()
+        );
       default:
         return data;
     }
   };
 
-
   const filteredBTData = applyStatusFilter(filterData(btData));
   const filteredSUData = applyStatusFilter(filterData(suData));
-
 
   return (
     <div className="flex min-h-screen font-sans bg-gray-100 text-sm text-gray-800">
@@ -104,7 +108,7 @@ function PeminjamanUser() {
 
       {/* Main Content */}
       <main className="flex-1 ml-60 p-6">
-        <div className="flex justify-between items-center mb-6"> 
+        <div className="flex justify-between items-center mb-6">
           <SearchAndFilter
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -114,7 +118,13 @@ function PeminjamanUser() {
             setIsDropdownOpen={setIsDropdownOpen}
           />
 
-          <User />
+          <div className="flex items-center gap-2">
+            <ion-icon
+              className="text-2xl"
+              name="person-circle-outline"
+            ></ion-icon>
+            <span className="font-semibold">{loggedInUserId}</span>
+          </div>
         </div>
 
         {/* Tabs */}

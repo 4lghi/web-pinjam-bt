@@ -79,7 +79,11 @@ const DashboardUser = () => {
           <h1 className="text-xl font-bold">Pinjam BT/SU</h1>
           <div className="flex items-center space-x-4">
             <div className="flex items-center gap-2">
-              <User />
+              <ion-icon
+                className="text-2xl"
+                name="person-circle-outline"
+              ></ion-icon>
+              <span className="font-semibold">{loggedInUserId}</span>
             </div>
           </div>
         </div>
