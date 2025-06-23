@@ -89,7 +89,7 @@ function PeminjamanUser() {
       case "Dikembalikan":
       case "Ditolak":
       case "Telat":
-      case "Menunggu":
+      case "Menunggu Persetujuan":
         return data.filter(
           (item) => item.status?.toLowerCase() === selectedFilter.toLowerCase()
         );

@@ -66,7 +66,7 @@ export default function SearchAndFilter({
                   "Dikembalikan",
                   "Ditolak",
                   "Telat",
-                  "Menunggu",
+                  "Menunggu Persetujuan",
                 ].map((label) => (
                   <li key={label}>
                     <button

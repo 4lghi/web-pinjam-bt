@@ -48,7 +48,19 @@ function PeminjamanPribadi() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
- 
+
+  const initialFormData = {
+      jenisPeminjaman: "Buku Tanah",
+      namaPeminjam: "",
+      jenisHak: "Hak Milik",
+      nomorHak: "",
+      userId: "",
+      kecamatan: "",
+      kelurahan: "",
+      fixDurasi: "",
+      keperluan: "",
+    };
+  
   const[submitFailed, setSubmitFailed] = useState("")
 
   const handleSubmit = async () => {
@@ -63,7 +75,6 @@ function PeminjamanPribadi() {
       await axiosInstance.post(endpoint, formData);
       // alert("Data berhasil disimpan!");
       closeModalForm();
-      fetchData();
       // Reload data jika perlu
     } catch (error) {
       console.error("Gagal simpan data:", error);
@@ -102,50 +113,36 @@ function PeminjamanPribadi() {
     }
   }, []);
 
-  const fetchData = async () => {
-    try {
-      const [btResponse, suResponse] = await Promise.all([
-        axiosInstance.get("http://localhost:3000/peminjaman/bukuTanah"),
-        axiosInstance.get("http://localhost:3000/peminjaman/suratUkur"),
-      ]);
-
-      const filteredBt = btResponse.data.filter(
-        (item) => item.userId === loggedInUserId
-      );
-
-      const filteredSu = suResponse.data.filter(
-        (item) => item.userId === loggedInUserId
-      );
-
-      setBtData(filteredBt);
-      setSuData(filteredSu);
-    } catch (error) {
-      console.error("Gagal ambil data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [btResponse, suResponse] = await Promise.all([
+          axiosInstance.get("http://localhost:3000/peminjaman/bukuTanah"),
+          axiosInstance.get("http://localhost:3000/peminjaman/suratUkur"),
+        ]);
+
+        const filteredBt = btResponse.data.filter(
+          (item) => item.userId === loggedInUserId
+        );
+
+        const filteredSu = suResponse.data.filter(
+          (item) => item.userId === loggedInUserId
+        );
+
+        setBtData(filteredBt);
+        setSuData(filteredSu);
+      } catch (error) {
+        console.error("Gagal ambil data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     console.log("BT Data:", btData);
     console.log("SU Data:", suData);
 
     fetchData();
   }, []);
-
-  const initialFormData = {
-    jenisPeminjaman: "Buku Tanah",
-    namaPeminjam: "",
-    jenisHak: "",
-    nomorHak: "",
-    seksi: "",
-    kecamatan: "",
-    kelurahan: "",
-    dateBorrowed: "",
-    fixDurasi: "",
-    keperluan: "",
-    userId: loggedInUserId,
-  };
 
   // search
   const filterData = (data) => {

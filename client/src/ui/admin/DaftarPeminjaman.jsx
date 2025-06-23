@@ -8,7 +8,7 @@ import SearchAndFilter from "../components/SearchAndFilter";
 import User from "../components/User";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import { X, ChevronLeft, Printer } from "lucide-react";
+import { X, ChevronLeft, Printer, CircleAlert } from "lucide-react";
 import { Download } from "lucide-react";
 import getTokenPayload from "../../utils/getTokenPayload";
 
@@ -40,7 +40,7 @@ function DaftarPeminjaman() {
   }, [selectedItem]);
 
   const statusColorMap = {
-    menunggu: "bg-yellow-100 text-yellow-700",
+    "menunggu persetujuan": "bg-yellow-100 text-yellow-700",
     dipinjam: "bg-purple-100 text-purple-700",
     dikembalikan: "bg-green-100 text-green-700",
     telat: "bg-orange-100 text-orange-700",
@@ -60,8 +60,17 @@ function DaftarPeminjaman() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModalForm = () => setIsModalOpen(false);
+  const openModal = () => {
+    setFormData(initialFormData);
+    setIsModalOpen(true);
+    setSubmitFailed("");
+  };
+
+  const closeModalForm = () => {
+    setFormData(initialFormData);
+    setIsModalOpen(false);
+    setSubmitFailed("");
+  };
 
   // export to excel
   const exportToExcel = async () => {
@@ -103,7 +112,7 @@ function DaftarPeminjaman() {
 
         let fillColor = null;
         switch (status) {
-          case "menunggu":
+          case "menunggu persetujuan":
             fillColor = "FFFFF9C4";
             break;
           case "disetujui":
@@ -212,7 +221,23 @@ function DaftarPeminjaman() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const initialFormData = {
+    jenisPeminjaman: "Buku Tanah",
+    namaPeminjam: "",
+    jenisHak: "Hak Milik",
+    nomorHak: "",
+    userId: "",
+    kecamatan: "",
+    kelurahan: "",
+    fixDurasi: "",
+    keperluan: "",
+  };
+
+  const[submitFailed, setSubmitFailed] = useState("")
+
   const handleSubmit = async () => {
+    setSubmitFailed("")
+
     const endpoint =
       formData.jenisPeminjaman === "Buku Tanah"
         ? "/peminjaman/bukuTanah"
@@ -229,16 +254,20 @@ function DaftarPeminjaman() {
         setSuData((prev) => [...prev, newItem]);
       }
 
-      alert("Data berhasil disimpan!");
+      // alert("Data berhasil disimpan!");
       closeModalForm();
     } catch (error) {
       console.error(
         "Gagal simpan data:",
         error.response?.data || error.message
       );
-      alert("Gagal menyimpan data.");
+      setSubmitFailed("Gagal menyimpan data. Harap lengkapi semua kolom yang wajib diisi sebelum menyimpan.");
     }
   };
+
+  const closeSubmitFailed = () => {
+    setSubmitFailed ("")
+  }
 
   // Modal handlers
   const handleAction = (action, item) => {
@@ -477,7 +506,7 @@ function DaftarPeminjaman() {
       case "Dikembalikan":
       case "Ditolak":
       case "Telat":
-      case "Menunggu":
+      case "Menunggu Persetujuan":
         return data.filter(
           (item) => item.status?.toLowerCase() === selectedFilter.toLowerCase()
         );
@@ -615,6 +644,24 @@ function DaftarPeminjaman() {
                   </h2>
                 </div>
 
+                {/* submit failed alert */}
+                <div className="flex space-y-4 ">
+                  {submitFailed && (
+                    <div variant="destructive" className="flex relative border-2 border-red-300 text-red-400 rounded-lg mb-4 px-3 py-2">
+                      <CircleAlert className="mr-2 items-center h-5 w-5"/>
+                      <div className="pr-8">{submitFailed}</div>
+                      <button
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-1 top-1 h-5 w-5 rounded-xl hover:bg-red-100"
+                        onClick={closeSubmitFailed}
+                      >
+                        <X className="h-3 w-3 m-auto" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   {/* Kolom kiri */}
                   <div className="space-y-3">
@@ -661,9 +708,9 @@ function DaftarPeminjaman() {
                     <div>
                       <label>Nomor Hak</label>
                       <input
-                        type="text"
+                        type="number"
                         name="nomorHak"
-                        className="w-full border rounded-lg px-3 py-2"
+                        className="w-full border rounded-lg px-3 py-2 appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [&-moz-appearance]:textfield"
                         value={formData.nomorHak}
                         onChange={handleChange}
                       />
@@ -751,16 +798,17 @@ function DaftarPeminjaman() {
                       showEditModal
                         ? () => {
                             setShowEditModal(false);
-                            setFormData({});
+                            setFormData(initialFormData);
+                            setSubmitFailed("");
                           }
                         : closeModalForm
                     }
-                    className="px-4 py-2 border rounded-lg"
+                    className="px-4 py-2 border rounded-lg hover:bg-slate-100 cursor-pointer"
                   >
                     Batalkan
                   </button>
                   <button
-                    className="px-4 py-2 bg-sky-900 text-white rounded-lg"
+                    className="px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-sky-700 cursor-pointer"
                     onClick={showEditModal ? handleEditSubmit : handleSubmit}
                   >
                     Simpan
@@ -948,7 +996,7 @@ function DaftarPeminjaman() {
                   {statusDropdownOpen && (
                     <div className="absolute mt-2 w-full bg-white border rounded-lg shadow-lg z-50 overflow-visible">
                       {[
-                        "menunggu",
+                        "menunggu persetujuan",
                         "disetujui",
                         "ditolak",
                         "dipinjam",

@@ -4,7 +4,7 @@ import { Edit, Info, MoreHorizontal, RotateCcw, Trash2, ChevronLeft, ChevronRigh
 import getTokenPayload from "../../utils/getTokenPayload"
 
 const statusColorMap = {
-  menunggu: "bg-yellow-100 text-yellow-700",
+  "menunggu persetujuan": "bg-yellow-100 text-yellow-700",
   dipinjam: "bg-purple-100 text-purple-700",
   dikembalikan: "bg-green-100 text-green-700",
   telat: "bg-orange-100 text-orange-700",
