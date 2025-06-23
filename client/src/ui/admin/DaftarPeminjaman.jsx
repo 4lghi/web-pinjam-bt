@@ -324,7 +324,7 @@ function DaftarPeminjaman() {
 
       // Show success message
       console.log("Data berhasil dihapus!");
-      alert("Data berhasil dihapus!");
+      // alert("Data berhasil dihapus!");
 
       closeAllModals();
     } catch (error) {
@@ -376,7 +376,7 @@ function DaftarPeminjaman() {
 
       // Show success message (you can implement toast notification here)
       console.log("Status berhasil diupdate!");
-      alert("Status berhasil diupdate!");
+      // alert("Status berhasil diupdate!");
 
       closeAllModals();
     } catch (error) {
