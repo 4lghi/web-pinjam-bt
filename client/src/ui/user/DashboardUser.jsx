@@ -108,7 +108,13 @@ const DashboardUser = () => {
             <div className="text-red-800 text-3xl">❌</div>
             <div>
               <div className="text-gray-700">Belum Dikembalikan</div>
-              <div className="text-2xl font-bold">0</div>
+                        <div className="text-2xl font-bold">
+                {
+                  [...filteredBTData, ...filteredSUData].filter(
+                    (item) => item.status === "telat" || item.status === "dipinjam"
+                  ).length
+                }
+              </div>
             </div>
           </div>
         </div>

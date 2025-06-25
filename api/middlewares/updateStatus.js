@@ -3,7 +3,7 @@ const { admin, db } = require("../firebase"); // pastikan inisialisasi Firebase 
 const updateStatus = async (req, res) => {
   try {
     const { id, collection } = req.params; // <-- ambil nama koleksi dari URL
-    const { newStatus } = req.body;
+    const { newStatus, reasonIfRejected } = req.body;
 
     const docRef = db.collection(collection).doc(id); // <-- gunakan koleksi dinamis
     const docSnap = await docRef.get();
@@ -19,6 +19,10 @@ const updateStatus = async (req, res) => {
     const updatePayload = {
       status: newStatus,
     };
+
+    if (reasonIfRejected !== undefined) {
+      updatePayload.reasonIfRejected = reasonIfRejected;
+    }
 
     console.log("data:", data);
 

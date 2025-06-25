@@ -19,6 +19,10 @@ function DaftarPengajuan() {
 
   const [deleteTarget, setDeleteTarget] = useState({ id: null, jenis: null });
 
+  const [showRejectReasonModal, setShowRejectReasonModal] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+  const [rejectTarget, setRejectTarget] = useState({ id: null, jenis: null });
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -130,7 +134,16 @@ function DaftarPengajuan() {
     }
   };
 
-  const handleRejectModal = async (id, jenis) => {
+  const handleRejectModal = (id, jenis) => {
+    setRejectTarget({ id, jenis });
+    setShowRejectReasonModal(true);
+  };
+
+  const handleRejectConfirm = async () => {
+    const { id, jenis } = rejectTarget;
+    if (!id || !rejectReason.trim()) return;
+
+    setIsSubmitting(true);
     try {
       const endpoint =
         jenis === "bt"
@@ -139,33 +152,38 @@ function DaftarPengajuan() {
 
       const response = await axiosInstance.patch(endpoint, {
         newStatus: "ditolak",
+        reasonIfRejected: rejectReason,
       });
 
-      // Update state sesuai jenis
       if (jenis === "bt") {
-        setBtData((prevData) =>
-          prevData.map((loan) =>
-            loan.id === id ? { ...loan, status: "disetujui" } : loan
+        setBtData((prev) =>
+          prev.map((loan) =>
+            loan.id === id ? { ...loan, status: "ditolak" } : loan
           )
         );
       } else {
-        setSuData((prevData) =>
-          prevData.map((loan) =>
-            loan.id === id ? { ...loan, status: "disetujui" } : loan
+        setSuData((prev) =>
+          prev.map((loan) =>
+            loan.id === id ? { ...loan, status: "ditolak" } : loan
           )
         );
       }
 
-      console.log("Status berhasil diubah:", response.data);
+      setShowRejectReasonModal(false);
+      setRejectReason("");
+      setRejectTarget({ id: null, jenis: null });
     } catch (error) {
-      console.error("Gagal update status:", error);
+      console.error("Gagal menolak:", error);
+      alert("Gagal menyimpan alasan penolakan");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleDelete = (id, jenis) => {
     setDeleteTarget({ id, jenis });
     setShowDeleteModal(true);
-    console.log()
+    console.log();
   };
 
   const handleDeleteConfirm = async () => {
@@ -287,7 +305,7 @@ function DaftarPengajuan() {
             Buku Tanah
           </button>
           <button
-            onClick={() => setActiveTab("suratUkur").then}
+            onClick={() => setActiveTab("suratUkur")}
             className={`px-4 py-2 rounded-xl shadow font-semibold ${
               activeTab === "suratUkur"
                 ? "bg-[#022B3A] text-white"
@@ -322,6 +340,45 @@ function DaftarPengajuan() {
           />
         )}
       </main>
+
+      {/* Modal Reject Reason */}
+      {showRejectReasonModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <h2 className="text-lg font-semibold mb-4">Tolak Pengajuan</h2>
+            <textarea
+              className="w-full border rounded-lg px-3 py-2 mb-4"
+              rows="4"
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+              placeholder="Masukkan alasan penolakan..."
+            />
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setShowRejectReasonModal(false);
+                  setRejectReason("");
+                }}
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
+              >
+                Batalkan
+              </button>
+              <button
+                onClick={handleRejectConfirm}
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors flex items-center gap-2"
+              >
+                {isSubmitting && (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                )}
+                {isSubmitting ? "Menyimpan..." : "Tolak"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal Delete */}
       {showDeleteModal && (
