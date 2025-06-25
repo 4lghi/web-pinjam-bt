@@ -187,7 +187,7 @@ const RequestTable = ({
                     </td>
                     <td className="px-2 py-2 text-center">
                       <span className="text-sm text-gray-700 truncate inline-block">
-                        {item.seksi || "N/A"}
+                        {item.userId || "N/A"}
                       </span>
                     </td>
                     <td className="px-2 py-2 text-center">

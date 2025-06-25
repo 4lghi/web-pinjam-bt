@@ -222,7 +222,7 @@ function DaftarPeminjaman() {
   };
 
   const initialFormData = {
-    jenisPeminjaman: "Buku Tanah",
+    jenisPeminjaman: activeTab === "bukuTanah" ? "Buku Tanah" : "Surat Ukur",
     namaPeminjam: "",
     jenisHak: "Hak Milik",
     nomorHak: "",
@@ -233,10 +233,10 @@ function DaftarPeminjaman() {
     keperluan: "",
   };
 
-  const[submitFailed, setSubmitFailed] = useState("")
+  const [submitFailed, setSubmitFailed] = useState("");
 
   const handleSubmit = async () => {
-    setSubmitFailed("")
+    setSubmitFailed("");
 
     const endpoint =
       formData.jenisPeminjaman === "Buku Tanah"
@@ -261,13 +261,15 @@ function DaftarPeminjaman() {
         "Gagal simpan data:",
         error.response?.data || error.message
       );
-      setSubmitFailed("Gagal menyimpan data. Harap lengkapi semua kolom yang wajib diisi sebelum menyimpan.");
+      setSubmitFailed(
+        "Gagal menyimpan data. Harap lengkapi semua kolom yang wajib diisi sebelum menyimpan."
+      );
     }
   };
 
   const closeSubmitFailed = () => {
-    setSubmitFailed ("")
-  }
+    setSubmitFailed("");
+  };
 
   // Modal handlers
   const handleAction = (action, item) => {
@@ -647,8 +649,11 @@ function DaftarPeminjaman() {
                 {/* submit failed alert */}
                 <div className="flex space-y-4 ">
                   {submitFailed && (
-                    <div variant="destructive" className="flex relative border-2 border-red-300 text-red-400 rounded-lg mb-4 px-3 py-2">
-                      <CircleAlert className="mr-2 items-center h-5 w-5"/>
+                    <div
+                      variant="destructive"
+                      className="flex relative border-2 border-red-300 text-red-400 rounded-lg mb-4 px-3 py-2"
+                    >
+                      <CircleAlert className="mr-2 items-center h-5 w-5" />
                       <div className="pr-8">{submitFailed}</div>
                       <button
                         variant="ghost"

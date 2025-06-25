@@ -165,6 +165,7 @@ function DaftarPengajuan() {
   const handleDelete = (id, jenis) => {
     setDeleteTarget({ id, jenis });
     setShowDeleteModal(true);
+    console.log()
   };
 
   const handleDeleteConfirm = async () => {

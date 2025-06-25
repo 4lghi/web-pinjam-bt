@@ -48,11 +48,11 @@ function PeminjamanPribadi() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
- 
-  const[submitFailed, setSubmitFailed] = useState("")
+
+  const [submitFailed, setSubmitFailed] = useState("");
 
   const handleSubmit = async () => {
-    setSubmitFailed("")
+    setSubmitFailed("");
 
     const endpoint =
       formData.jenisPeminjaman === "Buku Tanah"
@@ -67,13 +67,15 @@ function PeminjamanPribadi() {
       // Reload data jika perlu
     } catch (error) {
       console.error("Gagal simpan data:", error);
-      setSubmitFailed("Gagal menyimpan data. Harap lengkapi semua kolom yang wajib diisi sebelum menyimpan.");
+      setSubmitFailed(
+        "Gagal menyimpan data. Harap lengkapi semua kolom yang wajib diisi sebelum menyimpan."
+      );
     }
   };
 
   const closeSubmitFailed = () => {
-    setSubmitFailed ("")
-  }
+    setSubmitFailed("");
+  };
 
   const [formData, setFormData] = useState({
     jenisPeminjaman: "Buku Tanah",
@@ -134,9 +136,9 @@ function PeminjamanPribadi() {
   }, []);
 
   const initialFormData = {
-    jenisPeminjaman: "Buku Tanah",
+    jenisPeminjaman: activeTab === "bukuTanah" ? "Buku Tanah" : "Surat Ukur",
     namaPeminjam: "",
-    jenisHak: "",
+    jenisHak: "Hak Milik",
     nomorHak: "",
     seksi: "",
     kecamatan: "",
@@ -269,8 +271,11 @@ function PeminjamanPribadi() {
                 {/* submit failed alert */}
                 <div className="flex space-y-4 ">
                   {submitFailed && (
-                    <div variant="destructive" className="flex relative border-2 border-red-300 text-red-400 rounded-lg mb-4 px-3 py-2">
-                      <CircleAlert className="mr-2 items-center h-5 w-5"/>
+                    <div
+                      variant="destructive"
+                      className="flex relative border-2 border-red-300 text-red-400 rounded-lg mb-4 px-3 py-2"
+                    >
+                      <CircleAlert className="mr-2 items-center h-5 w-5" />
                       <div className="pr-8">{submitFailed}</div>
                       <button
                         variant="ghost"
@@ -343,17 +348,6 @@ function PeminjamanPribadi() {
                         onChange={handleChange}
                       />
                     </div>
-                    <div>
-                      <label>Keperluan</label>
-                      <textarea
-                        name="keperluan"
-                        className="w-full border rounded-lg px-3 py-2"
-                        rows="2"
-                        value={formData.keperluan}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
                   </div>
 
                   {/* Kolom kanan */}
@@ -403,6 +397,17 @@ function PeminjamanPribadi() {
                         <option value={3}>3 Hari</option>
                         <option value={7}>1 Minggu</option>
                       </select>
+                    </div>
+                    <div>
+                      <label>Keperluan</label>
+                      <textarea
+                        name="keperluan"
+                        className="w-full border rounded-lg px-3 py-2"
+                        rows="2"
+                        value={formData.keperluan}
+                        onChange={handleChange}
+                        required
+                      />
                     </div>
                   </div>
                 </div>
