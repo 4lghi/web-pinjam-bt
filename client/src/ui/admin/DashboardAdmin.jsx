@@ -5,6 +5,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import User from "../components/User";
 import { X, ChevronLeft, Search, AlertTriangle, XCircle } from "lucide-react";
 import getTokenPayload from "../../utils/getTokenPayload";
+import EarlyWarningCard from "../components/EarlyWarningCard";
 
 const DashboardAdmin = () => {
   const payload = getTokenPayload();
@@ -220,6 +221,15 @@ const DashboardAdmin = () => {
             </div>
           </div>
         </div>
+
+        <EarlyWarningCard
+          warningList={[
+            // placeholder: nanti ganti dengan hasil filter dokumen H-1
+            { jenis: "Buku Tanah", nomor: "12345", jatuhTempo: "27 Juni 2025" },
+            { jenis: "Surat Ukur", nomor: "67890", jatuhTempo: "27 Juni 2025" },
+            { jenis: "Buku Tanah", nomor: "55555", jatuhTempo: "27 Juni 2025" },
+          ]}
+        />
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

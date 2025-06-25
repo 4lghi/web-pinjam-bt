@@ -1,68 +1,75 @@
-import { useNavigate } from "react-router-dom"
-import { useState } from "react"
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useEffect } from "react";
-import { User, Lock, Eye, EyeOff, X, CircleAlert, CircleCheck } from "lucide-react"
-import axios from "axios"
-import getTokenPayload from "../utils/checkToken"
+import {
+  User,
+  Lock,
+  Eye,
+  EyeOff,
+  X,
+  CircleAlert,
+  CircleCheck,
+} from "lucide-react";
+import axios from "axios";
+import getTokenPayload from "../utils/checkToken";
 
 const Login = () => {
-  const navigate = useNavigate()
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [loginSuccess, setLoginSuccess] = useState(false)
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [loginSuccess, setLoginSuccess] = useState(false);
 
   const handleLogin = async (e) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError("")
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
     try {
       const response = await axios.post("http://localhost:3000/login", {
         username,
         password,
-      })
+      });
 
-      const { token, role } = response.data
+      const { token, role } = response.data;
 
       // Simpan token ke localStorage
-      localStorage.setItem("token", token)
-      localStorage.setItem("role", role) // opsional, kalau mau pakai di UI
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", role); // opsional, kalau mau pakai di UI
 
       setLoginSuccess(true);
 
       setTimeout(() => {
-        setLoginSuccess(false)
-    
-        if (role === "admin") {
-          getTokenPayload()
-          navigate("/dashboardAdmin")
-        } else if (role === "user") {
-          navigate("/dashboard")
-        } else {
-          alert("Role tidak dikenali")
-        }
-      }, 1000); 
+        setLoginSuccess(false);
 
+        if (role === "admin") {
+          getTokenPayload();
+          navigate("/dashboardAdmin");
+        } else if (role === "user") {
+          navigate("/dashboard");
+        } else {
+          alert("Role tidak dikenali");
+        }
+      }, 1000);
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        setError("Username atau password salah. Silahkan coba lagi.")
+        setError("Username atau password salah. Silahkan coba lagi.");
       } else if (error.response && error.response.status === 403) {
-        alert("Akses ditolak")
+        alert("Akses ditolak");
       } else {
-        alert("Terjadi kesalahan server")
-        console.error(error)
+        alert("Terjadi kesalahan server");
+        console.error(error);
       }
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const closeError = () => {
-    setError ("")
-  }
+    setError("");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-r bg-no-repeat from-green-200/70 via-amber-200/70 to-blue-200 flex items-center justify-center p-4">
@@ -73,19 +80,27 @@ const Login = () => {
       <div className="relative w-full max-w-md">
         <div className="bg-white/70 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
           {/* Header */}
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-sky-900 rounded-full flex items-center justify-center mx-auto mb-4">
-              <User className="h-8 w-8 text-white" />
-            </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Selamat Datang</h1>
-            <p className="text-gray-600">Silakan masuk ke akun Anda</p>
-          </div>
+    <div className="text-center mb-8">
+  <img
+    src="/logo.png" // ganti path jika perlu
+    alt="Logo"
+    className="w-24 h-24 mx-auto mb-4" // ukuran logo
+  />
+  <h1 className="text-3xl font-bold text-gray-900 mb-2">
+    Selamat Datang
+  </h1>
+  <p className="text-gray-600">Silakan masuk ke akun Anda</p>
+</div>
+
 
           {/* error alert */}
           <div className="flex space-y-4 ">
             {error && (
-              <div variant="destructive" className="flex relative border-2 border-red-300 text-red-400 rounded-lg mb-4 px-3 py-2">
-                <CircleAlert className="mr-2 items-center h-5 w-5"/>
+              <div
+                variant="destructive"
+                className="flex relative border-2 border-red-300 text-red-400 rounded-lg mb-4 px-3 py-2"
+              >
+                <CircleAlert className="mr-2 items-center h-5 w-5" />
                 <div className="pr-8">{error}</div>
                 <button
                   variant="ghost"
@@ -103,7 +118,10 @@ const Login = () => {
           <form onSubmit={handleLogin} className="space-y-6">
             {/* Username Field */}
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Username
               </label>
               <div className="relative">
@@ -124,7 +142,10 @@ const Login = () => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Password
               </label>
               <div className="relative">
@@ -173,7 +194,9 @@ const Login = () => {
 
           {/* Footer */}
           <div className="mt-8 text-center">
-            <p className="text-sm text-gray-600">Sistem Manajemen Pengguna</p>
+            <p className="text-sm text-gray-600">
+              Sistem Peminjaman Buku Tanah
+            </p>
           </div>
         </div>
 
@@ -186,15 +209,16 @@ const Login = () => {
       {loginSuccess && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm text-center transition-all duration-300 ease-in-out">
-            <CircleCheck className="w-15 h-15 mx-auto mb-3 text-green-700"/>
-            <h2 className="text-xl font-bold text-green-600 mb-2">Login Berhasil!</h2>
+            <CircleCheck className="w-15 h-15 mx-auto mb-3 text-green-700" />
+            <h2 className="text-xl font-bold text-green-600 mb-2">
+              Login Berhasil!
+            </h2>
             <p className="text-gray-600">Mengalihkan Anda ke dashboard...</p>
           </div>
         </div>
       )}
-
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
