@@ -6,6 +6,7 @@ import getTokenPayload from "../../utils/checkToken";
 import { Search, AlertTriangle, XCircle } from "lucide-react";
 import User from "../components/User";
 import EarlyWarningCard from "../components/EarlyWarningCard";
+import { getEarlyWarningList } from "../../utils/earlyWarning";
 
 const DashboardUser = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,6 +16,17 @@ const DashboardUser = () => {
   const [btData, setBtData] = useState([]);
   const [suData, setSuData] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [earlyWarningItems, setEarlyWarningItems] = useState([]);
+
+  useEffect(() => {
+    const warnings = getEarlyWarningList([
+      ...btData.map((item) => ({ ...item, jenis: "BT" })),
+      ...suData.map((item) => ({ ...item, jenis: "SU" })),
+    ]);
+    setEarlyWarningItems(warnings);
+    console.log("Early Warnings:", warnings);
+  }, [btData, suData]);
 
   const payload = getTokenPayload();
   const loggedInUserId = payload.username;
@@ -90,14 +102,7 @@ const DashboardUser = () => {
           </div>
         </div>
 
-        <EarlyWarningCard
-          warningList={[
-            // placeholder: nanti ganti dengan hasil filter dokumen H-1
-            { jenis: "Buku Tanah", nomor: "12345", jatuhTempo: "27 Juni 2025" },
-            { jenis: "Surat Ukur", nomor: "67890", jatuhTempo: "27 Juni 2025" },
-            { jenis: "Buku Tanah", nomor: "55555", jatuhTempo: "27 Juni 2025" },
-          ]}
-        />
+        <EarlyWarningCard warningList={earlyWarningItems} />
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

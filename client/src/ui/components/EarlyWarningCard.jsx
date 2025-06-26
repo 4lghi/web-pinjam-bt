@@ -4,8 +4,6 @@ import { useState } from "react";
 const EarlyWarningCard = ({ warningList = [] }) => {
   const [showModal, setShowModal] = useState(false);
 
-  if (warningList.length === 0) return null;
-
   const previewDocs = warningList
     .slice(0, 2)
     .map((doc) => `${doc.jenis} No. ${doc.nomor}`);
@@ -19,28 +17,35 @@ const EarlyWarningCard = ({ warningList = [] }) => {
           <Clock className="text-amber-600 mt-1 w-5 h-5" />
           <div>
             <h2 className="font-semibold text-amber-800">
-              {warningList.length} Peminjaman Dokumen Akan Jatuh Tempo
+              {warningList.length > 0
+                ? `${warningList.length} Peminjaman Dokumen Akan Jatuh Tempo`
+                : "Tidak ada dokumen yang akan jatuh tempo"}
             </h2>
             <p className="text-sm text-amber-700">
-              {previewDocs.join(", ")}
-              {remaining > 0 && ` dan ${remaining} lainnya`}
+              {warningList.length > 0
+                ? `${previewDocs.join(", ")}${
+                    remaining > 0 ? ` dan ${remaining} lainnya` : ""
+                  }`
+                : "Kamu tidak memiliki dokumen yang mendekati jatuh tempo saat ini."}
             </p>
           </div>
         </div>
 
-        <div>
-          <button
-            onClick={() => setShowModal(true)}
-            className="flex items-center gap-1 bg-amber-600 hover:bg-amber-700 text-white text-sm px-3 py-1.5 rounded-lg"
-          >
-            <Eye className="w-4 h-4" />
-            Lihat Detail
-          </button>
-        </div>
+        {warningList.length > 0 && (
+          <div>
+            <button
+              onClick={() => setShowModal(true)}
+              className="flex items-center gap-1 bg-amber-600 hover:bg-amber-700 text-white text-sm px-3 py-1.5 rounded-lg"
+            >
+              <Eye className="w-4 h-4" />
+              Lihat Detail
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Modal */}
-      {showModal && (
+      {showModal && warningList.length > 0 && (
         <div className="fixed inset-0 z-[9999] bg-black/40 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl w-full max-w-md p-6 shadow-lg relative">
             <h3 className="text-lg font-bold text-gray-800 mb-4">
@@ -48,7 +53,9 @@ const EarlyWarningCard = ({ warningList = [] }) => {
             </h3>
             <ul className="space-y-2 max-h-72 overflow-y-auto pr-1">
               {warningList
-                .sort((a, b) => new Date(a.jatuhTempo) - new Date(b.jatuhTempo))
+                .sort(
+                  (a, b) => new Date(a.jatuhTempo) - new Date(b.jatuhTempo)
+                )
                 .map((doc, idx) => (
                   <li
                     key={idx}
