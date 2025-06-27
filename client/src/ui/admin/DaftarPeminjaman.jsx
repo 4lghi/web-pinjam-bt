@@ -1063,10 +1063,7 @@ function DaftarPeminjaman() {
               {new Date(item.dateBorrowed).toLocaleDateString("id-ID")}
             </p>
             <p>
-              <strong>Nama Peminjam:</strong> {item.namaPeminjam}
-            </p>
-            <p>
-              <strong>Seksi:</strong> {item.userId}
+              <strong>Jenis Hak:</strong> {item.jenisHak}
             </p>
             <p>
               <strong>Nomor Hak:</strong> {item.nomorHak}
@@ -1076,6 +1073,12 @@ function DaftarPeminjaman() {
             </p>
             <p>
               <strong>Kecamatan:</strong> {item.kecamatan}
+            </p>
+            <p>
+              <strong>Nama Peminjam:</strong> {item.namaPeminjam}
+            </p>
+            <p>
+              <strong>Seksi:</strong> {item.userId}
             </p>
           </div>
         ))}

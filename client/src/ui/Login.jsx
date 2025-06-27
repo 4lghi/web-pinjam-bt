@@ -80,17 +80,17 @@ const Login = () => {
       <div className="relative w-full max-w-md">
         <div className="bg-white/70 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
           {/* Header */}
-    <div className="text-center mb-8">
-  <img
-    src="/logo.png" // ganti path jika perlu
-    alt="Logo"
-    className="w-24 h-24 mx-auto mb-4" // ukuran logo
-  />
-  <h1 className="text-3xl font-bold text-gray-900 mb-2">
-    Selamat Datang
-  </h1>
-  <p className="text-gray-600">Silakan masuk ke akun Anda</p>
-</div>
+          <div className="text-center mb-8">
+            <img
+              src="/logo.png" // ganti path jika perlu
+              alt="Logo"
+              className="w-24 h-24 mx-auto mb-4" // ukuran logo
+            />
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Selamat Datang
+            </h1>
+            <p className="text-gray-600">Silakan masuk ke akun Anda</p>
+          </div>
 
 
           {/* error alert */}

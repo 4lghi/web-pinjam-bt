@@ -3,7 +3,7 @@ import SidebarAdmin from "../components/SidebarAdmin";
 import LoanTable from "../components/LoanTable2";
 import axiosInstance from "../../utils/axiosInstance";
 import User from "../components/User";
-import { X, ChevronLeft, Search, AlertTriangle, XCircle } from "lucide-react";
+import { X, ChevronLeft, Search, AlertTriangle, XCircle, FileText } from "lucide-react";
 import getTokenPayload from "../../utils/getTokenPayload";
 import EarlyWarningCard from "../components/EarlyWarningCard";
 import { getEarlyWarningList } from "../../utils/earlyWarning";
@@ -241,41 +241,49 @@ const DashboardAdmin = () => {
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Kartu Terlambat */}
-          <div className="flex items-center gap-4 bg-yellow-50 border border-yellow-200 p-5 rounded-xl shadow-sm">
-            <div className="text-yellow-600">
-              <AlertTriangle className="w-10 h-10" />
-            </div>
-            <div>
-              <div className="text-sm text-yellow-800 font-medium">
-                Terlambat
+          <div className="border-0 border-l-4 border-l-red-400 rounded-md shadow-md hover:shadow-lg transition-shadow duration-200 p-6 bg-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <AlertTriangle className="w-5 h-5 text-red-500" />
+                  <span className="text-sm font-medium text-gray-600">Terlambat</span>
+                </div>
+                <div className="text-3xl font-bold text-red-600">
+                  {
+                    [...filteredBTData, ...filteredSUData].filter(
+                      (item) => item.status === "telat"
+                    ).length
+                  }
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Dokumen terlambat dikembalikan</p>
               </div>
-              <div className="text-3xl font-bold text-gray-900">
-                {
-                  [...filteredBTData, ...filteredSUData].filter(
-                    (item) => item.status === "telat"
-                  ).length
-                }
+              <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center">
+                <AlertTriangle className="w-6 h-6 text-red-500"/>
               </div>
             </div>
           </div>
 
           {/* Kartu Belum Dikembalikan */}
-          <div className="flex items-center gap-4 bg-red-50 border border-red-200 p-5 rounded-xl shadow-sm">
-            <div className="text-red-600">
-              <XCircle className="w-10 h-10" />
-            </div>
-            <div>
-              <div className="text-sm text-red-800 font-medium">
-                Belum Dikembalikan
+          <div className="border-0 border-l-4 border-l-blue-400 rounded-md shadow-md hover:shadow-lg transition-shadow duration-200 p-6 bg-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText className="w-5 h-5 text-blue-500" />
+                  <span className="text-sm font-medium text-gray-600">Belum Dikembalikan</span>
+                </div>
+                <div className="text-3xl font-bold text-blue-600">
+                  {
+                    [...filteredBTData, ...filteredSUData].filter(
+                      (item) =>
+                        item.status === "dipinjam" || item.status === "telat"
+                    ).length
+                  }
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Dokumen masih dipinjam</p>
               </div>
-              <div className="text-3xl font-bold text-gray-900">
-                {
-                  [...filteredBTData, ...filteredSUData].filter(
-                    (item) =>
-                      item.status === "dipinjam" || item.status === "telat"
-                  ).length
-                }
-              </div>
+                <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center">
+                  <FileText className="w-6 h-6 text-blue-500" />
+                </div>
             </div>
           </div>
         </div>
